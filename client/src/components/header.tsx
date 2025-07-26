@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Menu, Heart, User } from "lucide-react";
 import { Link } from "wouter";
 
@@ -59,16 +60,35 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
               <Heart className="h-5 w-5" />
             </Button>
           </Link>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="hidden sm:block text-gray-600 hover:text-primary"
-          >
-            <User className="h-5 w-5" />
-          </Button>
-          <Button className="bg-primary text-white hover:bg-primary/90">
-            Đăng nhập
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hidden sm:block text-gray-600 hover:text-primary relative"
+              >
+                <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center border-2 border-orange-200">
+                  <span className="text-sm">👤</span>
+                </div>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard" className="w-full cursor-pointer">
+                  Thông tin cá nhân
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                Lớp học của tôi
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                Đăng kí làm gia sư
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                Khác
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>
