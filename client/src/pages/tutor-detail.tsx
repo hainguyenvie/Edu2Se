@@ -16,11 +16,14 @@ import {
   Facebook,
   Youtube
 } from "lucide-react";
+import { Link } from "wouter";
 import Header from "@/components/header";
+import BookingModal from "@/components/booking-modal";
 
 export default function TutorDetail() {
   const [match, params] = useRoute("/tutor/:id");
   const [isFavorited, setIsFavorited] = useState(false);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   
   const { data: tutor, isLoading } = useQuery<Tutor>({
     queryKey: ['/api/tutors', params?.id],
@@ -236,7 +239,16 @@ export default function TutorDetail() {
           <div className="lg:col-span-1 space-y-4">
             {/* Action Buttons */}
             {sidebarItems.map((item, index) => (
-              <Button key={index} variant="outline" className="w-full justify-start">
+              <Button 
+                key={index} 
+                variant="outline" 
+                className="w-full justify-start"
+                onClick={() => {
+                  if (item.title === "ĐẶT LỊCH") {
+                    setIsBookingModalOpen(true);
+                  }
+                }}
+              >
                 <item.icon className={`h-5 w-5 mr-3 ${item.color}`} />
                 {item.title}
               </Button>
@@ -259,6 +271,13 @@ export default function TutorDetail() {
           </div>
         </div>
       </div>
+
+      {/* Booking Modal */}
+      <BookingModal 
+        tutor={tutor}
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+      />
     </div>
   );
 }

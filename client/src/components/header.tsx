@@ -22,14 +22,14 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
               <Menu className="h-6 w-6" />
             </Button>
           )}
-          <div className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">A+</span>
             </div>
             <span className="hidden sm:block font-semibold text-gray-900 text-lg">
               AitheduConnect
             </span>
-          </div>
+          </Link>
         </div>
 
         {/* Navigation Menu */}
