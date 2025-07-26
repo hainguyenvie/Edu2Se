@@ -44,7 +44,7 @@ export default function Favorites() {
     <div className="min-h-screen bg-gray-50">
       <Header />
       
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-4 py-6 pt-20">
         {/* Page Header */}
         <div className="flex items-center gap-3 mb-6">
           <Link href="/">
