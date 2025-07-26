@@ -11,7 +11,8 @@ import {
   Compass,
   Zap,
   Beaker,
-  Leaf
+  Leaf,
+  Earth
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -32,6 +33,7 @@ const iconMap = {
   Zap,
   Beaker,
   Leaf,
+  GlobeEurope: Earth,
 };
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {

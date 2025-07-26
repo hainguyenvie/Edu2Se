@@ -36,18 +36,18 @@ export class MemStorage implements IStorage {
   private initializeData() {
     // Initialize subjects
     const subjectsData: InsertSubject[] = [
-      { name: "Math", nameVi: "TOÁN", icon: "Calculator", color: "hsl(207, 90%, 54%)" },
-      { name: "Literature", nameVi: "VĂN", icon: "Book", color: "hsl(142, 71%, 45%)" },
-      { name: "Physics", nameVi: "LÝ", icon: "Zap", color: "hsl(16, 89%, 58%)" },
-      { name: "Chemistry", nameVi: "HÓA", icon: "Beaker", color: "hsl(340, 82%, 52%)" },
-      { name: "Biology", nameVi: "SINH", icon: "Leaf", color: "hsl(120, 61%, 50%)" },
-      { name: "English", nameVi: "TIẾNG ANH", icon: "Languages", color: "hsl(262, 83%, 58%)" },
-      { name: "French", nameVi: "TIẾNG PHÁP", icon: "Globe", color: "hsl(221, 83%, 53%)" },
-      { name: "Russian", nameVi: "TIẾNG NGA", icon: "GlobeEurope", color: "hsl(0, 72%, 51%)" },
-      { name: "Test Prep", nameVi: "ÔN THI", icon: "GraduationCap", color: "hsl(45, 93%, 47%)" },
-      { name: "Advanced", nameVi: "NÂNG CAO", icon: "Star", color: "hsl(291, 64%, 42%)" },
-      { name: "Consultation", nameVi: "TƯ VẤN", icon: "MessageCircle", color: "hsl(173, 58%, 39%)" },
-      { name: "Career Guidance", nameVi: "HƯỚNG NGHIỆP", icon: "Compass", color: "hsl(25, 95%, 53%)" },
+      { name: "Math", nameVi: "TOÁN", icon: "Calculator", color: "hsl(207, 90%, 54%)", isActive: true },
+      { name: "Literature", nameVi: "VĂN", icon: "Book", color: "hsl(142, 71%, 45%)", isActive: true },
+      { name: "Physics", nameVi: "LÝ", icon: "Zap", color: "hsl(16, 89%, 58%)", isActive: true },
+      { name: "Chemistry", nameVi: "HÓA", icon: "Beaker", color: "hsl(340, 82%, 52%)", isActive: true },
+      { name: "Biology", nameVi: "SINH", icon: "Leaf", color: "hsl(120, 61%, 50%)", isActive: true },
+      { name: "English", nameVi: "TIẾNG ANH", icon: "Languages", color: "hsl(262, 83%, 58%)", isActive: true },
+      { name: "French", nameVi: "TIẾNG PHÁP", icon: "Globe", color: "hsl(221, 83%, 53%)", isActive: true },
+      { name: "Russian", nameVi: "TIẾNG NGA", icon: "GlobeEurope", color: "hsl(0, 72%, 51%)", isActive: true },
+      { name: "Test Prep", nameVi: "ÔN THI", icon: "GraduationCap", color: "hsl(45, 93%, 47%)", isActive: true },
+      { name: "Advanced", nameVi: "NÂNG CAO", icon: "Star", color: "hsl(291, 64%, 42%)", isActive: true },
+      { name: "Consultation", nameVi: "TƯ VẤN", icon: "MessageCircle", color: "hsl(173, 58%, 39%)", isActive: true },
+      { name: "Career Guidance", nameVi: "HƯỚNG NGHIỆP", icon: "Compass", color: "hsl(25, 95%, 53%)", isActive: true },
     ];
 
     subjectsData.forEach(subject => {
@@ -215,7 +215,7 @@ export class MemStorage implements IStorage {
 
       if (filters.timeSlots && filters.timeSlots.length > 0) {
         tutors = tutors.filter(tutor =>
-          filters.timeSlots!.some(slot => tutor.timeSlots.includes(slot))
+          tutor.timeSlots && filters.timeSlots!.some(slot => tutor.timeSlots!.includes(slot))
         );
       }
 
@@ -231,8 +231,8 @@ export class MemStorage implements IStorage {
 
     return tutors.sort((a, b) => {
       // Sort by rating and review count
-      const aScore = parseFloat(a.rating) * a.reviewCount;
-      const bScore = parseFloat(b.rating) * b.reviewCount;
+      const aScore = parseFloat(a.rating || "0") * (a.reviewCount || 0);
+      const bScore = parseFloat(b.rating || "0") * (b.reviewCount || 0);
       return bScore - aScore;
     });
   }
@@ -262,7 +262,7 @@ export class MemStorage implements IStorage {
   }
 
   async getSubjects(): Promise<Subject[]> {
-    return Array.from(this.subjects.values()).filter(subject => subject.isActive);
+    return Array.from(this.subjects.values()).filter(subject => subject.isActive !== false);
   }
 
   async createSubject(insertSubject: InsertSubject): Promise<Subject> {
