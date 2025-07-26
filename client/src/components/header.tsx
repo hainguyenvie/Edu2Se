@@ -1,13 +1,16 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Menu, Heart, User } from "lucide-react";
 import { Link } from "wouter";
+import TutorRegistrationModal from "@/components/tutor-registration-modal";
 
 interface HeaderProps {
   onToggleSidebar?: () => void;
 }
 
 export default function Header({ onToggleSidebar }: HeaderProps) {
+  const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
   return (
     <header className="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-40">
       <div className="flex items-center justify-between px-4 py-3">
@@ -81,7 +84,7 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
               <DropdownMenuItem>
                 Lớp học của tôi
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setIsRegistrationModalOpen(true)}>
                 Đăng kí làm gia sư
               </DropdownMenuItem>
               <DropdownMenuItem>
@@ -91,6 +94,12 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
           </DropdownMenu>
         </div>
       </div>
+
+      {/* Tutor Registration Modal */}
+      <TutorRegistrationModal 
+        isOpen={isRegistrationModalOpen}
+        onClose={() => setIsRegistrationModalOpen(false)}
+      />
     </header>
   );
 }
