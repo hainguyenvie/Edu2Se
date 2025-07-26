@@ -14,10 +14,9 @@ import {
   Clock,
   Play,
   Facebook,
-  Youtube,
-  ArrowLeft
+  Youtube
 } from "lucide-react";
-import { Link } from "wouter";
+import Header from "@/components/header";
 
 export default function TutorDetail() {
   const [match, params] = useRoute("/tutor/:id");
@@ -87,17 +86,7 @@ export default function TutorDetail() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3">
-        <div className="flex items-center space-x-4">
-          <Link href="/">
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-          </Link>
-          <h1 className="text-lg font-semibold">Chi tiết gia sư</h1>
-        </div>
-      </div>
+      <Header />
 
       <div className="container mx-auto px-4 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">

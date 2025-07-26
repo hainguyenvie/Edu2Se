@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Menu, Heart, User } from "lucide-react";
+import { Link } from "wouter";
 
 interface HeaderProps {
-  onToggleSidebar: () => void;
+  onToggleSidebar?: () => void;
 }
 
 export default function Header({ onToggleSidebar }: HeaderProps) {
@@ -11,14 +12,16 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
       <div className="flex items-center justify-between px-4 py-3">
         {/* Logo and Brand */}
         <div className="flex items-center space-x-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden text-gray-600 hover:text-gray-900"
-            onClick={onToggleSidebar}
-          >
-            <Menu className="h-6 w-6" />
-          </Button>
+          {onToggleSidebar && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="lg:hidden text-gray-600 hover:text-gray-900"
+              onClick={onToggleSidebar}
+            >
+              <Menu className="h-6 w-6" />
+            </Button>
+          )}
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">A+</span>
@@ -47,13 +50,15 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
 
         {/* User Actions */}
         <div className="flex items-center space-x-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="hidden sm:block text-gray-600 hover:text-primary"
-          >
-            <Heart className="h-5 w-5" />
-          </Button>
+          <Link href="/favorites">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="hidden sm:block text-gray-600 hover:text-primary"
+            >
+              <Heart className="h-5 w-5" />
+            </Button>
+          </Link>
           <Button
             variant="ghost"
             size="icon"
