@@ -38,6 +38,9 @@ export class MemStorage implements IStorage {
     const subjectsData: InsertSubject[] = [
       { name: "Math", nameVi: "TOÁN", icon: "Calculator", color: "hsl(207, 90%, 54%)" },
       { name: "Literature", nameVi: "VĂN", icon: "Book", color: "hsl(142, 71%, 45%)" },
+      { name: "Physics", nameVi: "LÝ", icon: "Zap", color: "hsl(16, 89%, 58%)" },
+      { name: "Chemistry", nameVi: "HÓA", icon: "Beaker", color: "hsl(340, 82%, 52%)" },
+      { name: "Biology", nameVi: "SINH", icon: "Leaf", color: "hsl(120, 61%, 50%)" },
       { name: "English", nameVi: "TIẾNG ANH", icon: "Languages", color: "hsl(262, 83%, 58%)" },
       { name: "French", nameVi: "TIẾNG PHÁP", icon: "Globe", color: "hsl(221, 83%, 53%)" },
       { name: "Russian", nameVi: "TIẾNG NGA", icon: "GlobeEurope", color: "hsl(0, 72%, 51%)" },

@@ -8,7 +8,10 @@ import {
   GraduationCap, 
   Star, 
   MessageCircle, 
-  Compass 
+  Compass,
+  Zap,
+  Beaker,
+  Leaf
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -26,6 +29,9 @@ const iconMap = {
   Star,
   MessageCircle,
   Compass,
+  Zap,
+  Beaker,
+  Leaf,
 };
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
