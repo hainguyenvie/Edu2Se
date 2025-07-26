@@ -1,0 +1,69 @@
+AitheduConnect - Online Tutoring Marketplace
+
+Project Goal
+
+Develop a functional and user-friendly online tutoring marketplace platform named AitheduConnect, connecting students with qualified tutors. The platform should prioritize a seamless user experience, incorporating features for quick tutor discovery, flexible booking, interactive learning, and community engagement. Special attention should be paid to UI/UX design tailored for the Vietnamese market.
+
+Core Principles of AitheduConnect
+
+•
+NHANH (Fast): 3-second registration, instant tutor search, 1-tap payment.
+
+•
+MARKETPLACE: Empowering students/parents with maximum choice.
+
+•
+GROWTH HACK: Viral features, community building, Study-With-Me, achievement sharing.
+
+•
+SCALE: Large-scale expansion, automation, unlimited by traditional center constraints.
+
+•
+TỰ DO (Freedom): Student-centric, active learning path and methods.
+
+Target Users
+
+•
+Students (9th-12th grade): Those struggling with basics or preparing for exams.
+
+•
+University Students: Aspiring tutors.
+
+•
+Parents: Seeking quality education for their children.
+
+Key Features and Modules
+
+I. Core Marketplace Structure
+
+1. Homepage (/)
+
+•
+Hero Section:
+
+•
+Title: "Tìm Gia Sư Phù Hợp Chỉ Trong 3 Giây" (Find the Right Tutor in Just 3 Seconds)
+
+•
+Instant Search Bar: Dropdown for subjects (Math, Physics, Chemistry, Literature, English), "Học với tôi bây giờ" (Study with me now) button for instant online tutors.
+
+•
+Logic/AI matching for available tutors.
+
+•
+3-second Social Login: Google/Facebook/Apple ID.
+
+•
+Main CTAs: "Tìm Gia Sư Ngay" (Find Tutor Now) + "Học Thử 15 Phút Miễn Phí" (Try 15 Minutes Free).
+
+
+
+•
+Featured Tutors: Grid display of tutors with short intro videos (30s-2m), detailed ratings (e.g., "Kiên nhẫn" - Patient, "Giải thích dễ hiểu" - Easy to understand), badges ("Online Ngay" - Online Now, "Top Rated", "Verified"). Pricing from 100k/hour with combo packages.
+
+•
+Growth Hack Section: Banner for "Học Miễn Phí 1 Bạn Mới" (Learn Free with a New Friend) - invite a friend, both get free lessons; "Học Cùng Bạn" (Study with a Friend) - one fee for two people; Study-With-Me Rooms (public study rooms); Flash Sale ("Lớp học 0 đồng" - 0 VND class) with countdown timer.
+
+•
+Social Proof: Display "1000+ gia sư đã xác minh" (1000+ verified tutors), "5000+ học viên hài lòng" (5000+ satisfied students), testimonials, success stories.
+
