@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Menu, Heart, User } from "lucide-react";
+import { Menu, Heart, User, Bell, MessageCircle } from "lucide-react";
 import { Link } from "wouter";
-import TutorRegistrationModal from "@/components/tutor-registration-modal";
+import TutorRegistrationModal from "./tutor-registration-modal";
+import NotificationDropdown from "./notification-dropdown";
+import MessagesPopup from "./messages-popup";
 
 interface HeaderProps {
   onToggleSidebar?: () => void;
@@ -11,6 +13,8 @@ interface HeaderProps {
 
 export default function Header({ onToggleSidebar }: HeaderProps) {
   const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [isMessagesOpen, setIsMessagesOpen] = useState(false);
   return (
     <header className="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-40">
       <div className="flex items-center justify-between px-4 py-3">
@@ -54,6 +58,20 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
 
         {/* User Actions */}
         <div className="flex items-center space-x-3">
+          {/* Messages Icon */}
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="hidden sm:block text-gray-600 hover:text-primary relative"
+            onClick={() => setIsMessagesOpen(!isMessagesOpen)}
+          >
+            <MessageCircle className="h-5 w-5" />
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+              3
+            </span>
+          </Button>
+
+          {/* Favorites Heart Icon */}
           <Link href="/favorites">
             <Button
               variant="ghost"
@@ -63,6 +81,19 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
               <Heart className="h-5 w-5" />
             </Button>
           </Link>
+
+          {/* Notifications Icon */}
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="hidden sm:block text-gray-600 hover:text-primary relative"
+            onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+          >
+            <Bell className="h-5 w-5" />
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+              5
+            </span>
+          </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -99,6 +130,18 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
       <TutorRegistrationModal 
         isOpen={isRegistrationModalOpen}
         onClose={() => setIsRegistrationModalOpen(false)}
+      />
+
+      {/* Notification Dropdown */}
+      <NotificationDropdown 
+        isOpen={isNotificationOpen}
+        onClose={() => setIsNotificationOpen(false)}
+      />
+
+      {/* Messages Popup */}
+      <MessagesPopup 
+        isOpen={isMessagesOpen}
+        onClose={() => setIsMessagesOpen(false)}
       />
     </header>
   );
