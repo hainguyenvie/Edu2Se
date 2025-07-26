@@ -6,17 +6,20 @@ import { useState } from "react";
 
 interface TutorCardProps {
   tutor: Tutor;
+  onClick?: () => void;
 }
 
-export default function TutorCard({ tutor }: TutorCardProps) {
+export default function TutorCard({ tutor, onClick }: TutorCardProps) {
   const [isFavorited, setIsFavorited] = useState(false);
 
-  const handleContact = () => {
+  const handleContact = (e: React.MouseEvent) => {
+    e.stopPropagation();
     console.log('Contact tutor:', tutor.name);
     // TODO: Implement contact functionality
   };
 
-  const toggleFavorite = () => {
+  const toggleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setIsFavorited(!isFavorited);
     // TODO: Implement favorite functionality
   };
@@ -52,7 +55,10 @@ export default function TutorCard({ tutor }: TutorCardProps) {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden tutor-card-hover">
+    <div 
+      className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden tutor-card-hover cursor-pointer"
+      onClick={onClick}
+    >
       <div className="relative">
         <img
           src={tutor.profileImage || `https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop`}
@@ -117,7 +123,9 @@ export default function TutorCard({ tutor }: TutorCardProps) {
             </span>
             <span className="text-sm text-gray-600">/giờ</span>
           </div>
-          {getStatusButton()}
+          <div onClick={(e) => e.stopPropagation()}>
+            {getStatusButton()}
+          </div>
         </div>
       </div>
     </div>

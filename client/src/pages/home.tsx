@@ -4,6 +4,7 @@ import Sidebar from "@/components/sidebar";
 import VideoCarousel from "@/components/video-carousel";
 import SearchFilters from "@/components/search-filters";
 import TutorCard from "@/components/tutor-card";
+import TutorDetailSidebar from "@/components/tutor-detail-sidebar";
 import CommunityFeatures from "@/components/community-features";
 import { useQuery } from "@tanstack/react-query";
 import { type Tutor, type SearchFilters as SearchFiltersType } from "@shared/schema";
@@ -13,6 +14,8 @@ import { Button } from "@/components/ui/button";
 export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [filters, setFilters] = useState<SearchFiltersType>({});
+  const [selectedTutor, setSelectedTutor] = useState<Tutor | null>(null);
+  const [tutorDetailOpen, setTutorDetailOpen] = useState(false);
 
   // Build query string from filters
   const queryParams = new URLSearchParams();
@@ -37,6 +40,16 @@ export default function Home() {
 
   const closeSidebar = () => {
     setSidebarOpen(false);
+  };
+
+  const handleTutorClick = (tutor: Tutor) => {
+    setSelectedTutor(tutor);
+    setTutorDetailOpen(true);
+  };
+
+  const closeTutorDetail = () => {
+    setTutorDetailOpen(false);
+    setSelectedTutor(null);
   };
 
   return (
@@ -128,7 +141,11 @@ export default function Home() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {tutors.map((tutor) => (
-                  <TutorCard key={tutor.id} tutor={tutor} />
+                  <TutorCard 
+                    key={tutor.id} 
+                    tutor={tutor} 
+                    onClick={() => handleTutorClick(tutor)}
+                  />
                 ))}
               </div>
             )}
@@ -147,6 +164,13 @@ export default function Home() {
           <CommunityFeatures />
         </main>
       </div>
+
+      {/* Tutor Detail Sidebar */}
+      <TutorDetailSidebar
+        tutor={selectedTutor}
+        isOpen={tutorDetailOpen}
+        onClose={closeTutorDetail}
+      />
     </div>
   );
 }
