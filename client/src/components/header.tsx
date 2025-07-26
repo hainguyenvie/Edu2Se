@@ -30,7 +30,7 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
         </div>
 
         {/* Navigation Menu */}
-        <nav className="hidden md:flex items-center space-x-8">
+        <nav className="hidden md:flex items-center space-x-6">
           <Button variant="outline" className="text-gray-600 hover:text-primary">
             Học cùng tôi
           </Button>
@@ -38,7 +38,10 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
             Bảng xếp hạng
           </Button>
           <Button variant="outline" className="text-gray-600 hover:text-primary">
-            Voucher và QnA/Forum
+            Mã giảm giá
+          </Button>
+          <Button variant="outline" className="text-gray-600 hover:text-primary">
+            Hỏi đáp
           </Button>
         </nav>
 
