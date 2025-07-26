@@ -45,7 +45,7 @@ export default function TutorCard({ tutor, onClick }: TutorCardProps) {
     }
     return (
       <Button onClick={handleContact} className="w-full text-sm bg-primary hover:bg-primary/90">
-        Liên hệ
+        Xem thêm
       </Button>
     );
   };

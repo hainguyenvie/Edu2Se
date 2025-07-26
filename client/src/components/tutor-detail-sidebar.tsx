@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { type Tutor } from "@shared/schema";
 import { Star, X, Clock, BookOpen, Award, MessageCircle, Calendar, MapPin } from "lucide-react";
 import { useState } from "react";
+import { useLocation } from "wouter";
 
 interface TutorDetailSidebarProps {
   tutor: Tutor | null;
@@ -12,6 +13,7 @@ interface TutorDetailSidebarProps {
 
 export default function TutorDetailSidebar({ tutor, isOpen, onClose }: TutorDetailSidebarProps) {
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>("");
+  const [, setLocation] = useLocation();
 
   if (!tutor) return null;
 
@@ -48,7 +50,8 @@ export default function TutorDetailSidebar({ tutor, isOpen, onClose }: TutorDeta
 
   const handleViewDetails = () => {
     console.log('Viewing full profile of:', tutor.name);
-    // TODO: Implement profile view
+    setLocation(`/tutor/${tutor.id}`);
+    onClose();
   };
 
   return (
