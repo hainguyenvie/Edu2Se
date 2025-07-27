@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import { X, Send, Minimize2, Plus, Search } from "lucide-react";
 interface MessagesPopupProps {
   isOpen: boolean;
   onClose: () => void;
+  selectedTutorName?: string;
 }
 
 const conversations = [
@@ -72,10 +73,25 @@ const currentMessages = [
   }
 ];
 
-export default function MessagesPopup({ isOpen, onClose }: MessagesPopupProps) {
-  const [selectedConversation, setSelectedConversation] = useState(conversations[0]);
+export default function MessagesPopup({ isOpen, onClose, selectedTutorName }: MessagesPopupProps) {
+  // Find the conversation based on selected tutor name or default to first
+  const initialConversation = selectedTutorName 
+    ? conversations.find(conv => conv.name === selectedTutorName) || conversations[0]
+    : conversations[0];
+  
+  const [selectedConversation, setSelectedConversation] = useState(initialConversation);
   const [newMessage, setNewMessage] = useState("");
   const [isMinimized, setIsMinimized] = useState(false);
+
+  // Update selected conversation when selectedTutorName changes
+  useEffect(() => {
+    if (selectedTutorName) {
+      const conversation = conversations.find(conv => conv.name === selectedTutorName);
+      if (conversation) {
+        setSelectedConversation(conversation);
+      }
+    }
+  }, [selectedTutorName]);
 
   if (!isOpen) return null;
 
