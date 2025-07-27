@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Menu, Heart, User, Bell, MessageCircle } from "lucide-react";
@@ -15,6 +15,25 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
   const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isMessagesOpen, setIsMessagesOpen] = useState(false);
+  const [currentTutorId, setCurrentTutorId] = useState<string | null>(null);
+
+  // Fetch the first tutor ID to use as current user's tutor profile
+  useEffect(() => {
+    const fetchCurrentTutorId = async () => {
+      try {
+        const response = await fetch('/api/tutors');
+        const tutors = await response.json();
+        if (tutors && tutors.length > 0) {
+          // Use the first tutor (Thầy Đức Anh) as the current user's profile
+          setCurrentTutorId(tutors[0].id);
+        }
+      } catch (error) {
+        console.error('Failed to fetch tutor ID:', error);
+      }
+    };
+    
+    fetchCurrentTutorId();
+  }, []);
   return (
     <header className="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-40">
       <div className="flex items-center justify-between px-4 py-3">
@@ -119,7 +138,10 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
                 Đăng kí làm gia sư
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/tutor/d80376ce-dc3d-434b-8564-d48edbf73b00" className="w-full cursor-pointer">
+                <Link 
+                  href={currentTutorId ? `/tutor/${currentTutorId}` : "#"} 
+                  className={`w-full cursor-pointer ${!currentTutorId ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
                   Trang chủ Gia sư
                 </Link>
               </DropdownMenuItem>
