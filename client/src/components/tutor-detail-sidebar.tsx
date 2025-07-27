@@ -205,7 +205,7 @@ export default function TutorDetailSidebar({ tutor, isOpen, onClose }: TutorDeta
           <div className="p-6 border-t border-gray-200 space-y-3">
             <Button 
               onClick={handleBookNow}
-              disabled={!selectedTimeSlot || tutor.status === 'busy'}
+              disabled={tutor.status === 'busy'}
               className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3"
             >
               ĐẶT LỊCH NGAY
