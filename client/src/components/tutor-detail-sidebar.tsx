@@ -5,19 +5,18 @@ import { Star, X, Clock, BookOpen, Award, MessageCircle, Calendar, MapPin } from
 import { useState } from "react";
 import { useLocation } from "wouter";
 import BookingModal from "@/components/booking-modal";
-import MessagesPopup from "@/components/messages-popup";
 
 interface TutorDetailSidebarProps {
   tutor: Tutor | null;
   isOpen: boolean;
   onClose: () => void;
+  onStartChat: (tutorName: string) => void;
 }
 
-export default function TutorDetailSidebar({ tutor, isOpen, onClose }: TutorDetailSidebarProps) {
+export default function TutorDetailSidebar({ tutor, isOpen, onClose, onStartChat }: TutorDetailSidebarProps) {
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>("");
   const [, setLocation] = useLocation();
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  const [isMessagesOpen, setIsMessagesOpen] = useState(false);
 
   if (!tutor) return null;
 
@@ -49,8 +48,10 @@ export default function TutorDetailSidebar({ tutor, isOpen, onClose }: TutorDeta
 
   const handleChat = () => {
     console.log('Starting chat with:', tutor.name);
-    // Open messages popup and close sidebar
-    setIsMessagesOpen(true);
+    // Call parent function to handle chat and close sidebar
+    if (tutor.name) {
+      onStartChat(tutor.name);
+    }
     onClose();
   };
 
@@ -238,13 +239,6 @@ export default function TutorDetailSidebar({ tutor, isOpen, onClose }: TutorDeta
         tutor={tutor}
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
-      />
-
-      {/* Messages Popup */}
-      <MessagesPopup 
-        isOpen={isMessagesOpen}
-        onClose={() => setIsMessagesOpen(false)}
-        selectedTutorName={tutor.name}
       />
     </>
   );

@@ -5,6 +5,7 @@ import VideoCarousel from "@/components/video-carousel";
 import SearchFilters from "@/components/search-filters";
 import TutorCard from "@/components/tutor-card";
 import TutorDetailSidebar from "@/components/tutor-detail-sidebar";
+import MessagesPopup from "@/components/messages-popup";
 import CommunityFeatures from "@/components/community-features";
 import { useQuery } from "@tanstack/react-query";
 import { type Tutor, type SearchFilters as SearchFiltersType } from "@shared/schema";
@@ -16,6 +17,8 @@ export default function Home() {
   const [filters, setFilters] = useState<SearchFiltersType>({});
   const [selectedTutor, setSelectedTutor] = useState<Tutor | null>(null);
   const [tutorDetailOpen, setTutorDetailOpen] = useState(false);
+  const [isMessagesOpen, setIsMessagesOpen] = useState(false);
+  const [selectedTutorForChat, setSelectedTutorForChat] = useState<string | null>(null);
 
   // Build query string from filters
   const queryParams = new URLSearchParams();
@@ -50,6 +53,16 @@ export default function Home() {
   const closeTutorDetail = () => {
     setTutorDetailOpen(false);
     setSelectedTutor(null);
+  };
+
+  const handleStartChat = (tutorName: string) => {
+    setSelectedTutorForChat(tutorName);
+    setIsMessagesOpen(true);
+  };
+
+  const closeMessages = () => {
+    setIsMessagesOpen(false);
+    setSelectedTutorForChat(null);
   };
 
   return (
@@ -170,6 +183,14 @@ export default function Home() {
         tutor={selectedTutor}
         isOpen={tutorDetailOpen}
         onClose={closeTutorDetail}
+        onStartChat={handleStartChat}
+      />
+
+      {/* Messages Popup */}
+      <MessagesPopup 
+        isOpen={isMessagesOpen}
+        onClose={closeMessages}
+        selectedTutorName={selectedTutorForChat || undefined}
       />
     </div>
   );
