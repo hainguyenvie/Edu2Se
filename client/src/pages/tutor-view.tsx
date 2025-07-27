@@ -2,7 +2,7 @@ import { useParams } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Star, Play, Calendar, MessageCircle, Facebook, Youtube } from "lucide-react";
+import { Star, Play, Calendar, MessageCircle, Facebook, Youtube, Heart, Flag } from "lucide-react";
 import BookingModal from "@/components/booking-modal";
 import { useState } from "react";
 import Header from "@/components/header";
@@ -33,6 +33,7 @@ type Tutor = {
 export default function TutorView() {
   const { id } = useParams();
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   const { data: tutor, isLoading } = useQuery<Tutor>({
     queryKey: [`/api/tutors/${id}`],
@@ -211,6 +212,16 @@ export default function TutorView() {
 
           {/* Right Sidebar - Actions */}
           <div className="lg:col-span-1 space-y-4">
+            {/* Follow Button */}
+            <Button 
+              variant={isFollowing ? "default" : "outline"}
+              className="w-full"
+              onClick={() => setIsFollowing(!isFollowing)}
+            >
+              <Heart className={`h-5 w-5 mr-3 ${isFollowing ? 'fill-current' : ''}`} />
+              {isFollowing ? 'ĐANG THEO DÕI' : 'THEO DÕI'}
+            </Button>
+
             {/* Book Button */}
             <Button 
               className="w-full"
@@ -224,6 +235,12 @@ export default function TutorView() {
             <Button variant="outline" className="w-full">
               <MessageCircle className="h-5 w-5 mr-3" />
               NHẮN TIN
+            </Button>
+
+            {/* Report Button */}
+            <Button variant="outline" className="w-full text-red-600 hover:text-red-700 hover:border-red-300">
+              <Flag className="h-5 w-5 mr-3" />
+              BÁO CÁO
             </Button>
 
             {/* Free Offers */}
