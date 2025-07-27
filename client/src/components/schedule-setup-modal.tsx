@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -135,6 +135,9 @@ export default function ScheduleSetupModal({ isOpen, onClose }: ScheduleSetupMod
             <Calendar className="h-5 w-5" />
             <span>Thiết Lập Lịch Dạy</span>
           </DialogTitle>
+          <DialogDescription>
+            Quản lý lịch dạy hàng tuần và thiết lập khung giờ có sẵn
+          </DialogDescription>
         </DialogHeader>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">

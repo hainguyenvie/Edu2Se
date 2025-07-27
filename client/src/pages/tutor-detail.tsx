@@ -29,11 +29,13 @@ import { Link } from "wouter";
 import Header from "@/components/header";
 import BookingModal from "@/components/booking-modal";
 import ScheduleSetupModal from "@/components/schedule-setup-modal";
+import StatisticsModal from "@/components/statistics-modal";
 
 export default function TutorDetail() {
   // This component is for editing your own profile (/my-profile route)
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isScheduleSetupOpen, setIsScheduleSetupOpen] = useState(false);
+  const [isStatisticsOpen, setIsStatisticsOpen] = useState(false);
   const isOwnerView = true; // Always true for own profile
   const [isEditMode, setIsEditMode] = useState(false);
   
@@ -558,8 +560,7 @@ export default function TutorDetail() {
                     console.log("Booking requests clicked");
                     // Handle booking requests
                   } else if (item.title === "Thống kê chi tiết") {
-                    console.log("Statistics clicked");
-                    // Handle statistics view
+                    setIsStatisticsOpen(true);
                   }
                 }}
               >
@@ -653,6 +654,12 @@ export default function TutorDetail() {
       <ScheduleSetupModal 
         isOpen={isScheduleSetupOpen}
         onClose={() => setIsScheduleSetupOpen(false)}
+      />
+
+      {/* Statistics Modal */}
+      <StatisticsModal 
+        isOpen={isStatisticsOpen}
+        onClose={() => setIsStatisticsOpen(false)}
       />
     </div>
   );
