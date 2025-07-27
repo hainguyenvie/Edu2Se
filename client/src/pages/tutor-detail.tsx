@@ -28,10 +28,12 @@ import {
 import { Link } from "wouter";
 import Header from "@/components/header";
 import BookingModal from "@/components/booking-modal";
+import ScheduleSetupModal from "@/components/schedule-setup-modal";
 
 export default function TutorDetail() {
   // This component is for editing your own profile (/my-profile route)
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [isScheduleSetupOpen, setIsScheduleSetupOpen] = useState(false);
   const isOwnerView = true; // Always true for own profile
   const [isEditMode, setIsEditMode] = useState(false);
   
@@ -551,8 +553,7 @@ export default function TutorDetail() {
                     }
                     setIsEditMode(!isEditMode);
                   } else if (item.title === "Thiết lập lịch dạy") {
-                    console.log("Schedule setup clicked");
-                    // Handle schedule setup
+                    setIsScheduleSetupOpen(true);
                   } else if (item.title === "Yêu cầu đặt lịch") {
                     console.log("Booking requests clicked");
                     // Handle booking requests
@@ -646,6 +647,12 @@ export default function TutorDetail() {
         tutor={tutor}
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
+      />
+
+      {/* Schedule Setup Modal */}
+      <ScheduleSetupModal 
+        isOpen={isScheduleSetupOpen}
+        onClose={() => setIsScheduleSetupOpen(false)}
       />
     </div>
   );
