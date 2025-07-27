@@ -13,11 +13,7 @@ interface TutorCardProps {
 export default function TutorCard({ tutor, onClick }: TutorCardProps) {
   const [isFavorited, setIsFavorited] = useState(false);
 
-  const handleContact = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    console.log('Contact tutor:', tutor.name);
-    // TODO: Implement contact functionality
-  };
+
 
   const toggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -45,22 +41,17 @@ export default function TutorCard({ tutor, onClick }: TutorCardProps) {
       );
     }
     return (
-      <div className="flex gap-2">
-        <Button 
-          onClick={(e) => {
-            e.stopPropagation();
-            handleContact(e);
-          }} 
-          className="flex-1 text-sm bg-primary hover:bg-primary/90"
-        >
-          Liên hệ
-        </Button>
-        <Link href={`/tutor/${tutor.id}`}>
-          <Button variant="outline" className="flex-1 text-sm" onClick={(e) => e.stopPropagation()}>
-            Xem hồ sơ
-          </Button>
-        </Link>
-      </div>
+      <Button 
+        onClick={(e) => {
+          e.stopPropagation();
+          if (onClick) {
+            onClick();
+          }
+        }} 
+        className="w-full text-sm bg-primary hover:bg-primary/90"
+      >
+        Xem thêm
+      </Button>
     );
   };
 
