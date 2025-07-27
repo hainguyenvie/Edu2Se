@@ -337,15 +337,7 @@ export default function VirtualClassroom({ classInfo }: VirtualClassroomProps) {
         </div>
       </div>
 
-      {/* User notification */}
-      <div className="absolute top-16 right-4 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg">
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
-            9
-          </div>
-          <span className="text-sm">Bạn đã vào lớp học thành công!</span>
-        </div>
-      </div>
+
     </div>
   );
 }
