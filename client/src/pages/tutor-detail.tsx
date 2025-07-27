@@ -36,10 +36,40 @@ export default function TutorDetail() {
   const [isOwnerView, setIsOwnerView] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   
+  // Initialize editable state with default values
+  const [editableAchievements, setEditableAchievements] = useState([
+    { title: "TIẾU ĐỎI 200 HỌC VIÊN", color: "bg-blue-100 text-blue-800" },
+    { title: "ĐÃ DẠY 8000 GIỜ", color: "bg-green-100 text-green-800" },
+    { title: "CHỨNG CHỈ SEAL HỘI TIẾU", color: "bg-green-100 text-green-800" },
+  ]);
+  const [editableSubjects, setEditableSubjects] = useState([
+    { name: "TOÁN", available: true },
+    { name: "LÝ", available: true },
+    { name: "HÓA", available: false },
+    { name: "ÔN THI", available: true },
+    { name: "LUYỆN ĐỀ", available: true },
+    { name: "HỌ ĐẢP", available: true },
+    { name: "TƯ VẤN TÂM SỰ", available: false },
+    { name: "LỚP HỌC LIVE", available: false },
+  ]);
+  const [editableOffers, setEditableOffers] = useState(Array(4).fill({
+    title: "FREE 1H học thử 1 tuần",
+    icon: "🎯"
+  }));
+  const [editableInfo, setEditableInfo] = useState("HỌC SINH LỚP 12 NĂM LỚP, THỊ KHOA TOÁN TỈN!\nAN TRẠNG THI ĐẠO KHOA TRƯỜNG NHỮNG HỌC THỊ KHÔNG TÂM THƯỜNG.");
+  const [editablePrice, setEditablePrice] = useState(0);
+  
   const { data: tutor, isLoading } = useQuery<Tutor>({
     queryKey: ['/api/tutors', params?.id],
     enabled: !!params?.id,
   });
+
+  // Update price when tutor data loads
+  useEffect(() => {
+    if (tutor?.pricePerHour) {
+      setEditablePrice(tutor.pricePerHour);
+    }
+  }, [tutor]);
 
   // Check if this is the owner viewing their own profile
   useEffect(() => {
@@ -130,12 +160,7 @@ export default function TutorDetail() {
     icon: "🎯"
   });
 
-  // Editable state
-  const [editableAchievements, setEditableAchievements] = useState(achievements);
-  const [editableSubjects, setEditableSubjects] = useState(subjects);
-  const [editableOffers, setEditableOffers] = useState(freeOffers);
-  const [editableInfo, setEditableInfo] = useState("HỌC SINH LỚP 12 NĂM LỚP, THỊ KHOA TOÁN TỈN!\nAN TRẠNG THI ĐẠO KHOA TRƯỜNG NHỮNG HỌC THỊ KHÔNG TÂM THƯỜNG.");
-  const [editablePrice, setEditablePrice] = useState(tutor?.pricePerHour || 0);
+
 
   // Helper functions for editing
   const addAchievement = () => {
