@@ -9,6 +9,7 @@ import TutorView from "@/pages/tutor-view";
 import Favorites from "@/pages/favorites";
 import Dashboard from "@/pages/dashboard";
 import Messages from "@/pages/messages";
+import VirtualClassroom from "@/pages/virtual-classroom";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -20,6 +21,7 @@ function Router() {
       <Route path="/favorites" component={Favorites} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/messages" component={Messages} />
+      <Route path="/virtual-classroom" component={VirtualClassroom} />
       <Route component={NotFound} />
     </Switch>
   );

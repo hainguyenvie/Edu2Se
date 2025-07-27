@@ -92,14 +92,13 @@ export default function MeetingRoomModal({ isOpen, onClose, classInfo }: Meeting
       setConnectionTime(prev => {
         if (prev <= 1) {
           clearInterval(timer);
-          // Simulate joining the virtual classroom
+          // Navigate to virtual classroom
           console.log('Joining virtual classroom with Lessonspace...');
-          // Here you would integrate with Lessonspace SDK
-          // For now, we'll just show a success message
-          alert('Đã vào lớp học thành công! Tích hợp Lessonspace SDK sẽ được thêm vào đây.');
           setIsConnecting(false);
           setConnectionTime(5);
           onClose();
+          // Navigate to virtual classroom page
+          window.location.href = '/virtual-classroom';
           return 5;
         }
         return prev - 1;
