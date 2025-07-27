@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { type Tutor } from "@shared/schema";
 import { Star, Heart } from "lucide-react";
 import { useState } from "react";
+import { Link } from "wouter";
 
 interface TutorCardProps {
   tutor: Tutor;
@@ -55,10 +56,8 @@ export default function TutorCard({ tutor, onClick }: TutorCardProps) {
   };
 
   return (
-    <div 
-      className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden tutor-card-hover cursor-pointer"
-      onClick={onClick}
-    >
+    <Link href={`/tutor/${tutor.id}`}>
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden tutor-card-hover cursor-pointer">
       <div className="relative">
         <img
           src={tutor.profileImage || `https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop`}
@@ -104,7 +103,7 @@ export default function TutorCard({ tutor, onClick }: TutorCardProps) {
               <Star
                 key={i}
                 className={`w-4 h-4 ${
-                  i < Math.floor(parseFloat(tutor.rating))
+                  i < Math.floor(parseFloat(tutor.rating || "0"))
                     ? 'fill-current'
                     : ''
                 }`}
@@ -129,5 +128,6 @@ export default function TutorCard({ tutor, onClick }: TutorCardProps) {
         </div>
       </div>
     </div>
+    </Link>
   );
 }

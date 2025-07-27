@@ -139,8 +139,8 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link 
-                  href={currentTutorId ? `/tutor/${currentTutorId}` : "#"} 
-                  className={`w-full cursor-pointer ${!currentTutorId ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  href="/my-profile" 
+                  className="w-full cursor-pointer"
                 >
                   Trang chủ Gia sư
                 </Link>

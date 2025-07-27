@@ -42,10 +42,11 @@ export default function Home() {
     setSidebarOpen(false);
   };
 
-  const handleTutorClick = (tutor: Tutor) => {
-    setSelectedTutor(tutor);
-    setTutorDetailOpen(true);
-  };
+  // No longer needed since TutorCard uses Link navigation
+  // const handleTutorClick = (tutor: Tutor) => {
+  //   setSelectedTutor(tutor);
+  //   setTutorDetailOpen(true);
+  // };
 
   const closeTutorDetail = () => {
     setTutorDetailOpen(false);
@@ -143,8 +144,7 @@ export default function Home() {
                 {tutors.map((tutor) => (
                   <TutorCard 
                     key={tutor.id} 
-                    tutor={tutor} 
-                    onClick={() => handleTutorClick(tutor)}
+                    tutor={tutor}
                   />
                 ))}
               </div>

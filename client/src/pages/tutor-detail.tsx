@@ -1,12 +1,9 @@
-import { useState, useEffect } from "react";
-import { useRoute } from "wouter";
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { type Tutor } from "@shared/schema";
 import { 
   Star, 
   Heart, 
@@ -33,10 +30,9 @@ import Header from "@/components/header";
 import BookingModal from "@/components/booking-modal";
 
 export default function TutorDetail() {
-  const [match, params] = useRoute("/tutor/:id");
-  const [isFavorited, setIsFavorited] = useState(false);
+  // This component is for editing your own profile (/my-profile route)
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  const [isOwnerView, setIsOwnerView] = useState(false);
+  const isOwnerView = true; // Always true for own profile
   const [isEditMode, setIsEditMode] = useState(false);
   
   // Initialize editable state with default values
@@ -65,64 +61,7 @@ export default function TutorDetail() {
     { id: 3, title: "ẢNH VÀ VIDEO GT" }
   ]);
   const [editableInfo, setEditableInfo] = useState("HỌC SINH LỚP 12 NĂM LỚP, THỊ KHOA TOÁN TỈN!\nAN TRẠNG THI ĐẠO KHOA TRƯỜNG NHỮNG HỌC THỊ KHÔNG TÂM THƯỜNG.");
-  const [editablePrice, setEditablePrice] = useState(0);
-  
-  const { data: tutor, isLoading } = useQuery<Tutor>({
-    queryKey: ['/api/tutors', params?.id],
-    enabled: !!params?.id,
-  });
-
-  // Update price when tutor data loads
-  useEffect(() => {
-    if (tutor?.pricePerHour) {
-      setEditablePrice(tutor.pricePerHour);
-    }
-  }, [tutor]);
-
-  // Check if this is the owner viewing their own profile
-  useEffect(() => {
-    const checkOwnership = async () => {
-      try {
-        const response = await fetch('/api/tutors');
-        const tutors = await response.json();
-        if (tutors && tutors.length > 0) {
-          // Check if current tutor ID matches the first tutor (current user)
-          const currentUserTutorId = tutors[0].id;
-          setIsOwnerView(params?.id === currentUserTutorId);
-        }
-      } catch (error) {
-        console.error('Failed to check ownership:', error);
-      }
-    };
-    
-    if (params?.id) {
-      checkOwnership();
-    }
-  }, [params?.id]);
-
-  if (!match || isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-gray-600">Đang tải thông tin gia sư...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!tutor) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Không tìm thấy gia sư</h2>
-          <Link href="/">
-            <Button>Quay về trang chủ</Button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  const [editablePrice, setEditablePrice] = useState(350000);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('vi-VN').format(price);
@@ -286,7 +225,7 @@ export default function TutorDetail() {
                     <Star
                       key={i}
                       className={`w-4 h-4 ${
-                        i < Math.floor(parseFloat(tutor.rating || "0"))
+                        i < Math.floor(4.8)
                           ? 'fill-yellow-400 text-yellow-400'
                           : 'text-gray-300'
                       }`}
@@ -306,7 +245,7 @@ export default function TutorDetail() {
                       <span>₫/1h</span>
                     </div>
                   ) : (
-                    `${formatPrice(tutor.pricePerHour)}₫/1h`
+                    `${formatPrice(editablePrice)}₫/1h`
                   )}
                 </div>
                 <div className="text-sm text-gray-600">MINH TIẾN</div>
