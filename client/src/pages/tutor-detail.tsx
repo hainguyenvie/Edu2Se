@@ -63,6 +63,23 @@ export default function TutorDetail() {
   const [editableInfo, setEditableInfo] = useState("HỌC SINH LỚP 12 NĂM LỚP, THỊ KHOA TOÁN TỈN!\nAN TRẠNG THI ĐẠO KHOA TRƯỜNG NHỮNG HỌC THỊ KHÔNG TÂM THƯỜNG.");
   const [editablePrice, setEditablePrice] = useState(350000);
 
+  // Static tutor data for BookingModal
+  const tutor = {
+    id: "current-user",
+    name: "MINH TIẾN",
+    subjects: ["TOÁN", "LÝ"],
+    pricePerHour: editablePrice,
+    rating: "4.8",
+    experience: "5 năm",
+    status: "online" as const,
+    avatar: "",
+    about: editableInfo,
+    education: "Đại học Bách Khoa",
+    achievements: editableAchievements.map(a => a.title),
+    schedule: ["Thứ 2-6: 18:00-22:00", "Thứ 7: 14:00-18:00"],
+    reviews: []
+  };
+
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('vi-VN').format(price);
   };

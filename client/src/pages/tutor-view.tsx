@@ -114,7 +114,7 @@ export default function TutorView() {
               <div className="mb-4">
                 <h1 className="text-xl font-bold mb-2">{tutor.name}</h1>
                 <div className="text-2xl font-bold text-green-600 mb-2">
-                  {tutor.price.toLocaleString()}₫/h
+                  {(tutor.pricePerHour || 0).toLocaleString()}₫/h
                 </div>
                 <div className="text-sm text-gray-600">MINH TIẾN</div>
               </div>
