@@ -45,9 +45,22 @@ export default function TutorCard({ tutor, onClick }: TutorCardProps) {
       );
     }
     return (
-      <Button onClick={handleContact} className="w-full text-sm bg-primary hover:bg-primary/90">
-        Xem thêm
-      </Button>
+      <div className="flex gap-2">
+        <Button 
+          onClick={(e) => {
+            e.stopPropagation();
+            handleContact(e);
+          }} 
+          className="flex-1 text-sm bg-primary hover:bg-primary/90"
+        >
+          Liên hệ
+        </Button>
+        <Link href={`/tutor/${tutor.id}`}>
+          <Button variant="outline" className="flex-1 text-sm" onClick={(e) => e.stopPropagation()}>
+            Xem hồ sơ
+          </Button>
+        </Link>
+      </div>
     );
   };
 
@@ -55,9 +68,17 @@ export default function TutorCard({ tutor, onClick }: TutorCardProps) {
     return new Intl.NumberFormat('vi-VN').format(price);
   };
 
+  const handleCardClick = () => {
+    if (onClick) {
+      onClick();
+    }
+  };
+
   return (
-    <Link href={`/tutor/${tutor.id}`}>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden tutor-card-hover cursor-pointer">
+      <div 
+        onClick={handleCardClick}
+        className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden tutor-card-hover cursor-pointer"
+      >
       <div className="relative">
         <img
           src={tutor.profileImage || `https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop`}
@@ -128,6 +149,5 @@ export default function TutorCard({ tutor, onClick }: TutorCardProps) {
         </div>
       </div>
     </div>
-    </Link>
   );
 }
