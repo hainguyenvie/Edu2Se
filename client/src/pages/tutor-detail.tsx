@@ -312,27 +312,9 @@ export default function TutorDetail() {
                 <div className="text-sm text-gray-600">MINH TIẾN</div>
               </div>
 
-              {/* Social Links */}
-              <div className="flex justify-center space-x-3 mb-6">
-                <Button variant="outline" size="icon" className="text-blue-600">
-                  <Facebook className="h-4 w-4" />
-                </Button>
-                <Button variant="outline" size="icon" className="text-red-600">
-                  <Youtube className="h-4 w-4" />
-                </Button>
-              </div>
+              
 
-              {/* Stats */}
-              <div className="space-y-3 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Học tập</span>
-                  <span className="font-medium">⭐⭐⭐⭐⭐</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Thành tích</span>
-                  <span className="font-medium">⭐⭐⭐⭐⭐</span>
-                </div>
-              </div>
+              
             </Card>
           </div>
 
