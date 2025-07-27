@@ -3,6 +3,19 @@ import { pgTable, text, varchar, integer, decimal, boolean, timestamp, jsonb } f
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// Re-export types for better organization
+export type {
+  User,
+  Tutor,
+  Video,
+  Subject,
+  InsertUser,
+  InsertTutor,
+  InsertVideo,
+  InsertSubject,
+  SearchFilters
+} from "./types";
+
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   username: text("username").notNull().unique(),
@@ -73,6 +86,17 @@ export const insertSubjectSchema = createInsertSchema(subjects).omit({
   id: true,
 });
 
+export const searchFiltersSchema = z.object({
+  subject: z.string().optional(),
+  courseType: z.string().optional(),
+  minPrice: z.number().optional(),
+  maxPrice: z.number().optional(),
+  timeSlots: z.array(z.string()).optional(),
+  keywords: z.string().optional(),
+});
+
+export type SearchFilters = z.infer<typeof searchFiltersSchema>;
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type InsertTutor = z.infer<typeof insertTutorSchema>;
@@ -81,14 +105,3 @@ export type InsertVideo = z.infer<typeof insertVideoSchema>;
 export type Video = typeof videos.$inferSelect;
 export type InsertSubject = z.infer<typeof insertSubjectSchema>;
 export type Subject = typeof subjects.$inferSelect;
-
-export const searchFiltersSchema = z.object({
-  subject: z.string().optional(),
-  courseType: z.string().optional(),
-  minPrice: z.number().min(50000).optional(),
-  maxPrice: z.number().max(5000000).optional(),
-  timeSlots: z.array(z.string()).optional(),
-  keywords: z.string().optional(),
-});
-
-export type SearchFilters = z.infer<typeof searchFiltersSchema>;

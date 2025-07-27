@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type Tutor, type InsertTutor, type Video, type InsertVideo, type Subject, type InsertSubject, type SearchFilters } from "@shared/schema";
+import { type User, type InsertUser, type Tutor, type InsertTutor, type Video, type InsertVideo, type Subject, type InsertSubject, type SearchFilters } from "@shared/types";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -52,7 +52,11 @@ export class MemStorage implements IStorage {
 
     subjectsData.forEach(subject => {
       const id = randomUUID();
-      this.subjects.set(id, { ...subject, id });
+      this.subjects.set(id, { 
+        ...subject, 
+        id,
+        isActive: subject.isActive ?? true 
+      });
     });
 
     // Initialize tutors

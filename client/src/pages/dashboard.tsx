@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, FileText, Users, ChevronLeft, ChevronRight } from "lucide-react";
 import Header from "@/components/header";
-import MeetingRoomModal from "@/components/meeting-room-modal";
+import MeetingRoomModal from "@/features/meeting-room/components/meeting-room-modal";
 
 export default function Dashboard() {
   const [currentDate, setCurrentDate] = useState(new Date());

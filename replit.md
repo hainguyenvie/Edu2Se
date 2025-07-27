@@ -12,11 +12,13 @@ Preferred communication style: Simple, everyday language.
 
 ### Frontend Architecture
 - **Framework**: React 18 with TypeScript
+- **Architecture Pattern**: Feature-based modular architecture
 - **Routing**: Wouter for client-side routing
 - **UI Components**: shadcn/ui component library built on Radix UI primitives
 - **Styling**: Tailwind CSS with custom design tokens optimized for Vietnamese market
 - **State Management**: TanStack Query (React Query) for server state management
 - **Build Tool**: Vite for fast development and optimized builds
+- **Code Organization**: Feature-driven development with barrel exports and custom hooks
 
 ### Backend Architecture
 - **Runtime**: Node.js with Express.js framework
@@ -30,6 +32,14 @@ Preferred communication style: Simple, everyday language.
 - **Future Ready**: Drizzle ORM configured for PostgreSQL with Neon Database
 - **Schema**: Comprehensive database schema defined with proper relationships
 - **Migrations**: Drizzle Kit for database migrations
+
+### Code Architecture (Refactored - January 2025)
+- **Feature-Based Organization**: Components organized by business features rather than technical concerns
+- **Type Safety**: Comprehensive type system with shared types and proper schema validation
+- **Constants Management**: Centralized configuration and constants for maintainability
+- **Custom Hooks**: Business logic extracted into reusable custom hooks
+- **Component Modularization**: Large components broken down into focused, single-responsibility components
+- **Utility Functions**: Common operations centralized in utility modules
 
 ## Key Components
 
@@ -117,4 +127,22 @@ Preferred communication style: Simple, everyday language.
 - **Database Ready**: Prepared for production database integration
 - **Monitoring**: Request logging and error tracking built-in
 
-The architecture prioritizes rapid development while maintaining production readiness, with special attention to Vietnamese market requirements and mobile-first design principles.
+## Recent Changes (January 2025)
+
+### Major Refactoring Completed
+- **Feature-Based Architecture**: Restructured codebase from flat component organization to feature-based modules
+- **Virtual Classroom Modularization**: Broke down 350+ line component into focused, reusable components
+- **Type System Overhaul**: Created comprehensive type definitions and resolved schema inconsistencies
+- **Constants Management**: Centralized configuration system for API endpoints, routes, and UI constants
+- **Custom Hooks Implementation**: Extracted business logic into reusable hooks for better maintainability
+- **Component Optimization**: Created modular components with proper separation of concerns
+- **Utility Functions**: Added formatting, storage, and common operation utilities
+- **Barrel Exports**: Implemented clean import patterns for better developer experience
+
+### Architecture Benefits
+- **Maintainability**: Clear separation of concerns and single responsibility principle
+- **Scalability**: Feature-based structure allows for easy team scaling and parallel development
+- **Developer Experience**: Better IntelliSense, type safety, and clear project structure
+- **Performance**: Smaller component bundles and better tree-shaking opportunities
+
+The architecture prioritizes rapid development while maintaining production readiness, with special attention to Vietnamese market requirements and mobile-first design principles. The recent refactoring establishes a solid foundation for future feature development and team collaboration.
