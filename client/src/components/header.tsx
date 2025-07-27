@@ -119,7 +119,7 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
                 Đăng kí làm gia sư
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/tutor/e31ce57f-2aed-40c1-afc4-0d217ebf8353" className="w-full cursor-pointer">
+                <Link href="/tutor/c551c683-6c68-4578-bfb0-29a2aeacdc98" className="w-full cursor-pointer">
                   Trang chủ Gia sư
                 </Link>
               </DropdownMenuItem>
