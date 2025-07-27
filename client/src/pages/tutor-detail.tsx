@@ -23,7 +23,10 @@ import {
   Plus,
   Minus,
   Save,
-  X
+  X,
+  GripVertical,
+  ArrowUp,
+  ArrowDown
 } from "lucide-react";
 import { Link } from "wouter";
 import Header from "@/components/header";
@@ -56,6 +59,11 @@ export default function TutorDetail() {
     title: "FREE 1H học thử 1 tuần",
     icon: "🎯"
   }));
+  const [editableVideos, setEditableVideos] = useState([
+    { id: 1, title: "ẢNH VÀ VIDEO GT" },
+    { id: 2, title: "ẢNH VÀ VIDEO GT" },
+    { id: 3, title: "ẢNH VÀ VIDEO GT" }
+  ]);
   const [editableInfo, setEditableInfo] = useState("HỌC SINH LỚP 12 NĂM LỚP, THỊ KHOA TOÁN TỈN!\nAN TRẠNG THI ĐẠO KHOA TRƯỜNG NHỮNG HỌC THỊ KHÔNG TÂM THƯỜNG.");
   const [editablePrice, setEditablePrice] = useState(0);
   
@@ -190,6 +198,71 @@ export default function TutorDetail() {
     setEditableOffers(editableOffers.filter((_, i) => i !== index));
   };
 
+  const addVideo = () => {
+    const newVideo = { id: Date.now(), title: "ẢNH VÀ VIDEO GT" };
+    setEditableVideos([...editableVideos, newVideo]);
+  };
+
+  const removeVideo = (index: number) => {
+    setEditableVideos(editableVideos.filter((_, i) => i !== index));
+  };
+
+  // Reordering functions
+  const moveItem = (array: any[], fromIndex: number, toIndex: number) => {
+    const newArray = [...array];
+    const [removed] = newArray.splice(fromIndex, 1);
+    newArray.splice(toIndex, 0, removed);
+    return newArray;
+  };
+
+  const moveAchievementUp = (index: number) => {
+    if (index > 0) {
+      setEditableAchievements(moveItem(editableAchievements, index, index - 1));
+    }
+  };
+
+  const moveAchievementDown = (index: number) => {
+    if (index < editableAchievements.length - 1) {
+      setEditableAchievements(moveItem(editableAchievements, index, index + 1));
+    }
+  };
+
+  const moveSubjectUp = (index: number) => {
+    if (index > 0) {
+      setEditableSubjects(moveItem(editableSubjects, index, index - 1));
+    }
+  };
+
+  const moveSubjectDown = (index: number) => {
+    if (index < editableSubjects.length - 1) {
+      setEditableSubjects(moveItem(editableSubjects, index, index + 1));
+    }
+  };
+
+  const moveVideoUp = (index: number) => {
+    if (index > 0) {
+      setEditableVideos(moveItem(editableVideos, index, index - 1));
+    }
+  };
+
+  const moveVideoDown = (index: number) => {
+    if (index < editableVideos.length - 1) {
+      setEditableVideos(moveItem(editableVideos, index, index + 1));
+    }
+  };
+
+  const moveOfferUp = (index: number) => {
+    if (index > 0) {
+      setEditableOffers(moveItem(editableOffers, index, index - 1));
+    }
+  };
+
+  const moveOfferDown = (index: number) => {
+    if (index < editableOffers.length - 1) {
+      setEditableOffers(moveItem(editableOffers, index, index + 1));
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -284,14 +357,36 @@ export default function TutorDetail() {
                 {editableAchievements.map((achievement, index) => (
                   <Card key={index} className={`p-4 text-center ${achievement.color} relative`}>
                     {isEditMode && isOwnerView && (
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        className="absolute -top-2 -right-2 h-6 w-6 p-0"
-                        onClick={() => removeAchievement(index)}
-                      >
-                        <Minus className="h-3 w-3" />
-                      </Button>
+                      <>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          className="absolute -top-2 -right-2 h-6 w-6 p-0"
+                          onClick={() => removeAchievement(index)}
+                        >
+                          <Minus className="h-3 w-3" />
+                        </Button>
+                        <div className="absolute -top-2 -left-2 flex flex-col space-y-1">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-5 w-5 p-0"
+                            onClick={() => moveAchievementUp(index)}
+                            disabled={index === 0}
+                          >
+                            <ArrowUp className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-5 w-5 p-0"
+                            onClick={() => moveAchievementDown(index)}
+                            disabled={index === editableAchievements.length - 1}
+                          >
+                            <ArrowDown className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </>
                     )}
                     {isEditMode && isOwnerView ? (
                       <Input
@@ -330,14 +425,36 @@ export default function TutorDetail() {
                 {editableSubjects.map((subject, index) => (
                   <div key={index} className="relative">
                     {isEditMode && isOwnerView && (
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        className="absolute -top-2 -right-2 h-6 w-6 p-0 z-10"
-                        onClick={() => removeSubject(index)}
-                      >
-                        <Minus className="h-3 w-3" />
-                      </Button>
+                      <>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          className="absolute -top-2 -right-2 h-6 w-6 p-0 z-10"
+                          onClick={() => removeSubject(index)}
+                        >
+                          <Minus className="h-3 w-3" />
+                        </Button>
+                        <div className="absolute -top-2 -left-2 flex flex-col space-y-1 z-10">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-5 w-5 p-0"
+                            onClick={() => moveSubjectUp(index)}
+                            disabled={index === 0}
+                          >
+                            <ArrowUp className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-5 w-5 p-0"
+                            onClick={() => moveSubjectDown(index)}
+                            disabled={index === editableSubjects.length - 1}
+                          >
+                            <ArrowDown className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </>
                     )}
                     {isEditMode && isOwnerView ? (
                       <Input
@@ -394,7 +511,7 @@ export default function TutorDetail() {
                   <Button 
                     size="sm" 
                     variant="outline"
-                    onClick={() => {/* Add video functionality */}}
+                    onClick={addVideo}
                     className="ml-3"
                   >
                     <Plus className="h-4 w-4" />
@@ -402,22 +519,44 @@ export default function TutorDetail() {
                 )}
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {Array(3).fill(null).map((_, index) => (
-                  <Card key={index} className="p-4 relative">
+                {editableVideos.map((video, index) => (
+                  <Card key={video.id} className="p-4 relative">
                     {isEditMode && isOwnerView && (
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        className="absolute -top-2 -right-2 h-6 w-6 p-0 z-10"
-                        onClick={() => {/* Remove video functionality */}}
-                      >
-                        <Minus className="h-3 w-3" />
-                      </Button>
+                      <>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          className="absolute -top-2 -right-2 h-6 w-6 p-0 z-10"
+                          onClick={() => removeVideo(index)}
+                        >
+                          <Minus className="h-3 w-3" />
+                        </Button>
+                        <div className="absolute -top-2 -left-2 flex flex-col space-y-1 z-10">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-5 w-5 p-0"
+                            onClick={() => moveVideoUp(index)}
+                            disabled={index === 0}
+                          >
+                            <ArrowUp className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-5 w-5 p-0"
+                            onClick={() => moveVideoDown(index)}
+                            disabled={index === editableVideos.length - 1}
+                          >
+                            <ArrowDown className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </>
                     )}
                     <div className="bg-blue-200 rounded-lg h-32 flex items-center justify-center mb-3">
                       <Play className="h-8 w-8 text-blue-600" />
                     </div>
-                    <p className="text-sm text-center font-medium">ẢNH VÀ VIDEO GT</p>
+                    <p className="text-sm text-center font-medium">{video.title}</p>
                   </Card>
                 ))}
               </div>
@@ -467,6 +606,7 @@ export default function TutorDetail() {
                         price: editablePrice,
                         achievements: editableAchievements,
                         subjects: editableSubjects,
+                        videos: editableVideos,
                         info: editableInfo,
                         offers: editableOffers
                       });
@@ -507,14 +647,36 @@ export default function TutorDetail() {
               {editableOffers.map((offer, index) => (
                 <Card key={index} className="p-4 border-purple-200 bg-purple-50 relative">
                   {isEditMode && isOwnerView && (
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      className="absolute -top-2 -right-2 h-6 w-6 p-0 z-10"
-                      onClick={() => removeOffer(index)}
-                    >
-                      <Minus className="h-3 w-3" />
-                    </Button>
+                    <>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        className="absolute -top-2 -right-2 h-6 w-6 p-0 z-10"
+                        onClick={() => removeOffer(index)}
+                      >
+                        <Minus className="h-3 w-3" />
+                      </Button>
+                      <div className="absolute -top-2 -left-2 flex flex-col space-y-1 z-10">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-5 w-5 p-0"
+                          onClick={() => moveOfferUp(index)}
+                          disabled={index === 0}
+                        >
+                          <ArrowUp className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-5 w-5 p-0"
+                          onClick={() => moveOfferDown(index)}
+                          disabled={index === editableOffers.length - 1}
+                        >
+                          <ArrowDown className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </>
                   )}
                   <div className="flex items-center space-x-3">
                     <span className="text-2xl">{offer.icon}</span>
