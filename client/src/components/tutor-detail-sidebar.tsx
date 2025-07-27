@@ -47,7 +47,9 @@ export default function TutorDetailSidebar({ tutor, isOpen, onClose }: TutorDeta
 
   const handleChat = () => {
     console.log('Starting chat with:', tutor.name);
-    // TODO: Implement chat functionality
+    // Navigate to messages and close sidebar
+    setLocation('/messages');
+    onClose();
   };
 
   const handleViewDetails = () => {

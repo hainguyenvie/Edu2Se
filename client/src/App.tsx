@@ -8,6 +8,7 @@ import TutorDetail from "@/pages/tutor-detail";
 import TutorView from "@/pages/tutor-view";
 import Favorites from "@/pages/favorites";
 import Dashboard from "@/pages/dashboard";
+import Messages from "@/pages/messages";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -18,6 +19,7 @@ function Router() {
       <Route path="/my-profile" component={TutorDetail} />
       <Route path="/favorites" component={Favorites} />
       <Route path="/dashboard" component={Dashboard} />
+      <Route path="/messages" component={Messages} />
       <Route component={NotFound} />
     </Switch>
   );
