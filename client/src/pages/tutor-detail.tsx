@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { type Tutor } from "@shared/schema";
 import { 
   Star, 
@@ -17,7 +19,11 @@ import {
   Youtube,
   Edit,
   Settings,
-  BarChart3
+  BarChart3,
+  Plus,
+  Minus,
+  Save,
+  X
 } from "lucide-react";
 import { Link } from "wouter";
 import Header from "@/components/header";
@@ -28,6 +34,7 @@ export default function TutorDetail() {
   const [isFavorited, setIsFavorited] = useState(false);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isOwnerView, setIsOwnerView] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
   
   const { data: tutor, isLoading } = useQuery<Tutor>({
     queryKey: ['/api/tutors', params?.id],
@@ -102,7 +109,11 @@ export default function TutorDetail() {
 
   const sidebarItems = isOwnerView 
     ? [
-        { icon: Edit, title: "Chỉnh sửa hồ sơ công khai", color: "text-blue-500" },
+        { 
+          icon: isEditMode ? Save : Edit, 
+          title: isEditMode ? "Lưu thay đổi" : "Chỉnh sửa hồ sơ công khai", 
+          color: isEditMode ? "text-green-500" : "text-blue-500" 
+        },
         { icon: Settings, title: "Thiết lập lịch dạy", color: "text-green-500" },
         { icon: Calendar, title: "Yêu cầu đặt lịch", color: "text-purple-500" },
         { icon: BarChart3, title: "Thống kê chi tiết", color: "text-orange-500" },
@@ -118,6 +129,41 @@ export default function TutorDetail() {
     title: "FREE 1H học thử 1 tuần",
     icon: "🎯"
   });
+
+  // Editable state
+  const [editableAchievements, setEditableAchievements] = useState(achievements);
+  const [editableSubjects, setEditableSubjects] = useState(subjects);
+  const [editableOffers, setEditableOffers] = useState(freeOffers);
+  const [editableInfo, setEditableInfo] = useState("HỌC SINH LỚP 12 NĂM LỚP, THỊ KHOA TOÁN TỈN!\nAN TRẠNG THI ĐẠO KHOA TRƯỜNG NHỮNG HỌC THỊ KHÔNG TÂM THƯỜNG.");
+  const [editablePrice, setEditablePrice] = useState(tutor?.pricePerHour || 0);
+
+  // Helper functions for editing
+  const addAchievement = () => {
+    const newAchievement = { title: "Thành tích mới", color: "bg-blue-100 text-blue-800" };
+    setEditableAchievements([...editableAchievements, newAchievement]);
+  };
+
+  const removeAchievement = (index: number) => {
+    setEditableAchievements(editableAchievements.filter((_, i) => i !== index));
+  };
+
+  const addSubject = () => {
+    const newSubject = { name: "MÔN MỚI", available: true };
+    setEditableSubjects([...editableSubjects, newSubject]);
+  };
+
+  const removeSubject = (index: number) => {
+    setEditableSubjects(editableSubjects.filter((_, i) => i !== index));
+  };
+
+  const addOffer = () => {
+    const newOffer = { title: "Ưu đãi mới", icon: "🎯" };
+    setEditableOffers([...editableOffers, newOffer]);
+  };
+
+  const removeOffer = (index: number) => {
+    setEditableOffers(editableOffers.filter((_, i) => i !== index));
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -151,7 +197,19 @@ export default function TutorDetail() {
                 </div>
                 
                 <div className="text-2xl font-bold text-gray-900 mb-1">
-                  {formatPrice(tutor.pricePerHour)}₫/1h
+                  {isEditMode && isOwnerView ? (
+                    <div className="flex items-center justify-center space-x-2">
+                      <Input
+                        type="number"
+                        value={editablePrice}
+                        onChange={(e) => setEditablePrice(Number(e.target.value))}
+                        className="w-20 text-center text-lg font-bold"
+                      />
+                      <span>₫/1h</span>
+                    </div>
+                  ) : (
+                    `${formatPrice(tutor.pricePerHour)}₫/1h`
+                  )}
                 </div>
                 <div className="text-sm text-gray-600">MINH TIẾN</div>
               </div>
@@ -184,11 +242,45 @@ export default function TutorDetail() {
           <div className="lg:col-span-2">
             {/* Achievements */}
             <div className="mb-6">
-              <h2 className="text-lg font-semibold mb-4 text-center">BẢNG THÀNH TÍCH</h2>
+              <div className="flex items-center justify-center mb-4">
+                <h2 className="text-lg font-semibold">BẢNG THÀNH TÍCH</h2>
+                {isEditMode && isOwnerView && (
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={addAchievement}
+                    className="ml-3"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {achievements.map((achievement, index) => (
-                  <Card key={index} className={`p-4 text-center ${achievement.color}`}>
-                    <div className="text-sm font-medium">{achievement.title}</div>
+                {editableAchievements.map((achievement, index) => (
+                  <Card key={index} className={`p-4 text-center ${achievement.color} relative`}>
+                    {isEditMode && isOwnerView && (
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        className="absolute -top-2 -right-2 h-6 w-6 p-0"
+                        onClick={() => removeAchievement(index)}
+                      >
+                        <Minus className="h-3 w-3" />
+                      </Button>
+                    )}
+                    {isEditMode && isOwnerView ? (
+                      <Input
+                        value={achievement.title}
+                        onChange={(e) => {
+                          const newAchievements = [...editableAchievements];
+                          newAchievements[index].title = e.target.value;
+                          setEditableAchievements(newAchievements);
+                        }}
+                        className="text-sm font-medium bg-transparent border-none text-center p-0"
+                      />
+                    ) : (
+                      <div className="text-sm font-medium">{achievement.title}</div>
+                    )}
                   </Card>
                 ))}
               </div>
@@ -196,21 +288,56 @@ export default function TutorDetail() {
 
             {/* Subjects */}
             <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-4 text-center">NHẬN DẠY CÁC MÔN SAU</h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {subjects.map((subject, index) => (
-                  <Button
-                    key={index}
-                    variant={subject.available ? "default" : "outline"}
-                    className={`text-sm ${
-                      subject.available 
-                        ? "bg-primary text-white" 
-                        : "bg-gray-100 text-gray-400 cursor-not-allowed"
-                    }`}
-                    disabled={!subject.available}
+              <div className="flex items-center justify-center mb-4">
+                <h3 className="text-lg font-semibold">NHẬN DẠY CÁC MÔN SAU</h3>
+                {isEditMode && isOwnerView && (
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={addSubject}
+                    className="ml-3"
                   >
-                    {subject.name}
+                    <Plus className="h-4 w-4" />
                   </Button>
+                )}
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {editableSubjects.map((subject, index) => (
+                  <div key={index} className="relative">
+                    {isEditMode && isOwnerView && (
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        className="absolute -top-2 -right-2 h-6 w-6 p-0 z-10"
+                        onClick={() => removeSubject(index)}
+                      >
+                        <Minus className="h-3 w-3" />
+                      </Button>
+                    )}
+                    {isEditMode && isOwnerView ? (
+                      <Input
+                        value={subject.name}
+                        onChange={(e) => {
+                          const newSubjects = [...editableSubjects];
+                          newSubjects[index].name = e.target.value;
+                          setEditableSubjects(newSubjects);
+                        }}
+                        className="text-sm text-center bg-primary text-white border-primary"
+                      />
+                    ) : (
+                      <Button
+                        variant={subject.available ? "default" : "outline"}
+                        className={`text-sm w-full ${
+                          subject.available 
+                            ? "bg-primary text-white" 
+                            : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                        }`}
+                        disabled={!subject.available}
+                      >
+                        {subject.name}
+                      </Button>
+                    )}
+                  </div>
                 ))}
               </div>
             </div>
@@ -219,19 +346,49 @@ export default function TutorDetail() {
             <div className="mb-6">
               <h3 className="text-lg font-semibold mb-4">THÔNG TIN</h3>
               <Card className="p-6">
-                <p className="text-gray-700 leading-relaxed">
-                  HỌC SINH LỚP 12 NĂM LỚP, THỊ KHOA TOÁN TỈN!
-                  <br />
-                  AN TRẠNG THI ĐẠO KHOA TRƯỜNG NHỮNG HỌC THỊ KHÔNG TÂM THƯỜNG.
-                </p>
+                {isEditMode && isOwnerView ? (
+                  <Textarea
+                    value={editableInfo}
+                    onChange={(e) => setEditableInfo(e.target.value)}
+                    className="text-gray-700 leading-relaxed min-h-[100px] resize-none"
+                    placeholder="Nhập thông tin về bản thân..."
+                  />
+                ) : (
+                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                    {editableInfo}
+                  </p>
+                )}
               </Card>
             </div>
 
             {/* Videos */}
             <div className="mb-6">
+              <div className="flex items-center justify-center mb-4">
+                <h3 className="text-lg font-semibold">ẢNH VÀ VIDEO GT</h3>
+                {isEditMode && isOwnerView && (
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => {/* Add video functionality */}}
+                    className="ml-3"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {Array(3).fill(null).map((_, index) => (
-                  <Card key={index} className="p-4">
+                  <Card key={index} className="p-4 relative">
+                    {isEditMode && isOwnerView && (
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        className="absolute -top-2 -right-2 h-6 w-6 p-0 z-10"
+                        onClick={() => {/* Remove video functionality */}}
+                      >
+                        <Minus className="h-3 w-3" />
+                      </Button>
+                    )}
                     <div className="bg-blue-200 rounded-lg h-32 flex items-center justify-center mb-3">
                       <Play className="h-8 w-8 text-blue-600" />
                     </div>
@@ -278,9 +435,18 @@ export default function TutorDetail() {
                 onClick={() => {
                   if (item.title === "ĐẶT LỊCH") {
                     setIsBookingModalOpen(true);
-                  } else if (item.title === "Chỉnh sửa hồ sơ công khai") {
-                    console.log("Edit profile clicked");
-                    // Handle profile editing
+                  } else if (item.title === "Chỉnh sửa hồ sơ công khai" || item.title === "Lưu thay đổi") {
+                    if (isEditMode) {
+                      // Save changes logic here
+                      console.log("Saving changes...", {
+                        price: editablePrice,
+                        achievements: editableAchievements,
+                        subjects: editableSubjects,
+                        info: editableInfo,
+                        offers: editableOffers
+                      });
+                    }
+                    setIsEditMode(!isEditMode);
                   } else if (item.title === "Thiết lập lịch dạy") {
                     console.log("Schedule setup clicked");
                     // Handle schedule setup
@@ -300,14 +466,48 @@ export default function TutorDetail() {
 
             {/* Free Offers */}
             <div className="space-y-3">
-              <h4 className="font-semibold text-center">ƯU ĐÃI CỦA MINH TIẾN</h4>
-              {freeOffers.map((offer, index) => (
-                <Card key={index} className="p-4 border-purple-200 bg-purple-50">
+              <div className="flex items-center justify-center">
+                <h4 className="font-semibold text-center">ƯU ĐÃI CỦA MINH TIẾN</h4>
+                {isEditMode && isOwnerView && (
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={addOffer}
+                    className="ml-3"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+              {editableOffers.map((offer, index) => (
+                <Card key={index} className="p-4 border-purple-200 bg-purple-50 relative">
+                  {isEditMode && isOwnerView && (
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      className="absolute -top-2 -right-2 h-6 w-6 p-0 z-10"
+                      onClick={() => removeOffer(index)}
+                    >
+                      <Minus className="h-3 w-3" />
+                    </Button>
+                  )}
                   <div className="flex items-center space-x-3">
                     <span className="text-2xl">{offer.icon}</span>
-                    <div className="text-sm font-medium text-purple-800">
-                      {offer.title}
-                    </div>
+                    {isEditMode && isOwnerView ? (
+                      <Input
+                        value={offer.title}
+                        onChange={(e) => {
+                          const newOffers = [...editableOffers];
+                          newOffers[index].title = e.target.value;
+                          setEditableOffers(newOffers);
+                        }}
+                        className="text-sm font-medium text-purple-800 bg-transparent border-none p-0"
+                      />
+                    ) : (
+                      <div className="text-sm font-medium text-purple-800">
+                        {offer.title}
+                      </div>
+                    )}
                   </div>
                 </Card>
               ))}
