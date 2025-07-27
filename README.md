@@ -7,6 +7,8 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178c6)
 ![Node.js](https://img.shields.io/badge/Node.js-20-339933)
 
+Deploy-Link: https://edu2se.replit.app/
+
 ## 🌟 Overview
 
 AitheduConnect is a comprehensive online tutoring marketplace designed specifically for the Vietnamese education market. The platform connects 9th-12th grade students with qualified tutors, emphasizing speed (3-second registration), marketplace choice, viral growth features, and student freedom.
