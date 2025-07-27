@@ -4,9 +4,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, FileText, Users, ChevronLeft, ChevronRight } from "lucide-react";
 import Header from "@/components/header";
+import MeetingRoomModal from "@/components/meeting-room-modal";
 
 export default function Dashboard() {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [isMeetingRoomOpen, setIsMeetingRoomOpen] = useState(false);
+  const [selectedClass, setSelectedClass] = useState<any>(null);
   
   // Mock data for dashboard
   const stats = [
@@ -65,6 +68,11 @@ export default function Dashboard() {
     const newDate = new Date(currentDate);
     newDate.setMonth(newDate.getMonth() + direction);
     setCurrentDate(newDate);
+  };
+
+  const handleJoinMeeting = (classInfo: any) => {
+    setSelectedClass(classInfo);
+    setIsMeetingRoomOpen(true);
   };
 
   return (
@@ -151,7 +159,17 @@ export default function Dashboard() {
                   </div>
                   <div className="text-sm font-medium">Math 12 - Mrs. Huyen</div>
                   <div className="text-xs text-gray-500">Mentor: Mrs. Huyen</div>
-                  <Button size="sm" className="w-full mt-3">
+                  <Button 
+                    size="sm" 
+                    className="w-full mt-3"
+                    onClick={() => handleJoinMeeting({
+                      name: "Math 12 - Mrs. Huyen",
+                      subject: "Toán học lớp 12",
+                      tutor: "Mrs. Huyen",
+                      time: "8:00 PM - 10:30 PM",
+                      duration: "2h 30m"
+                    })}
+                  >
                     Meet
                   </Button>
                 </div>
@@ -186,7 +204,17 @@ export default function Dashboard() {
                   <div className="text-sm text-gray-600 mb-2">Name</div>
                   <div className="text-lg font-semibold mb-2">Sắp Diễn Ra</div>
                   <div className="text-sm text-gray-700 mb-3">Math 12 - Mrs. Huyen</div>
-                  <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white mb-2">
+                  <Button 
+                    size="sm" 
+                    className="bg-blue-600 hover:bg-blue-700 text-white mb-2"
+                    onClick={() => handleJoinMeeting({
+                      name: "Sắp Diễn Ra",
+                      subject: "Math 12 - Mrs. Huyen",
+                      tutor: "Mrs. Huyen",
+                      time: "Hiện tại",
+                      duration: "2h"
+                    })}
+                  >
                     Meet
                   </Button>
                   <div className="text-xs text-gray-600">
@@ -233,6 +261,18 @@ export default function Dashboard() {
           </Card>
         </div>
       </div>
+
+      {/* Meeting Room Modal */}
+      {selectedClass && (
+        <MeetingRoomModal 
+          isOpen={isMeetingRoomOpen}
+          onClose={() => {
+            setIsMeetingRoomOpen(false);
+            setSelectedClass(null);
+          }}
+          classInfo={selectedClass}
+        />
+      )}
     </div>
   );
 }
