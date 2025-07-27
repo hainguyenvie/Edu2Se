@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRoute } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,10 @@ import {
   Clock,
   Play,
   Facebook,
-  Youtube
+  Youtube,
+  Edit,
+  Settings,
+  BarChart3
 } from "lucide-react";
 import { Link } from "wouter";
 import Header from "@/components/header";
@@ -24,11 +27,33 @@ export default function TutorDetail() {
   const [match, params] = useRoute("/tutor/:id");
   const [isFavorited, setIsFavorited] = useState(false);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [isOwnerView, setIsOwnerView] = useState(false);
   
   const { data: tutor, isLoading } = useQuery<Tutor>({
     queryKey: ['/api/tutors', params?.id],
     enabled: !!params?.id,
   });
+
+  // Check if this is the owner viewing their own profile
+  useEffect(() => {
+    const checkOwnership = async () => {
+      try {
+        const response = await fetch('/api/tutors');
+        const tutors = await response.json();
+        if (tutors && tutors.length > 0) {
+          // Check if current tutor ID matches the first tutor (current user)
+          const currentUserTutorId = tutors[0].id;
+          setIsOwnerView(params?.id === currentUserTutorId);
+        }
+      } catch (error) {
+        console.error('Failed to check ownership:', error);
+      }
+    };
+    
+    if (params?.id) {
+      checkOwnership();
+    }
+  }, [params?.id]);
 
   if (!match || isLoading) {
     return (
@@ -75,12 +100,19 @@ export default function TutorDetail() {
     { title: "CHỨNG CHỈ SEAL HỘI TIẾU", color: "bg-green-100 text-green-800" },
   ];
 
-  const sidebarItems = [
-    { icon: Heart, title: "THEO DÕI", color: "text-red-500" },
-    { icon: Calendar, title: "ĐẶT LỊCH", color: "text-blue-500" },
-    { icon: MessageCircle, title: "CHAT VỚI THẦY", color: "text-green-500" },
-    { icon: Shield, title: "Báo cáo", color: "text-orange-500" },
-  ];
+  const sidebarItems = isOwnerView 
+    ? [
+        { icon: Edit, title: "Chỉnh sửa hồ sơ công khai", color: "text-blue-500" },
+        { icon: Settings, title: "Thiết lập lịch dạy", color: "text-green-500" },
+        { icon: Calendar, title: "Yêu cầu đặt lịch", color: "text-purple-500" },
+        { icon: BarChart3, title: "Thống kê chi tiết", color: "text-orange-500" },
+      ]
+    : [
+        { icon: Heart, title: "THEO DÕI", color: "text-red-500" },
+        { icon: Calendar, title: "ĐẶT LỊCH", color: "text-blue-500" },
+        { icon: MessageCircle, title: "CHAT VỚI THẦY", color: "text-green-500" },
+        { icon: Shield, title: "Báo cáo", color: "text-orange-500" },
+      ];
 
   const freeOffers = Array(4).fill({
     title: "FREE 1H học thử 1 tuần",
@@ -246,6 +278,18 @@ export default function TutorDetail() {
                 onClick={() => {
                   if (item.title === "ĐẶT LỊCH") {
                     setIsBookingModalOpen(true);
+                  } else if (item.title === "Chỉnh sửa hồ sơ công khai") {
+                    console.log("Edit profile clicked");
+                    // Handle profile editing
+                  } else if (item.title === "Thiết lập lịch dạy") {
+                    console.log("Schedule setup clicked");
+                    // Handle schedule setup
+                  } else if (item.title === "Yêu cầu đặt lịch") {
+                    console.log("Booking requests clicked");
+                    // Handle booking requests
+                  } else if (item.title === "Thống kê chi tiết") {
+                    console.log("Statistics clicked");
+                    // Handle statistics view
                   }
                 }}
               >
