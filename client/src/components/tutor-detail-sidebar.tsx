@@ -4,6 +4,7 @@ import { type Tutor } from "@shared/schema";
 import { Star, X, Clock, BookOpen, Award, MessageCircle, Calendar, MapPin } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
+import BookingModal from "@/components/booking-modal";
 
 interface TutorDetailSidebarProps {
   tutor: Tutor | null;
@@ -14,6 +15,7 @@ interface TutorDetailSidebarProps {
 export default function TutorDetailSidebar({ tutor, isOpen, onClose }: TutorDetailSidebarProps) {
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>("");
   const [, setLocation] = useLocation();
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
   if (!tutor) return null;
 
@@ -40,7 +42,7 @@ export default function TutorDetailSidebar({ tutor, isOpen, onClose }: TutorDeta
 
   const handleBookNow = () => {
     console.log('Booking tutor:', tutor.name, 'Time slot:', selectedTimeSlot);
-    // TODO: Implement booking functionality
+    setIsBookingModalOpen(true);
   };
 
   const handleChat = () => {
@@ -206,7 +208,7 @@ export default function TutorDetailSidebar({ tutor, isOpen, onClose }: TutorDeta
               disabled={!selectedTimeSlot || tutor.status === 'busy'}
               className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3"
             >
-              BOOK NOW
+              ĐẶT LỊCH NGAY
             </Button>
             <Button 
               onClick={handleChat}
@@ -226,6 +228,13 @@ export default function TutorDetailSidebar({ tutor, isOpen, onClose }: TutorDeta
           </div>
         </div>
       </div>
+
+      {/* Booking Modal */}
+      <BookingModal 
+        tutor={tutor}
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+      />
     </>
   );
 }
