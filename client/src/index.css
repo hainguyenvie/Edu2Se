@@ -2,6 +2,62 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hide scrollbars but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Smooth transitions for homepage elements */
+.homepage-section {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Video story styling */
+.video-story {
+  width: 96px;
+  height: 128px;
+  border-radius: 12px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.video-story:hover {
+  transform: scale(1.05);
+}
+
+/* Banner animations */
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.banner-content {
+  animation: fadeInSlide 0.5s ease-out;
+}
+
+/* Quick search hover effects */
+.quick-search-item {
+  transition: all 0.2s ease;
+}
+
+.quick-search-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
 :root {
   --background: hsl(0, 0%, 100%);
   --foreground: hsl(20, 14.3%, 4.1%);

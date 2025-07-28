@@ -15,6 +15,7 @@ import {
   Earth
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SUBJECT_COLORS } from "@/config/constants";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -52,15 +53,24 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         <nav className="space-y-2">
           {subjects.map((subject) => {
             const IconComponent = iconMap[subject.icon as keyof typeof iconMap] || Calculator;
+            const iconColor = SUBJECT_COLORS[subject.icon as keyof typeof SUBJECT_COLORS] || SUBJECT_COLORS.Calculator;
             
             return (
               <a
                 key={subject.id}
                 href="#"
-                className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-700 font-medium border border-gray-200 transition-colors"
+                className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-50 text-gray-700 font-medium border border-gray-200 transition-all hover:shadow-sm"
                 onClick={onClose}
               >
-                <IconComponent className="w-5 h-5 text-primary" />
+                <div 
+                  className="w-8 h-8 rounded-lg flex items-center justify-center"
+                  style={{ backgroundColor: iconColor + '20' }}
+                >
+                  <IconComponent 
+                    className="w-4 h-4" 
+                    style={{ color: iconColor }}
+                  />
+                </div>
                 <span>{subject.nameVi}</span>
               </a>
             );

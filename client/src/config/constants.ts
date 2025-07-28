@@ -122,16 +122,57 @@ export const TIME_SLOTS = {
 
 // Subject Colors and Icons (Vietnamese Market Optimized)
 export const SUBJECT_COLORS = {
-  MATH: 'hsl(207, 90%, 54%)',
-  LITERATURE: 'hsl(142, 71%, 45%)',
-  PHYSICS: 'hsl(16, 89%, 58%)',
-  CHEMISTRY: 'hsl(340, 82%, 52%)',
-  BIOLOGY: 'hsl(120, 61%, 50%)',
-  ENGLISH: 'hsl(262, 83%, 58%)',
-  FRENCH: 'hsl(221, 83%, 53%)',
-  RUSSIAN: 'hsl(0, 72%, 51%)',
-  TEST_PREP: 'hsl(45, 93%, 47%)',
-  ADVANCED: 'hsl(291, 64%, 42%)',
-  CONSULTATION: 'hsl(173, 58%, 39%)',
-  CAREER_GUIDANCE: 'hsl(25, 95%, 53%)',
+  Calculator: 'hsl(207, 90%, 54%)', // Math - Blue
+  Book: 'hsl(142, 71%, 45%)', // Literature - Green  
+  Zap: 'hsl(16, 89%, 58%)', // Physics - Orange
+  Beaker: 'hsl(340, 82%, 52%)', // Chemistry - Pink
+  Leaf: 'hsl(120, 61%, 50%)', // Biology - Green
+  Languages: 'hsl(262, 83%, 58%)', // English - Purple
+  Globe: 'hsl(221, 83%, 53%)', // French - Blue
+  GlobeEurope: 'hsl(0, 72%, 51%)', // Russian - Red
+  Star: 'hsl(45, 93%, 47%)', // Test Prep - Yellow
+  GraduationCap: 'hsl(291, 64%, 42%)', // Advanced - Purple
+  MessageCircle: 'hsl(173, 58%, 39%)', // Consultation - Teal
+  Compass: 'hsl(25, 95%, 53%)', // Career Guidance - Orange
 } as const;
+
+// Banner Configuration
+export const BANNER_CONFIG = {
+  AUTO_ROTATE_INTERVAL: 4000, // 4 seconds
+  BANNERS: [
+    {
+      id: 'special-offer',
+      title: '🎉 KHUYẾN MÃI ĐẶC BIỆT',
+      subtitle: 'Học thử 15 phút miễn phí cho học viên mới • Giảm 50% khóa học đầu tiên',
+      gradient: 'from-purple-400 to-pink-400',
+      textColor: 'text-white',
+      subtitleColor: 'text-purple-100'
+    },
+    {
+      id: 'quality-tutors',
+      title: '⭐ GIA SƯ CHẤT LƯỢNG CAO',
+      subtitle: 'Hơn 1000+ gia sư được xác minh • Tỷ lệ hài lòng 98%',
+      gradient: 'from-blue-500 to-indigo-600',
+      textColor: 'text-white',
+      subtitleColor: 'text-blue-100'
+    },
+    {
+      id: 'flexible-learning',
+      title: '📚 HỌC MỌI LÚC MỌI NƠI',
+      subtitle: 'Lớp học trực tuyến linh hoạt • Thiết bị hỗ trợ đa dạng',
+      gradient: 'from-green-500 to-teal-600',
+      textColor: 'text-white',
+      subtitleColor: 'text-green-100'
+    }
+  ]
+} as const;
+
+// Quick Search Categories (reordered for better logic)
+export const QUICK_SEARCH_CATEGORIES = [
+  { name: 'Toán', nameVi: 'TOÁN', icon: 'Calculator', color: SUBJECT_COLORS.Calculator, popular: true },
+  { name: 'Văn', nameVi: 'VĂN', icon: 'Book', color: SUBJECT_COLORS.Book, popular: true },
+  { name: 'Anh', nameVi: 'ANH', icon: 'Languages', color: SUBJECT_COLORS.Languages, popular: true },
+  { name: 'Lý', nameVi: 'LÝ', icon: 'Zap', color: SUBJECT_COLORS.Zap, popular: false },
+  { name: 'Hóa', nameVi: 'HÓA', icon: 'Beaker', color: SUBJECT_COLORS.Beaker, popular: false },
+  { name: 'Sinh', nameVi: 'SINH', icon: 'Leaf', color: SUBJECT_COLORS.Leaf, popular: false },
+] as const;
