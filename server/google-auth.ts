@@ -5,7 +5,7 @@ import { type IStorage } from './storage';
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 
 export class GoogleAuthService {
-  private client: OAuth2Client;
+  private client: OAuth2Client | undefined;
 
   constructor(private storage: IStorage) {
     if (GOOGLE_CLIENT_ID) {

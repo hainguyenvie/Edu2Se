@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type Tutor, type InsertTutor, type Video, type InsertVideo, type Subject, type InsertSubject, type SearchFilters } from "@shared/types";
+import { type User, type InsertUser, type Tutor, type InsertTutor, type Video, type InsertVideo, type Subject, type InsertSubject } from "@shared/types";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -8,7 +8,7 @@ export interface IStorage {
   createUser(user: InsertUser): Promise<User>;
   updateUserLastLogin(id: string): Promise<void>;
   
-  getTutors(filters?: SearchFilters): Promise<Tutor[]>;
+  getTutors(filters?: any): Promise<Tutor[]>;
   getTutor(id: string): Promise<Tutor | undefined>;
   createTutor(tutor: InsertTutor): Promise<Tutor>;
   
@@ -19,10 +19,36 @@ export interface IStorage {
   createSubject(subject: InsertSubject): Promise<Subject>;
 }
 
-// import { DbStorage } from "./db-storage";
+// Initialize storage - will try database first, fallback to memory
+async function initializeStorage(): Promise<IStorage> {
+  if (process.env.DATABASE_URL) {
+    try {
+      const { DbStorage } = await import("./db-storage");
+      const dbStorage = new DbStorage();
+      console.log('✅ Using database storage');
+      return dbStorage;
+    } catch (error) {
+      console.error('❌ Database connection failed, falling back to memory storage:', error);
+    }
+  } else {
+    console.log('⚠️ DATABASE_URL not found, using memory storage');
+  }
+  
+  const memStorage = new MemStorage();
+  return memStorage;
+}
 
-// Use memory storage temporarily until database is properly configured
-// export const storage = new DbStorage();
+// Create storage instance
+let storageInstance: IStorage | null = null;
+
+export async function getStorage(): Promise<IStorage> {
+  if (!storageInstance) {
+    storageInstance = await initializeStorage();
+  }
+  return storageInstance;
+}
+
+// Legacy export for backwards compatibility - will use getStorage() in routes
 
 export class MemStorage implements IStorage {
   private users: Map<string, User>;
@@ -307,4 +333,4 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage(); // Using MemStorage temporarily
+// Storage instance is exported above with error handling
