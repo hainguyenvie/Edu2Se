@@ -3,10 +3,12 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { searchFiltersSchema } from "@shared/schema";
 import { AuthService } from "./auth";
+import { GoogleAuthService } from "./google-auth";
 import { type LoginCredentials, type RegisterData } from "@shared/types";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const authService = new AuthService(storage);
+  const googleAuthService = new GoogleAuthService(storage);
 
   // Authentication routes
   app.post("/api/auth/register", async (req, res) => {
@@ -70,6 +72,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/auth/logout", (req, res) => {
     // For JWT tokens, logout is handled client-side by removing the token
     res.json({ success: true, message: "Đăng xuất thành công" });
+  });
+
+  // Google authentication route
+  app.post("/api/auth/google", async (req, res) => {
+    try {
+      const { token } = req.body;
+      
+      if (!token) {
+        return res.status(400).json({
+          success: false,
+          message: "Token Google không được cung cấp"
+        });
+      }
+
+      const result = await googleAuthService.signInWithGoogle(token);
+      
+      if (!result.success) {
+        return res.status(401).json(result);
+      }
+
+      res.json(result);
+    } catch (error) {
+      console.error('Google auth error:', error);
+      res.status(500).json({
+        success: false,
+        message: "Đã có lỗi xảy ra khi đăng nhập bằng Google"
+      });
+    }
   });
   // Get all tutors with optional filters
   app.get("/api/tutors", async (req, res) => {

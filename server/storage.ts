@@ -19,6 +19,11 @@ export interface IStorage {
   createSubject(subject: InsertSubject): Promise<Subject>;
 }
 
+// import { DbStorage } from "./db-storage";
+
+// Use memory storage temporarily until database is properly configured
+// export const storage = new DbStorage();
+
 export class MemStorage implements IStorage {
   private users: Map<string, User>;
   private tutors: Map<string, Tutor>;
@@ -302,4 +307,4 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new MemStorage(); // Using MemStorage temporarily

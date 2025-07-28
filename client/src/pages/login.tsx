@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, LogIn, UserPlus } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
+import { GoogleSignIn } from "@/components/google-sign-in";
 import { type LoginCredentials, type AuthResponse } from "@shared/types";
 
 export default function LoginPage() {
@@ -158,6 +160,23 @@ export default function LoginPage() {
               </Button>
             </form>
           </Form>
+
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <Separator className="w-full" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">
+                  Hoặc
+                </span>
+              </div>
+            </div>
+            
+            <div className="mt-4">
+              <GoogleSignIn />
+            </div>
+          </div>
 
           <div className="mt-6 text-center">
             <p className="text-sm text-muted-foreground">
