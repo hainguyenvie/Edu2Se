@@ -74,7 +74,7 @@ export class GoogleAuthService {
       await this.storage.updateUserLastLogin(user.id);
 
       // Generate JWT token (using the same logic as regular auth)
-      const jwt = require('jsonwebtoken');
+      const jwt = (await import('jsonwebtoken')).default;
       const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
       const token = jwt.sign(
         { 

@@ -74,6 +74,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ success: true, message: "Đăng xuất thành công" });
   });
 
+  // Google config endpoint for debugging
+  app.get("/api/auth/google-config", (req, res) => {
+    res.json({
+      configured: !!process.env.GOOGLE_CLIENT_ID,
+      clientIdLength: process.env.GOOGLE_CLIENT_ID?.length || 0
+    });
+  });
+
   // Google authentication route
   app.post("/api/auth/google", async (req, res) => {
     try {

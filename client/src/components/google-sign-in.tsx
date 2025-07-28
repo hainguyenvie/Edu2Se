@@ -51,47 +51,78 @@ export function GoogleSignIn() {
     if (typeof window.google === 'undefined') {
       toast({
         title: "Lỗi",
-        description: "Google Sign-In chưa được tải. Vui lòng thử lại.",
+        description: "Google Sign-In chưa được tải. Vui lòng thử lại sau.",
         variant: "destructive",
       });
       setIsLoading(false);
       return;
     }
 
-    // Initialize Google Sign-In
-    window.google.accounts.id.initialize({
-      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-      callback: (response: any) => {
-        if (response.credential) {
-          googleSignInMutation.mutate(response.credential);
-        } else {
-          toast({
-            title: "Đăng nhập thất bại",
-            description: "Không thể lấy thông tin từ Google",
-            variant: "destructive",
-          });
+    // Check if client ID is configured
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    if (!clientId) {
+      toast({
+        title: "Lỗi cấu hình",
+        description: "Google Client ID chưa được cấu hình.",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      // Initialize Google Sign-In
+      window.google.accounts.id.initialize({
+        client_id: clientId,
+        callback: (response: any) => {
+          console.log('Google response:', response);
+          if (response.credential) {
+            googleSignInMutation.mutate(response.credential);
+          } else {
+            toast({
+              title: "Đăng nhập thất bại",
+              description: "Không thể lấy thông tin từ Google",
+              variant: "destructive",
+            });
+            setIsLoading(false);
+          }
+        },
+        auto_select: false,
+        cancel_on_tap_outside: true,
+      });
+
+      // Prompt the user to sign in
+      window.google.accounts.id.prompt((notification: any) => {
+        console.log('Google prompt notification:', notification);
+        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+          // Show the button as fallback
+          const buttonContainer = document.getElementById('google-signin-button');
+          if (buttonContainer) {
+            buttonContainer.innerHTML = '';
+            buttonContainer.className = 'w-full mt-2';
+            window.google.accounts.id.renderButton(
+              buttonContainer,
+              {
+                theme: 'outline',
+                size: 'large',
+                width: '100%',
+                text: 'signin_with',
+                locale: 'vi',
+              }
+            );
+          }
           setIsLoading(false);
         }
-      },
-    });
-
-    // Prompt the user to sign in
-    window.google.accounts.id.prompt((notification: any) => {
-      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-        // Try alternative sign-in method
-        window.google.accounts.id.renderButton(
-          document.getElementById('google-signin-button'),
-          {
-            theme: 'outline',
-            size: 'large',
-            width: '100%',
-            text: 'signin_with',
-            locale: 'vi',
-          }
-        );
-        setIsLoading(false);
-      }
-    });
+      });
+    } catch (error) {
+      console.error('Google Sign-In initialization error:', error);
+      toast({
+        title: "Lỗi khởi tạo",
+        description: "Không thể khởi tạo Google Sign-In",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -133,8 +164,8 @@ export function GoogleSignIn() {
         )}
       </Button>
       
-      {/* Hidden div for Google Sign-In button fallback */}
-      <div id="google-signin-button" className="hidden"></div>
+      {/* Fallback div for Google Sign-In button */}
+      <div id="google-signin-button" className="w-full"></div>
     </div>
   );
 }
