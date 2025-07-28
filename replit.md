@@ -43,10 +43,13 @@ Preferred communication style: Simple, everyday language.
 
 ## Key Components
 
-### 1. User Management
+### 1. User Management & Authentication
 - **Users Table**: Stores user accounts with roles (student, tutor, admin)
-- **Authentication**: Basic structure in place for future implementation
-- **Authorization**: Role-based access control ready
+- **JWT Authentication**: Complete login/logout system with secure password hashing
+- **Email-Based Login**: Users login with email address instead of username
+- **Authorization**: Role-based access control with protected routes
+- **User Context**: React context managing authentication state across the app
+- **Profile Management**: Full name, email verification, and last login tracking
 
 ### 2. Tutor Marketplace
 - **Tutor Profiles**: Comprehensive tutor information including subjects, grades, education, experience
@@ -138,6 +141,16 @@ Preferred communication style: Simple, everyday language.
 - **Component Optimization**: Created modular components with proper separation of concerns
 - **Utility Functions**: Added formatting, storage, and common operation utilities
 - **Barrel Exports**: Implemented clean import patterns for better developer experience
+
+### Supabase Authentication System (January 28, 2025)
+- **Complete Authentication Flow**: Implemented full sign-in/sign-up system with Vietnamese interface
+- **JWT Token-Based Authentication**: Secure token management with bcrypt password hashing
+- **Email-Based Login**: Email address serves as username for simplified user experience
+- **Role Management**: Support for student and tutor roles with proper authorization
+- **Authentication Context**: React context for managing user state across the application
+- **Protected Routes**: Authentication middleware for securing API endpoints
+- **User Profile Management**: Comprehensive user data handling with last login tracking
+- **Vietnamese Localization**: All authentication forms and messages in Vietnamese language
 
 ### Architecture Benefits
 - **Maintainability**: Clear separation of concerns and single responsibility principle

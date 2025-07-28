@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, UserPlus, LogIn } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
@@ -60,6 +60,8 @@ export default function RegisterPage() {
 
   const onSubmit = (data: RegisterData & { confirmPassword: string }) => {
     const { confirmPassword, ...registerData } = data;
+    // Use email as username
+    registerData.username = registerData.email;
     registerMutation.mutate(registerData);
   };
 
@@ -100,34 +102,6 @@ export default function RegisterPage() {
 
               <FormField
                 control={form.control}
-                name="username"
-                rules={{
-                  required: "Vui lòng nhập tên đăng nhập",
-                  minLength: {
-                    value: 3,
-                    message: "Tên đăng nhập phải có ít nhất 3 ký tự",
-                  },
-                  pattern: {
-                    value: /^[a-zA-Z0-9_]+$/,
-                    message: "Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới",
-                  },
-                }}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Tên đăng nhập</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Nhập tên đăng nhập"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
                 name="email"
                 rules={{
                   required: "Vui lòng nhập email",
@@ -138,7 +112,7 @@ export default function RegisterPage() {
                 }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Tên đăng nhập</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Nhập email"
@@ -146,28 +120,6 @@ export default function RegisterPage() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="role"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Loại tài khoản</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Chọn loại tài khoản" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="student">Học sinh</SelectItem>
-                        <SelectItem value="tutor">Gia sư</SelectItem>
-                      </SelectContent>
-                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}

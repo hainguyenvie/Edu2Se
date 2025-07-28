@@ -67,7 +67,7 @@ export default function LoginPage() {
           </div>
           <CardTitle className="text-2xl text-center">Đăng nhập</CardTitle>
           <CardDescription className="text-center">
-            Nhập thông tin để truy cập tài khoản của bạn
+            Nhập email và mật khẩu để truy cập tài khoản của bạn
           </CardDescription>
         </CardHeader>
         
@@ -78,14 +78,19 @@ export default function LoginPage() {
                 control={form.control}
                 name="username"
                 rules={{
-                  required: "Vui lòng nhập tên đăng nhập hoặc email",
+                  required: "Vui lòng nhập email",
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: "Email không hợp lệ",
+                  },
                 }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Tên đăng nhập hoặc Email</FormLabel>
+                    <FormLabel>Tên đăng nhập</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Nhập tên đăng nhập hoặc email"
+                        placeholder="Nhập email"
+                        type="email"
                         {...field}
                       />
                     </FormControl>

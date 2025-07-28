@@ -64,7 +64,7 @@ export type InsertUser = {
 
 // Authentication types
 export type LoginCredentials = {
-  username: string;
+  username: string; // This will be the email address
   password: string;
 };
 
