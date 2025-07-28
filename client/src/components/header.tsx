@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Menu, Heart, User, Bell, MessageCircle } from "lucide-react";
 import { Link } from "wouter";
+import { AuthNav } from "./auth-nav";
 import TutorRegistrationModal from "./tutor-registration-modal";
 import NotificationDropdown from "./notification-dropdown";
 import MessagesPopup from "./messages-popup";
@@ -114,43 +115,7 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
               5
             </span>
           </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hidden sm:block text-gray-600 hover:text-primary relative"
-              >
-                <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center border-2 border-orange-200">
-                  <span className="text-sm">👤</span>
-                </div>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem asChild>
-                <Link href="/dashboard" className="w-full cursor-pointer">
-                  Thông tin cá nhân
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                Lớp học của tôi
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setIsRegistrationModalOpen(true)}>
-                Đăng kí làm gia sư
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link 
-                  href="/my-profile" 
-                  className="w-full cursor-pointer"
-                >
-                  Trang chủ Gia sư
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                Khác
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <AuthNav />
         </div>
       </div>
 

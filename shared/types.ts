@@ -6,8 +6,12 @@ export type User = {
   username: string;
   password: string;
   email: string;
+  fullName?: string | null;
   role: string;
+  isEmailVerified?: boolean | null;
+  lastLogin?: Date | null;
   createdAt: Date | null;
+  updatedAt?: Date | null;
 };
 
 export type Tutor = {
@@ -54,7 +58,29 @@ export type InsertUser = {
   username: string;
   password: string;
   email: string;
+  fullName?: string;
   role?: string;
+};
+
+// Authentication types
+export type LoginCredentials = {
+  username: string;
+  password: string;
+};
+
+export type RegisterData = {
+  username: string;
+  email: string;
+  password: string;
+  fullName?: string;
+  role?: "student" | "tutor";
+};
+
+export type AuthResponse = {
+  success: boolean;
+  message: string;
+  user?: Omit<User, 'password'>;
+  token?: string;
 };
 
 export type InsertTutor = {
