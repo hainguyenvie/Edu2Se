@@ -1,13 +1,12 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { getStorage } from "./storage";
+import { storage } from "./storage";
 import { searchFiltersSchema } from "@shared/schema";
 import { AuthService } from "./auth";
 import { GoogleAuthService } from "./google-auth";
 import { type LoginCredentials, type RegisterData } from "@shared/types";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  const storage = await getStorage();
   const authService = new AuthService(storage);
   const googleAuthService = new GoogleAuthService(storage);
 
