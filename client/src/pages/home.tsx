@@ -12,9 +12,11 @@ import { useQuery } from "@tanstack/react-query";
 import { type Tutor, type SearchFilters as SearchFiltersType } from "@shared/schema";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { Menu } from "lucide-react";
 
 export default function Home() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true); // Start with sidebar open on desktop
   const [filters, setFilters] = useState<SearchFiltersType>({});
   const [selectedTutor, setSelectedTutor] = useState<Tutor | null>(null);
   const [tutorDetailOpen, setTutorDetailOpen] = useState(false);
@@ -71,7 +73,7 @@ export default function Home() {
       <Header onToggleSidebar={toggleSidebar} />
       
       <div className="flex pt-16">
-        <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
+        <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} onToggle={toggleSidebar} />
         
         {/* Mobile overlay */}
         {sidebarOpen && (
@@ -82,7 +84,22 @@ export default function Home() {
         )}
 
         {/* Main content */}
-        <main className="flex-1 lg:ml-64">
+        <main className={cn("flex-1 transition-all duration-300", sidebarOpen ? "lg:ml-64" : "lg:ml-0")}>
+          {/* Show Sidebar Button when hidden */}
+          {!sidebarOpen && (
+            <div className="fixed top-20 left-4 z-40 lg:block hidden">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={toggleSidebar}
+                className="bg-white shadow-md hover:shadow-lg"
+                title="Show Sidebar"
+              >
+                <Menu className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+
           {/* Auto-Rotating Promotional Banner */}
           <AutoRotatingBanner />
 

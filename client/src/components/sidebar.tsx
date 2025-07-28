@@ -12,14 +12,17 @@ import {
   Zap,
   Beaker,
   Leaf,
-  Earth
+  Earth,
+  X
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { SUBJECT_COLORS } from "@/config/constants";
 
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  onToggle?: () => void;
 }
 
 const iconMap = {
@@ -37,7 +40,7 @@ const iconMap = {
   GlobeEurope: Earth,
 };
 
-export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+export default function Sidebar({ isOpen, onClose, onToggle }: SidebarProps) {
   const { data: subjects = [] } = useQuery<Subject[]>({
     queryKey: ['/api/subjects'],
   });
@@ -46,10 +49,25 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     <aside
       className={cn(
         "fixed left-0 top-16 h-full w-64 bg-white border-r border-gray-200 z-30 sidebar-transition",
-        isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        isOpen ? "translate-x-0" : "-translate-x-full"
       )}
     >
       <div className="p-4">
+        {/* Sidebar Header with Toggle */}
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-900">Môn học</h2>
+          {onToggle && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onToggle}
+              className="text-gray-500 hover:text-gray-700 p-1"
+              title="Hide Sidebar"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
         <nav className="space-y-2">
           {subjects.map((subject) => {
             const IconComponent = iconMap[subject.icon as keyof typeof iconMap] || Calculator;

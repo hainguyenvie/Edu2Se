@@ -17,6 +17,20 @@
   transition: all 0.3s ease-in-out;
 }
 
+/* Sidebar transitions */
+.sidebar-transition {
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Improved sidebar toggle */
+.sidebar-hidden {
+  transform: translateX(-100%);
+}
+
+.sidebar-visible {
+  transform: translateX(0);
+}
+
 /* Video story styling */
 .video-story {
   width: 96px;
