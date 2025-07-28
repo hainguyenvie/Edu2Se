@@ -8,7 +8,6 @@ import TutorDetailSidebar from "@/components/tutor-detail-sidebar";
 import MessagesPopup from "@/components/messages-popup";
 import CommunityFeatures from "@/components/community-features";
 import AutoRotatingBanner from "@/components/auto-rotating-banner";
-import QuickSearchSection from "@/components/quick-search-section";
 import { useQuery } from "@tanstack/react-query";
 import { type Tutor, type SearchFilters as SearchFiltersType } from "@shared/schema";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -37,10 +36,6 @@ export default function Home() {
 
   const handleFilterChange = (newFilters: SearchFiltersType) => {
     setFilters(newFilters);
-  };
-
-  const handleSubjectSelect = (subject: string) => {
-    setFilters(prev => ({ ...prev, subject }));
   };
 
   const toggleSidebar = () => {
@@ -90,9 +85,6 @@ export default function Home() {
         <main className="flex-1 lg:ml-64">
           {/* Auto-Rotating Promotional Banner */}
           <AutoRotatingBanner />
-
-          {/* Quick Search Section */}
-          <QuickSearchSection onSubjectSelect={handleSubjectSelect} />
 
           {/* Video Carousel */}
           <VideoCarousel />
