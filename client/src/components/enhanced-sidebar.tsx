@@ -29,7 +29,7 @@ export default function EnhancedSidebar({
 }: EnhancedSidebarProps) {
   const [subject, setSubject] = useState<string>("");
   const [courseType, setCourseType] = useState<string>("");
-  const [priceRange, setPriceRange] = useState([50000, 500000]);
+  const [priceRange, setPriceRange] = useState([50000, 5000000]);
   const [customPriceMode, setCustomPriceMode] = useState(false);
   const [timeSlots, setTimeSlots] = useState<string[]>([]);
   const [keywords, setKeywords] = useState("");
@@ -109,7 +109,7 @@ export default function EnhancedSidebar({
   const clearFilters = () => {
     setSubject("");
     setCourseType("");
-    setPriceRange([50000, 500000]);
+    setPriceRange([50000, 5000000]);
     setTimeSlots([]);
     setKeywords("");
     if (onFiltersChange) {
@@ -121,7 +121,7 @@ export default function EnhancedSidebar({
     return new Intl.NumberFormat('vi-VN').format(price);
   };
 
-  const hasActiveFilters = subject || courseType || timeSlots.length > 0 || keywords || (priceRange[0] !== 50000 || priceRange[1] !== 500000);
+  const hasActiveFilters = subject || courseType || timeSlots.length > 0 || keywords || (priceRange[0] !== 50000 || priceRange[1] !== 5000000);
 
   return (
     <aside
