@@ -104,9 +104,9 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      {/* Video Player Popup */}
+      {/* Video Player Popup - Vertical/Portrait orientation */}
       <div 
-        className="relative w-full max-w-md h-[80vh] bg-black rounded-2xl overflow-hidden shadow-2xl"
+        className="relative w-full max-w-sm h-[85vh] bg-black rounded-2xl overflow-hidden shadow-2xl"
         onMouseMove={handleMouseMove}
       >
         {/* Close Button */}
@@ -130,6 +130,7 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
             loop
             playsInline
             poster={video.thumbnail}
+            style={{ aspectRatio: '9/16' }}
           />
 
           {/* Center Play/Pause Button */}
@@ -148,26 +149,7 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
             )}
           </Button>
 
-          {/* Progress Bar - positioned to not overlap action buttons */}
-          <div 
-            className={`absolute bottom-32 left-4 right-20 transition-opacity duration-300 ${
-              showControls ? 'opacity-100' : 'opacity-0'
-            }`}
-          >
-            <div 
-              className="w-full h-1 bg-white/30 rounded-full cursor-pointer"
-              onClick={handleProgressClick}
-            >
-              <div 
-                className="h-full bg-white rounded-full transition-all"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-            <div className="flex justify-between text-white text-xs mt-1">
-              <span>{formatTime(currentTime)}</span>
-              <span>{formatTime(duration)}</span>
-            </div>
-          </div>
+
         </div>
 
         {/* Side Action Buttons (TikTok style) */}
@@ -222,16 +204,33 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
             </div>
           </div>
 
-          {/* Volume Control */}
-          <div className="flex items-center space-x-2">
+          {/* Volume Control and Progress Bar - positioned together */}
+          <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
               size="icon"
               onClick={toggleMute}
-              className="text-white hover:bg-white/20 w-8 h-8"
+              className="text-white hover:bg-white/20 w-8 h-8 flex-shrink-0"
             >
               {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
             </Button>
+            
+            {/* Progress Bar next to speaker */}
+            <div className="flex-1">
+              <div 
+                className="w-full h-1 bg-white/30 rounded-full cursor-pointer"
+                onClick={handleProgressClick}
+              >
+                <div 
+                  className="h-full bg-white rounded-full transition-all"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+              <div className="flex justify-between text-white text-[10px] mt-1">
+                <span>{formatTime(currentTime)}</span>
+                <span>{formatTime(duration)}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
