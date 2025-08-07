@@ -126,8 +126,9 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
       {/* Video Player Popup - Extends width when comments are open */}
       <div 
         className={`relative h-[85vh] bg-black rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 ${
-          showComments ? 'flex w-full max-w-4xl' : 'w-full max-w-sm'
+          showComments ? 'flex' : 'w-full max-w-sm'
         }`}
+        style={{ width: showComments ? '640px' : undefined }}
         onMouseMove={handleMouseMove}
         onClick={(e) => e.stopPropagation()}
       >
