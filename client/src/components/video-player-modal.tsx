@@ -103,10 +103,10 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
-      {/* Mobile-first layout similar to TikTok/Instagram Reels */}
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      {/* Video Player Popup */}
       <div 
-        className="relative w-full h-full max-w-md mx-auto bg-black flex flex-col"
+        className="relative w-full max-w-md h-[80vh] bg-black rounded-2xl overflow-hidden shadow-2xl"
         onMouseMove={handleMouseMove}
       >
         {/* Close Button */}
@@ -114,7 +114,7 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
           variant="ghost"
           size="icon"
           onClick={onClose}
-          className={`absolute top-4 left-4 z-20 text-white hover:bg-white/20 transition-opacity duration-300 ${
+          className={`absolute top-4 right-4 z-20 text-white hover:bg-white/20 transition-opacity duration-300 ${
             showControls ? 'opacity-100' : 'opacity-0'
           }`}
         >
@@ -148,9 +148,9 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
             )}
           </Button>
 
-          {/* Progress Bar */}
+          {/* Progress Bar - positioned to not overlap action buttons */}
           <div 
-            className={`absolute bottom-20 left-4 right-4 transition-opacity duration-300 ${
+            className={`absolute bottom-32 left-4 right-20 transition-opacity duration-300 ${
               showControls ? 'opacity-100' : 'opacity-0'
             }`}
           >
@@ -170,70 +170,68 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
           </div>
         </div>
 
+        {/* Side Action Buttons (TikTok style) */}
+        <div className="absolute right-4 bottom-16 top-1/2 flex flex-col justify-center space-y-6">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-white hover:bg-white/20 flex flex-col items-center bg-black/20 backdrop-blur-sm rounded-full w-12 h-12"
+          >
+            <Heart className="w-6 h-6" />
+            <span className="text-xs mt-1">123</span>
+          </Button>
+          
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-white hover:bg-white/20 flex flex-col items-center bg-black/20 backdrop-blur-sm rounded-full w-12 h-12"
+          >
+            <MessageCircle className="w-6 h-6" />
+            <span className="text-xs mt-1">45</span>
+          </Button>
+          
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-white hover:bg-white/20 flex flex-col items-center bg-black/20 backdrop-blur-sm rounded-full w-12 h-12"
+          >
+            <Bookmark className="w-6 h-6" />
+          </Button>
+          
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-white hover:bg-white/20 flex flex-col items-center bg-black/20 backdrop-blur-sm rounded-full w-12 h-12"
+          >
+            <Share className="w-6 h-6" />
+          </Button>
+        </div>
+
         {/* Bottom Controls & Info */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-          {/* Tutor Info */}
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-              <span className="text-white text-sm font-bold">
+        <div className="absolute bottom-0 left-0 right-20 p-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent rounded-bl-2xl">
+          {/* Tutor Info - positioned lower */}
+          <div className="flex items-center space-x-3 mb-2">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+              <span className="text-white text-xs font-bold">
                 {video.tutor.charAt(0)}
               </span>
             </div>
             <div>
-              <p className="text-white font-semibold text-sm">{video.tutor}</p>
-              <p className="text-white/70 text-xs">Gia sư • Bài giảng</p>
+              <p className="text-white font-semibold text-xs">{video.tutor}</p>
+              <p className="text-white/70 text-[10px]">Gia sư • Bài giảng</p>
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={toggleMute}
-                className="text-white hover:bg-white/20"
-              >
-                {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
-              </Button>
-            </div>
-
-            {/* Side Action Buttons (TikTok style) */}
-            <div className="flex flex-col space-y-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-white hover:bg-white/20 flex flex-col items-center"
-              >
-                <Heart className="w-6 h-6" />
-                <span className="text-xs mt-1">123</span>
-              </Button>
-              
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-white hover:bg-white/20 flex flex-col items-center"
-              >
-                <MessageCircle className="w-6 h-6" />
-                <span className="text-xs mt-1">45</span>
-              </Button>
-              
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-white hover:bg-white/20 flex flex-col items-center"
-              >
-                <Bookmark className="w-6 h-6" />
-              </Button>
-              
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-white hover:bg-white/20 flex flex-col items-center"
-              >
-                <Share className="w-6 h-6" />
-              </Button>
-            </div>
+          {/* Volume Control */}
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleMute}
+              className="text-white hover:bg-white/20 w-8 h-8"
+            >
+              {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+            </Button>
           </div>
         </div>
       </div>
