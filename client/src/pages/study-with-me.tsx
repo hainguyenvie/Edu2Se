@@ -4,9 +4,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, Users, Clock, Plus, MessageCircle, Trophy, Video, HelpCircle, Home } from "lucide-react";
 import Header from "@/components/header";
+import LoginModal from "@/components/modals/login-modal";
+import PaymentModal from "@/components/modals/payment-modal";
+import RoomViewModal from "@/components/modals/room-view-modal";
 
 export default function StudyWithMe() {
   const [activeTab, setActiveTab] = useState("study-with-me");
+  const [selectedRoom, setSelectedRoom] = useState<any>(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showRoomView, setShowRoomView] = useState(false);
 
   // Mock data for study rooms
   const studyRooms = [
@@ -133,9 +140,30 @@ export default function StudyWithMe() {
     ));
   };
 
-  const handleJoinRoom = (roomId: number) => {
-    console.log(`Joining room ${roomId}`);
-    // Implement join room logic here
+  const handleJoinRoom = (room: any) => {
+    setSelectedRoom(room);
+    setShowLoginModal(true);
+  };
+
+  const handleLoginSuccess = () => {
+    setShowLoginModal(false);
+    setShowPaymentModal(true);
+  };
+
+  const handlePaymentSuccess = () => {
+    setShowPaymentModal(false);
+    setShowRoomView(true);
+  };
+
+  const handleCloseRoomView = () => {
+    setShowRoomView(false);
+    setSelectedRoom(null);
+  };
+
+  const handleCloseModals = () => {
+    setShowLoginModal(false);
+    setShowPaymentModal(false);
+    setSelectedRoom(null);
   };
 
   return (
@@ -261,7 +289,7 @@ export default function StudyWithMe() {
                       <Button 
                         size="sm"
                         className="bg-blue-600 hover:bg-blue-700 px-6 shadow-sm"
-                        onClick={() => handleJoinRoom(room.id)}
+                        onClick={() => handleJoinRoom(room)}
                       >
                         Tham gia
                       </Button>
@@ -290,6 +318,27 @@ export default function StudyWithMe() {
           </Button>
         </div>
       </div>
+
+      {/* Modals */}
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={handleCloseModals}
+        onLoginSuccess={handleLoginSuccess}
+      />
+      
+      <PaymentModal
+        isOpen={showPaymentModal}
+        onClose={handleCloseModals}
+        onPaymentSuccess={handlePaymentSuccess}
+        roomName={selectedRoom?.creator?.name || ""}
+        price="20k VND"
+      />
+      
+      <RoomViewModal
+        isOpen={showRoomView}
+        onClose={handleCloseRoomView}
+        roomData={selectedRoom || {}}
+      />
     </div>
   );
 }

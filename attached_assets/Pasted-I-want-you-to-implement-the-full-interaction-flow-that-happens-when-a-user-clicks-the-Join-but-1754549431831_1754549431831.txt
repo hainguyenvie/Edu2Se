@@ -1,0 +1,68 @@
+I want you to implement the full **interaction flow** that happens when a user clicks the "Join" button in the “Study With Me” feature.
+
+This is part of a learning platform where users can join public virtual study rooms created by others.
+
+Based on the wireframes, here’s what I need:
+
+---
+
+### 🧩 Functional Flow:
+
+1. **Initial State:**
+   - A list of study rooms is displayed (already implemented).
+   - Each room has a "Join" (`Tham gia`) button.
+
+2. **When user clicks “Join” on a room:**
+   - Step 1: Show a **Login popup** with:
+     - Email and password fields
+     - Google Sign-In option
+     - A login button (blue)
+
+   - Step 2 (after login): Show a **QR Code payment popup**:
+     - Displays a VN PAY QR code image
+     - Shows price (e.g. "20k VND")
+     - Button/text to confirm successful payment (simulate)
+
+   - Step 3 (after payment): Redirect user to the **Room View UI**:
+     - Display creator’s avatar, name, rating, and study vibe icons
+     - A video section (placeholder or embedded YouTube/HTML5 video)
+     - List of participants on the right (avatars)
+     - “Share” button (can simulate)
+
+---
+
+### 🔧 Technical Requirements:
+
+- Use **HTML, CSS, and JavaScript** (React is okay if necessary)
+- Use **modals** or popup components for login and QR payment
+- Simulate authentication and payment (no backend needed)
+- Use hardcoded user credentials and QR code image
+- The room view can be a separate HTML section or routed page
+- Maintain simple, responsive layout
+
+---
+
+### 🎨 UI Design:
+
+- Use modern, clean UI with hover/transition effects
+- Use Vietnamese UI labels: “Tham gia”, “Đăng nhập”, “Quét QR để tham gia”, etc.
+- Use mock avatars and placeholder video
+
+---
+
+### 📁 Suggested structure:
+
+- `index.html` or `App.jsx`: main page with room list
+- `loginModal.js`, `paymentModal.js`, `roomView.js`: modal/components
+- `style.css` or `Tailwind CSS` for styling
+
+---
+
+### 🏁 Goal:
+
+- Simulate a **full Join Room flow** with three steps:
+   1. Login Modal
+   2. Payment Modal (QR Code)
+   3. Room View Interface (with video + participants)
+- No backend, just clean frontend UX for demo/prototype purposes
+- Structure code for easy integration into a larger platform
