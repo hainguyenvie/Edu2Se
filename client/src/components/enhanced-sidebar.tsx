@@ -150,6 +150,85 @@ export default function EnhancedSidebar({
           </CardContent>
         </Card>
 
+        {/* Active Filters */}
+        {hasActiveFilters && (
+          <Card className="border-blue-200 bg-blue-50">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium text-blue-700">Bộ lọc hiện tại:</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearFilters}
+                  className="text-blue-600 hover:text-blue-700 hover:bg-blue-100 p-1"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+              <div className="space-y-2">
+                {subject && (
+                  <div className="flex items-center justify-between bg-white rounded-lg px-3 py-2 border border-blue-200">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-blue-600">📚</span>
+                      <span className="text-sm font-medium text-blue-700">Môn: {subject}</span>
+                    </div>
+                    <button 
+                      onClick={() => setSubject('')}
+                      className="text-blue-400 hover:text-blue-600"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
+                {courseType && (
+                  <div className="flex items-center justify-between bg-white rounded-lg px-3 py-2 border border-blue-200">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-blue-600">🎓</span>
+                      <span className="text-sm font-medium text-blue-700">Khóa: {courseType}</span>
+                    </div>
+                    <button 
+                      onClick={() => setCourseType('')}
+                      className="text-blue-400 hover:text-blue-600"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
+                {timeSlots.length > 0 && (
+                  <div className="flex items-center justify-between bg-white rounded-lg px-3 py-2 border border-blue-200">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-blue-600">⏰</span>
+                      <span className="text-sm font-medium text-blue-700">
+                        Thời gian: {timeSlots.join(', ')}
+                      </span>
+                    </div>
+                    <button 
+                      onClick={() => setTimeSlots([])}
+                      className="text-blue-400 hover:text-blue-600"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
+                {keywords && (
+                  <div className="flex items-center justify-between bg-white rounded-lg px-3 py-2 border border-blue-200">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-blue-600">🔍</span>
+                      <span className="text-sm font-medium text-blue-700">Tìm: {keywords}</span>
+                    </div>
+                    <button 
+                      onClick={() => setKeywords('')}
+                      className="text-blue-400 hover:text-blue-600"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Popular Subjects */}
         <Card>
           <CardHeader className="pb-3">
@@ -175,53 +254,6 @@ export default function EnhancedSidebar({
                 </Badge>
               ))}
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Subject Selection */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm flex items-center">
-              <MapPin className="w-4 h-4 mr-2 text-blue-500" />
-              Môn học
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <Select value={subject} onValueChange={setSubject}>
-              <SelectTrigger className="h-11 border-2 border-gray-200 focus:border-blue-500 rounded-lg">
-                <SelectValue placeholder="Chọn môn học" />
-              </SelectTrigger>
-              <SelectContent>
-                {subjects.map((subj) => (
-                  <SelectItem key={subj.id} value={subj.name}>
-                    {subj.nameVi}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </CardContent>
-        </Card>
-
-        {/* Course Type */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm flex items-center">
-              <Filter className="w-4 h-4 mr-2 text-purple-500" />
-              Khóa học
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <Select value={courseType} onValueChange={setCourseType}>
-              <SelectTrigger className="h-11 border-2 border-gray-200 focus:border-blue-500 rounded-lg">
-                <SelectValue placeholder="Chọn loại khóa học" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Cơ bản">Cơ bản</SelectItem>
-                <SelectItem value="Nâng cao">Nâng cao</SelectItem>
-                <SelectItem value="Luyện thi">Luyện thi</SelectItem>
-                <SelectItem value="Ôn thi">Ôn thi</SelectItem>
-              </SelectContent>
-            </Select>
           </CardContent>
         </Card>
 
@@ -304,46 +336,52 @@ export default function EnhancedSidebar({
           </CardContent>
         </Card>
 
-        {/* Active Filters */}
-        {hasActiveFilters && (
-          <Card className="border-blue-200 bg-blue-50">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-medium text-blue-700">Bộ lọc đang áp dụng:</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={clearFilters}
-                  className="text-blue-600 hover:text-blue-700 hover:bg-blue-100 p-1"
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {subject && (
-                  <Badge variant="default" className="bg-blue-600 text-xs">
-                    {subject}
-                  </Badge>
-                )}
-                {courseType && (
-                  <Badge variant="default" className="bg-purple-600 text-xs">
-                    {courseType}
-                  </Badge>
-                )}
-                {timeSlots.map((slot) => (
-                  <Badge key={slot} variant="default" className="bg-green-600 text-xs">
-                    {timeSlotOptions.find(t => t.value === slot)?.label}
-                  </Badge>
+        {/* Subject Selection */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm flex items-center">
+              <MapPin className="w-4 h-4 mr-2 text-blue-500" />
+              Môn học
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <Select value={subject} onValueChange={setSubject}>
+              <SelectTrigger className="h-11 border-2 border-gray-200 focus:border-blue-500 rounded-lg">
+                <SelectValue placeholder="Chọn môn học" />
+              </SelectTrigger>
+              <SelectContent>
+                {subjects.map((subj) => (
+                  <SelectItem key={subj.id} value={subj.name}>
+                    {subj.nameVi}
+                  </SelectItem>
                 ))}
-                {keywords && (
-                  <Badge variant="default" className="bg-orange-600 text-xs">
-                    "{keywords}"
-                  </Badge>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+              </SelectContent>
+            </Select>
+          </CardContent>
+        </Card>
+
+        {/* Course Type */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm flex items-center">
+              <Filter className="w-4 h-4 mr-2 text-purple-500" />
+              Khóa học
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <Select value={courseType} onValueChange={setCourseType}>
+              <SelectTrigger className="h-11 border-2 border-gray-200 focus:border-blue-500 rounded-lg">
+                <SelectValue placeholder="Chọn loại khóa học" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Cơ bản">Cơ bản</SelectItem>
+                <SelectItem value="Nâng cao">Nâng cao</SelectItem>
+                <SelectItem value="Luyện thi">Luyện thi</SelectItem>
+                <SelectItem value="Ôn thi">Ôn thi</SelectItem>
+              </SelectContent>
+            </Select>
+          </CardContent>
+        </Card>
       </div>
     </aside>
   );
