@@ -108,8 +108,20 @@ AitheduConnect is a comprehensive online tutoring marketplace designed specifica
    ```
 
 3. **Start development server**
+   
+   **For Mac/Linux:**
    ```bash
    npm run dev
+   ```
+   
+   **For Windows:**
+   ```bash
+   node dev.js
+   ```
+   
+   **Alternative (cross-platform):**
+   ```bash
+   npx cross-env NODE_ENV=development tsx server/index.ts
    ```
 
 4. **Open in browser**
@@ -326,9 +338,22 @@ npm run build
 ### Common Issues
 
 **Development server won't start**
+
+*Windows users may encounter `'NODE_ENV' is not recognized` error:*
+```bash
+# Use the Windows-compatible script
+node dev.js
+
+# Or install cross-env and use:
+npx cross-env NODE_ENV=development tsx server/index.ts
+```
+
+*For other issues:*
 ```bash
 # Clear node modules and reinstall
-rm -rf node_modules package-lock.json
+rm -rf node_modules package-lock.json  # Mac/Linux
+# or
+rmdir /s node_modules && del package-lock.json  # Windows
 npm install
 ```
 
