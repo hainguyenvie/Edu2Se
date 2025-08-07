@@ -29,7 +29,7 @@ export default function EnhancedSidebar({
 }: EnhancedSidebarProps) {
   const [subject, setSubject] = useState<string>("");
   const [courseType, setCourseType] = useState<string>("");
-  const [priceRange, setPriceRange] = useState([200000]);
+  const [priceRange, setPriceRange] = useState([50000, 500000]);
   const [timeSlots, setTimeSlots] = useState<string[]>([]);
   const [keywords, setKeywords] = useState("");
 
@@ -60,7 +60,7 @@ export default function EnhancedSidebar({
   };
 
   const handlePriceRangeSelect = (range: number[]) => {
-    setPriceRange([range[1]]);
+    setPriceRange(range);
   };
 
   const handleSubjectSelect = (selectedSubject: string) => {
@@ -75,8 +75,8 @@ export default function EnhancedSidebar({
     const filters: SearchFilters = {
       subject: subject || undefined,
       courseType: courseType || undefined,
-      minPrice: 50000,
-      maxPrice: priceRange[0],
+      minPrice: priceRange[0],
+      maxPrice: priceRange[1],
       timeSlots: timeSlots.length > 0 ? timeSlots : undefined,
       keywords: keywords || undefined,
     };
@@ -89,7 +89,7 @@ export default function EnhancedSidebar({
   const clearFilters = () => {
     setSubject("");
     setCourseType("");
-    setPriceRange([200000]);
+    setPriceRange([50000, 500000]);
     setTimeSlots([]);
     setKeywords("");
     if (onFiltersChange) {
@@ -101,7 +101,7 @@ export default function EnhancedSidebar({
     return new Intl.NumberFormat('vi-VN').format(price);
   };
 
-  const hasActiveFilters = subject || courseType || timeSlots.length > 0 || keywords;
+  const hasActiveFilters = subject || courseType || timeSlots.length > 0 || keywords || (priceRange[0] !== 50000 || priceRange[1] !== 500000);
 
   return (
     <aside
@@ -210,6 +210,22 @@ export default function EnhancedSidebar({
                     </button>
                   </div>
                 )}
+                {(priceRange[0] !== 50000 || priceRange[1] !== 500000) && (
+                  <div className="flex items-center justify-between bg-white rounded-lg px-3 py-2 border border-blue-200">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-blue-600">💰</span>
+                      <span className="text-sm font-medium text-blue-700">
+                        Giá: {formatPrice(priceRange[0])}₫ - {formatPrice(priceRange[1])}₫
+                      </span>
+                    </div>
+                    <button 
+                      onClick={() => setPriceRange([50000, 500000])}
+                      className="text-blue-400 hover:text-blue-600"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
                 {keywords && (
                   <div className="flex items-center justify-between bg-white rounded-lg px-3 py-2 border border-blue-200">
                     <div className="flex items-center gap-2">
@@ -302,7 +318,7 @@ export default function EnhancedSidebar({
                   size="sm"
                   onClick={() => handlePriceRangeSelect(range.value)}
                   className={`relative h-10 rounded-lg border-2 transition-all text-xs ${
-                    priceRange[0] === range.value[1]
+                    priceRange[0] === range.value[0] && priceRange[1] === range.value[1]
                       ? "border-blue-500 bg-blue-50 text-blue-700"
                       : "border-gray-200 hover:border-gray-300"
                   }`}
@@ -327,9 +343,15 @@ export default function EnhancedSidebar({
               />
               <div className="flex justify-between text-xs text-gray-500">
                 <span>50K</span>
-                <span className="font-medium text-blue-600">
-                  {formatPrice(priceRange[0])}₫
-                </span>
+                <div className="flex items-center space-x-2">
+                  <span className="font-medium text-blue-600">
+                    {formatPrice(priceRange[0])}₫
+                  </span>
+                  <span className="text-gray-400">-</span>
+                  <span className="font-medium text-blue-600">
+                    {formatPrice(priceRange[1])}₫
+                  </span>
+                </div>
                 <span>5M</span>
               </div>
             </div>
