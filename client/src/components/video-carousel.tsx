@@ -61,23 +61,15 @@ export default function VideoCarousel() {
               </div>
             </div>
             
-            {/* Video Info */}
-            <div className="absolute bottom-0 left-0 right-0 p-2">
-              <p className="text-white text-xs font-semibold text-center leading-tight">
-                {video.subject}
-              </p>
-              <div className="flex items-center justify-center mt-1 space-x-1">
-                <Clock className="w-2.5 h-2.5 text-white/80" />
-                <p className="text-white/80 text-[10px]">
-                  {video.duration}
-                </p>
-              </div>
-            </div>
-            
-            {/* Tutor Badge */}
-            <div className="absolute top-1 right-1">
-              <div className="bg-black/30 backdrop-blur-sm rounded-full px-1.5 py-0.5">
-                <p className="text-white text-[9px] font-medium">
+            {/* Tutor Info at Bottom */}
+            <div className="absolute bottom-0 left-0 right-0 p-2 bg-black/40 backdrop-blur-sm rounded-b-xl">
+              <div className="flex items-center justify-center space-x-2">
+                <div className="w-4 h-4 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                  <span className="text-white text-[8px] font-bold">
+                    {video.tutor.charAt(0)}
+                  </span>
+                </div>
+                <p className="text-white text-[10px] font-medium truncate">
                   {video.tutor}
                 </p>
               </div>
