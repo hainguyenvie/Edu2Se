@@ -132,83 +132,118 @@ export default function MessagesPopup({ isOpen, onClose, selectedTutorName }: Me
 
         {!isMinimized && (
           <CardContent className="p-0">
-            <div className="flex h-96">
+            <div className="flex h-[500px]">
               {/* Conversation List */}
-              <div className="w-1/3 border-r border-gray-200">
-                <div className="p-2 border-b border-gray-200">
+              <div className="w-80 border-r border-gray-200 bg-gray-50">
+                <div className="p-3 border-b border-gray-200 bg-white">
                   <div className="relative">
-                    <Search className="absolute left-2 top-2.5 h-3 w-3 text-gray-400" />
+                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
                     <Input
-                      placeholder="Tìm kiếm..."
-                      className="pl-7 h-8 text-xs"
+                      placeholder="Tìm kiếm cuộc trò chuyện..."
+                      className="pl-9 h-9 text-sm border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                     />
                   </div>
                 </div>
-                <ScrollArea className="h-80">
-                  {conversations.map((conversation) => (
-                    <div
-                      key={conversation.id}
-                      onClick={() => setSelectedConversation(conversation)}
-                      className={`p-2 border-b border-gray-100 cursor-pointer hover:bg-gray-50 ${
-                        selectedConversation.id === conversation.id ? 'bg-blue-50' : ''
-                      }`}
-                    >
-                      <div className="flex items-center space-x-2">
-                        <div className="relative">
-                          <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-sm">
-                            {conversation.avatar}
-                          </div>
-                          {conversation.online && (
-                            <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border border-white"></div>
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between">
-                            <p className="text-xs font-medium text-gray-900 truncate">
-                              {conversation.name}
-                            </p>
-                            {conversation.unread > 0 && (
-                              <span className="bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[16px] text-center">
-                                {conversation.unread}
-                              </span>
+                <ScrollArea className="h-[430px]">
+                  <div className="p-2">
+                    {conversations.map((conversation) => (
+                      <div
+                        key={conversation.id}
+                        onClick={() => setSelectedConversation(conversation)}
+                        className={`p-3 mb-2 rounded-lg cursor-pointer transition-all duration-200 ${
+                          selectedConversation.id === conversation.id 
+                            ? 'bg-blue-100 border border-blue-200 shadow-sm' 
+                            : 'bg-white hover:bg-gray-100 border border-gray-100 hover:border-gray-200'
+                        }`}
+                      >
+                        <div className="flex items-center space-x-3">
+                          <div className="relative flex-shrink-0">
+                            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-medium shadow-sm">
+                              {conversation.avatar}
+                            </div>
+                            {conversation.online && (
+                              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
                             )}
                           </div>
-                          <p className="text-xs text-gray-600 truncate mt-1">
-                            {conversation.lastMessage}
-                          </p>
-                          <p className="text-xs text-gray-500 mt-1">
-                            {conversation.time}
-                          </p>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between mb-1">
+                              <h4 className="text-sm font-semibold text-gray-900 truncate">
+                                {conversation.name}
+                              </h4>
+                              <div className="flex items-center space-x-2">
+                                <span className="text-xs text-gray-500">
+                                  {conversation.time}
+                                </span>
+                                {conversation.unread > 0 && (
+                                  <span className="bg-red-500 text-white text-xs rounded-full px-2 py-0.5 min-w-[18px] text-center font-medium">
+                                    {conversation.unread}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            <p className="text-sm text-gray-600 truncate">
+                              {conversation.lastMessage}
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </ScrollArea>
               </div>
 
               {/* Chat Area */}
-              <div className="flex-1 flex flex-col">
+              <div className="flex-1 flex flex-col bg-white">
+                {/* Chat Header */}
+                <div className="p-4 border-b border-gray-200 bg-gray-50">
+                  <div className="flex items-center space-x-3">
+                    <div className="relative">
+                      <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-medium shadow-sm">
+                        {selectedConversation.avatar}
+                      </div>
+                      {selectedConversation.online && (
+                        <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                      )}
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">{selectedConversation.name}</h3>
+                      <p className="text-sm text-gray-500">
+                        {selectedConversation.online ? 'Đang hoạt động' : 'Offline'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Messages */}
-                <ScrollArea className="flex-1 p-2">
-                  <div className="space-y-2">
+                <ScrollArea className="flex-1 p-4">
+                  <div className="space-y-4">
                     {currentMessages.map((message) => (
                       <div
                         key={message.id}
-                        className={`flex ${message.isOwn ? 'justify-end' : 'justify-start'}`}
+                        className={`flex ${message.isOwn ? 'justify-end' : 'justify-start'} mb-3`}
                       >
-                        <div
-                          className={`max-w-[80%] p-2 rounded-lg text-xs ${
-                            message.isOwn
-                              ? 'bg-blue-600 text-white'
-                              : 'bg-gray-100 text-gray-900'
-                          }`}
-                        >
-                          <p>{message.message}</p>
-                          <p className={`text-xs mt-1 ${
-                            message.isOwn ? 'text-blue-100' : 'text-gray-500'
-                          }`}>
-                            {message.time}
-                          </p>
+                        <div className={`flex max-w-[75%] ${message.isOwn ? 'flex-row-reverse' : 'flex-row'} items-end space-x-2`}>
+                          {!message.isOwn && (
+                            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-xs font-medium flex-shrink-0 mb-1">
+                              {selectedConversation.avatar}
+                            </div>
+                          )}
+                          <div className={`flex flex-col ${message.isOwn ? 'items-end' : 'items-start'}`}>
+                            <div
+                              className={`px-4 py-3 rounded-2xl shadow-sm ${
+                                message.isOwn
+                                  ? 'bg-blue-600 text-white rounded-br-md'
+                                  : 'bg-gray-100 text-gray-900 rounded-bl-md border border-gray-200'
+                              }`}
+                            >
+                              <p className="text-sm leading-relaxed">{message.message}</p>
+                            </div>
+                            <span className={`text-xs mt-1 px-2 ${
+                              message.isOwn ? 'text-blue-600' : 'text-gray-500'
+                            }`}>
+                              {message.time}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -216,23 +251,27 @@ export default function MessagesPopup({ isOpen, onClose, selectedTutorName }: Me
                 </ScrollArea>
 
                 {/* Message Input */}
-                <div className="p-2 border-t border-gray-200">
-                  <div className="flex items-center space-x-2">
-                    <Input
-                      placeholder="Nhập tin nhắn..."
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                      className="flex-1 h-8 text-xs"
-                    />
+                <div className="p-4 border-t border-gray-200 bg-gray-50">
+                  <div className="flex items-end space-x-3">
+                    <div className="flex-1 relative">
+                      <Input
+                        placeholder="Nhập tin nhắn..."
+                        value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
+                        onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
+                        className="pr-12 py-3 rounded-xl border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none min-h-[44px]"
+                      />
+                    </div>
                     <Button
                       onClick={handleSendMessage}
                       size="icon"
-                      className="h-8 w-8"
+                      className="h-11 w-11 bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition-all duration-200"
+                      disabled={!newMessage.trim()}
                     >
-                      <Send className="h-3 w-3" />
+                      <Send className="h-4 w-4" />
                     </Button>
                   </div>
+                  <p className="text-xs text-gray-500 mt-2">Nhấn Enter để gửi, Shift + Enter để xuống dòng</p>
                 </div>
               </div>
             </div>

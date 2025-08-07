@@ -147,26 +147,35 @@ export default function Messages() {
           </div>
 
           {/* Messages */}
-          <ScrollArea className="flex-1 p-4">
+          <ScrollArea className="flex-1 p-6">
             <div className="space-y-4">
               {messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`flex ${message.sender === 'me' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex ${message.sender === 'me' ? 'justify-end' : 'justify-start'} mb-4`}
                 >
-                  <div
-                    className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                      message.sender === 'me'
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-200 text-gray-900'
-                    }`}
-                  >
-                    <p className="text-sm">{message.text}</p>
-                    <p className={`text-xs mt-1 ${
-                      message.sender === 'me' ? 'text-blue-100' : 'text-gray-500'
-                    }`}>
-                      {message.time}
-                    </p>
+                  <div className={`flex max-w-[75%] ${message.sender === 'me' ? 'flex-row-reverse' : 'flex-row'} items-end space-x-3`}>
+                    {message.sender !== 'me' && (
+                      <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-xs font-medium flex-shrink-0 mb-1">
+                        {selectedConversation.avatar}
+                      </div>
+                    )}
+                    <div className={`flex flex-col ${message.sender === 'me' ? 'items-end' : 'items-start'}`}>
+                      <div
+                        className={`px-4 py-3 rounded-2xl shadow-sm ${
+                          message.sender === 'me'
+                            ? 'bg-blue-600 text-white rounded-br-md'
+                            : 'bg-gray-100 text-gray-900 rounded-bl-md border border-gray-200'
+                        }`}
+                      >
+                        <p className="text-sm leading-relaxed">{message.text}</p>
+                      </div>
+                      <span className={`text-xs mt-1 px-2 ${
+                        message.sender === 'me' ? 'text-blue-600' : 'text-gray-500'
+                      }`}>
+                        {message.time}
+                      </span>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -174,19 +183,27 @@ export default function Messages() {
           </ScrollArea>
 
           {/* Message Input */}
-          <div className="p-4 border-t border-gray-200 bg-white">
-            <div className="flex items-center space-x-2">
-              <Input
-                placeholder="Nhập tin nhắn..."
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                className="flex-1"
-              />
-              <Button onClick={handleSendMessage}>
+          <div className="p-4 border-t border-gray-200 bg-gray-50">
+            <div className="flex items-end space-x-3">
+              <div className="flex-1 relative">
+                <Input
+                  placeholder="Nhập tin nhắn..."
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
+                  className="pr-12 py-3 rounded-xl border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none min-h-[44px]"
+                />
+              </div>
+              <Button
+                onClick={handleSendMessage}
+                size="icon"
+                className="h-11 w-11 bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition-all duration-200"
+                disabled={!newMessage.trim()}
+              >
                 <Send className="h-4 w-4" />
               </Button>
             </div>
+            <p className="text-xs text-gray-500 mt-2">Nhấn Enter để gửi, Shift + Enter để xuống dòng</p>
           </div>
         </div>
       </div>
