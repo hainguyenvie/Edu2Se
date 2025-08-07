@@ -22,8 +22,13 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [showControls, setShowControls] = useState(true);
+  const [isLiked, setIsLiked] = useState(false);
+  const [showComments, setShowComments] = useState(false);
+  const [showTimeDisplay, setShowTimeDisplay] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const controlsTimeoutRef = useRef<NodeJS.Timeout>();
+  const timeDisplayTimeoutRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     if (isOpen && videoRef.current) {
@@ -81,7 +86,35 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
       const newTime = (newProgress / 100) * duration;
       videoRef.current.currentTime = newTime;
       setProgress(newProgress);
+      
+      // Show time display when user interacts with timeline
+      setShowTimeDisplay(true);
+      clearTimeout(timeDisplayTimeoutRef.current);
+      timeDisplayTimeoutRef.current = setTimeout(() => {
+        setShowTimeDisplay(false);
+      }, 2000);
     }
+  };
+
+  const handleProgressMouseDown = () => {
+    setIsDragging(true);
+    setShowTimeDisplay(true);
+  };
+
+  const handleProgressMouseUp = () => {
+    setIsDragging(false);
+    clearTimeout(timeDisplayTimeoutRef.current);
+    timeDisplayTimeoutRef.current = setTimeout(() => {
+      setShowTimeDisplay(false);
+    }, 2000);
+  };
+
+  const toggleLike = () => {
+    setIsLiked(!isLiked);
+  };
+
+  const toggleComments = () => {
+    setShowComments(!showComments);
   };
 
   const formatTime = (time: number) => {
@@ -138,13 +171,11 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
             variant="ghost"
             size="icon"
             onClick={togglePlay}
-            className={`absolute inset-0 w-full h-full bg-transparent hover:bg-black/10 transition-opacity duration-300 ${
-              showControls || !isPlaying ? 'opacity-100' : 'opacity-0'
-            }`}
+            className="absolute inset-0 w-full h-full bg-transparent hover:bg-black/10 transition-opacity duration-300"
           >
             {!isPlaying && (
-              <div className="bg-white/20 backdrop-blur-sm rounded-full p-4">
-                <Play className="w-8 h-8 text-white fill-white" />
+              <div className="bg-white/30 backdrop-blur-sm rounded-full p-6 shadow-lg">
+                <Play className="w-12 h-12 text-white fill-white" />
               </div>
             )}
           </Button>
@@ -158,9 +189,10 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
             <Button
               variant="ghost"
               size="icon"
+              onClick={toggleLike}
               className="text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 p-2"
             >
-              <Heart className="w-7 h-7 fill-white" />
+              <Heart className={`w-7 h-7 ${isLiked ? 'fill-red-500 text-red-500' : 'fill-white text-white'}`} />
             </Button>
             <span className="text-white text-xs mt-1 font-medium">123</span>
           </div>
@@ -169,6 +201,7 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
             <Button
               variant="ghost"
               size="icon"
+              onClick={toggleComments}
               className="text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 p-2"
             >
               <MessageCircle className="w-7 h-7" />
@@ -223,11 +256,13 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
               {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
             </Button>
             
-            {/* Progress Bar next to speaker - same line alignment */}
+            {/* Progress Bar next to speaker - extended without time */}
             <div className="flex-1 flex items-center">
               <div 
                 className="w-full h-1 bg-white/30 rounded-full cursor-pointer"
                 onClick={handleProgressClick}
+                onMouseDown={handleProgressMouseDown}
+                onMouseUp={handleProgressMouseUp}
               >
                 <div 
                   className="h-full bg-white rounded-full transition-all"
@@ -235,15 +270,90 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
                 />
               </div>
             </div>
-            
-            {/* Time display on same line */}
-            <div className="flex items-center space-x-2 text-white text-[10px] min-w-[60px]">
-              <span>{formatTime(currentTime)}</span>
-              <span>:</span>
-              <span>{formatTime(duration)}</span>
+          </div>
+
+          {/* Time display - only shown when interacting with timeline */}
+          {showTimeDisplay && (
+            <div className="flex justify-center mt-2">
+              <div className="bg-black/70 backdrop-blur-sm rounded-full px-3 py-1 text-white text-xs">
+                {formatTime(currentTime)} / {formatTime(duration)}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Comments Section - TikTok style slide-in */}
+        {showComments && (
+          <div className="absolute right-0 top-0 bottom-0 w-80 bg-black/90 backdrop-blur-md border-l border-white/20 overflow-hidden animate-in slide-in-from-right duration-300">
+            <div className="flex flex-col h-full">
+              {/* Comments Header */}
+              <div className="flex items-center justify-between p-4 border-b border-white/20">
+                <h3 className="text-white font-semibold">Bình luận</h3>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleComments}
+                  className="text-white hover:bg-white/20"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+
+              {/* Comments List */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                {/* Sample comments */}
+                <div className="flex space-x-3">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">H</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-white text-sm font-medium">Học sinh</p>
+                    <p className="text-white/80 text-sm">Bài giảng rất hay và dễ hiểu!</p>
+                    <span className="text-white/60 text-xs">2 phút trước</span>
+                  </div>
+                </div>
+
+                <div className="flex space-x-3">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">M</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-white text-sm font-medium">Mai Anh</p>
+                    <p className="text-white/80 text-sm">Thầy giải thích rất chi tiết, em hiểu hết rồi ạ</p>
+                    <span className="text-white/60 text-xs">5 phút trước</span>
+                  </div>
+                </div>
+
+                <div className="flex space-x-3">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-400 to-red-500 flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">T</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-white text-sm font-medium">Tuấn</p>
+                    <p className="text-white/80 text-sm">Cảm ơn thầy về bài giảng hay này</p>
+                    <span className="text-white/60 text-xs">10 phút trước</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Comment Input */}
+              <div className="p-4 border-t border-white/20">
+                <div className="flex space-x-3">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">B</span>
+                  </div>
+                  <div className="flex-1">
+                    <input
+                      type="text"
+                      placeholder="Thêm bình luận..."
+                      className="w-full bg-white/10 border border-white/20 rounded-full px-4 py-2 text-white placeholder-white/60 focus:outline-none focus:border-white/40"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
