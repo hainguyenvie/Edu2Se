@@ -14,7 +14,6 @@ import {
   Users, 
   TrendingUp,
   Eye,
-  Heart,
   MessageCircle
 } from "lucide-react";
 import { Link } from "wouter";
@@ -25,10 +24,9 @@ interface StudentRanking {
   name: string;
   avatar: string;
   rank: number;
-  points: number;
+  completionRate: number;
   studyHours: number;
-  badges: string[];
-  level: string;
+  subjects: { name: string; hours: number }[];
   school?: string;
   profileSlug: string;
 }
@@ -48,7 +46,7 @@ interface TutorRanking {
 }
 
 export default function RankingPage() {
-  const [activeTab, setActiveTab] = useState("students");
+  const [activeTab, setActiveTab] = useState("tutors");
 
   // Mock data for student rankings
   const studentRankings: StudentRanking[] = [
@@ -57,10 +55,13 @@ export default function RankingPage() {
       name: "Nguyễn Minh Anh",
       avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=100&h=100&fit=crop",
       rank: 1,
-      points: 2450,
+      completionRate: 98.5,
       studyHours: 124,
-      badges: ["Study Streak", "Math Master", "Night Owl"],
-      level: "Study Legend",
+      subjects: [
+        { name: "Toán", hours: 45 },
+        { name: "Lý", hours: 38 },
+        { name: "Hóa", hours: 41 }
+      ],
       school: "THPT Chu Văn An",
       profileSlug: "minh-anh"
     },
@@ -69,10 +70,13 @@ export default function RankingPage() {
       name: "Trần Hoàng Nam",
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
       rank: 2,
-      points: 2280,
+      completionRate: 96.2,
       studyHours: 98,
-      badges: ["Physics Pro", "Team Player", "Early Bird"],
-      level: "Study Master",
+      subjects: [
+        { name: "Lý", hours: 42 },
+        { name: "Hóa", hours: 35 },
+        { name: "Sinh", hours: 21 }
+      ],
       school: "THPT Lê Quý Đôn",
       profileSlug: "hoang-nam"
     },
@@ -81,10 +85,13 @@ export default function RankingPage() {
       name: "Lê Thu Hương",
       avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&h=100&fit=crop",
       rank: 3,
-      points: 2150,
+      completionRate: 94.8,
       studyHours: 89,
-      badges: ["Literature Queen", "Consistent", "Mentor"],
-      level: "Study Expert",
+      subjects: [
+        { name: "Văn", hours: 38 },
+        { name: "Anh", hours: 31 },
+        { name: "Sử", hours: 20 }
+      ],
       school: "THPT Marie Curie",
       profileSlug: "thu-huong"
     },
@@ -93,10 +100,12 @@ export default function RankingPage() {
       name: "Phạm Đức Minh",
       avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop",
       rank: 4,
-      points: 1980,
+      completionRate: 92.3,
       studyHours: 76,
-      badges: ["Chemistry Wizard", "Focus Master"],
-      level: "Study Pro",
+      subjects: [
+        { name: "Hóa", hours: 42 },
+        { name: "Sinh", hours: 34 }
+      ],
       school: "THPT Nguyễn Huệ",
       profileSlug: "duc-minh"
     },
@@ -105,10 +114,12 @@ export default function RankingPage() {
       name: "Võ Khánh Linh",
       avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop",
       rank: 5,
-      points: 1850,
+      completionRate: 89.7,
       studyHours: 71,
-      badges: ["Biology Expert", "Study Buddy"],
-      level: "Study Ace",
+      subjects: [
+        { name: "Sinh", hours: 38 },
+        { name: "Hóa", hours: 33 }
+      ],
       school: "THPT Trần Phú",
       profileSlug: "khanh-linh"
     }
@@ -212,7 +223,7 @@ export default function RankingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <Header />
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 pt-24 max-w-4xl">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
@@ -223,24 +234,24 @@ export default function RankingPage() {
           </p>
         </div>
 
-        {/* Rankings Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-8 bg-white border border-gray-200 rounded-xl p-1 h-auto">
-            <TabsTrigger 
-              value="students" 
-              className="flex items-center justify-center gap-2 text-base py-4 px-6 rounded-lg transition-all duration-200 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50"
-            >
-              <BookOpen className="w-5 h-5" />
-              Học Sinh Xuất Sắc
-            </TabsTrigger>
-            <TabsTrigger 
-              value="tutors"
-              className="flex items-center justify-center gap-2 text-base py-4 px-6 rounded-lg transition-all duration-200 data-[state=active]:bg-purple-600 data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50"
-            >
-              <Users className="w-5 h-5" />
-              Gia Sư Hàng Đầu
-            </TabsTrigger>
-          </TabsList>
+                 {/* Rankings Tabs */}
+         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+           <TabsList className="grid w-full grid-cols-2 mb-8 bg-white border border-gray-200 rounded-xl p-1 h-auto">
+             <TabsTrigger 
+               value="tutors"
+               className="flex items-center justify-center gap-2 text-base py-4 px-6 rounded-lg transition-all duration-200 data-[state=active]:bg-purple-600 data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50"
+             >
+               <Users className="w-5 h-5" />
+               Gia Sư Hàng Đầu
+             </TabsTrigger>
+             <TabsTrigger 
+               value="students" 
+               className="flex items-center justify-center gap-2 text-base py-4 px-6 rounded-lg transition-all duration-200 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50"
+             >
+               <BookOpen className="w-5 h-5" />
+               Học Sinh Xuất Sắc
+             </TabsTrigger>
+           </TabsList>
 
           {/* Student Rankings */}
           <TabsContent value="students" className="space-y-4">
@@ -263,60 +274,51 @@ export default function RankingPage() {
                         </Avatar>
                       </div>
 
-                      {/* Student Info */}
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-xl font-bold text-gray-900">{student.name}</h3>
-                          <Badge variant="secondary" className="bg-blue-100 text-blue-700 border-blue-200">
-                            {student.level}
-                          </Badge>
-                        </div>
-                        
-                        {student.school && (
-                          <p className="text-sm text-gray-600 mb-2">🏫 {student.school}</p>
-                        )}
+                                             {/* Student Info */}
+                       <div className="flex-1">
+                         <div className="flex items-center gap-3 mb-2">
+                           <h3 className="text-xl font-bold text-gray-900">{student.name}</h3>
+                         </div>
+                         
+                         {student.school && (
+                           <p className="text-sm text-gray-600 mb-2">🏫 {student.school}</p>
+                         )}
 
-                        <div className="flex items-center gap-6 text-sm text-gray-600 mb-3">
-                          <div className="flex items-center gap-1">
-                            <TrendingUp className="w-4 h-4 text-green-500" />
-                            <span className="font-semibold text-green-600">{student.points.toLocaleString()}</span>
-                            <span>điểm</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Clock className="w-4 h-4 text-blue-500" />
-                            <span className="font-semibold text-blue-600">{student.studyHours}</span>
-                            <span>giờ học</span>
-                          </div>
-                        </div>
+                         <div className="flex items-center gap-6 text-sm text-gray-600 mb-3">
+                           <div className="flex items-center gap-1">
+                             <TrendingUp className="w-4 h-4 text-green-500" />
+                             <span className="font-semibold text-green-600">{student.completionRate}%</span>
+                             <span>hoàn thành</span>
+                           </div>
+                           <div className="flex items-center gap-1">
+                             <Clock className="w-4 h-4 text-blue-500" />
+                             <span className="font-semibold text-blue-600">{student.studyHours}</span>
+                             <span>giờ học</span>
+                           </div>
+                         </div>
 
-                        <div className="flex flex-wrap gap-2">
-                          {student.badges.map((badge, index) => (
-                            <Badge key={index} variant="outline" className="text-xs bg-gradient-to-r from-purple-100 to-blue-100 border-purple-200">
-                              🏅 {badge}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
+                         <div className="flex flex-wrap gap-2">
+                           {student.subjects.map((subject, index) => (
+                             <Badge key={index} variant="outline" className="text-xs bg-gradient-to-r from-purple-100 to-blue-100 border-purple-200">
+                               📚 {subject.name} ({subject.hours}h)
+                             </Badge>
+                           ))}
+                         </div>
+                       </div>
 
-                      {/* Action Button */}
-                      <div className="flex flex-col items-end gap-2">
-                        <Link href={`/profile/student/${student.profileSlug}`}>
-                          <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6">
-                            <Eye className="w-4 h-4 mr-2" />
-                            Xem Profile
-                          </Button>
-                        </Link>
-                        <div className="flex items-center gap-4 text-xs text-gray-500">
-                          <span className="flex items-center gap-1">
-                            <Heart className="w-3 h-3" />
-                            {Math.floor(Math.random() * 50) + 10}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <MessageCircle className="w-3 h-3" />
-                            {Math.floor(Math.random() * 20) + 5}
-                          </span>
-                        </div>
-                      </div>
+                                             {/* Action Button */}
+                       <div className="flex flex-col items-end gap-2">
+                         <Button 
+                           className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6"
+                           onClick={() => {
+                             // TODO: Open chat box for messaging
+                             console.log(`Open chat with ${student.name}`);
+                           }}
+                         >
+                           <MessageCircle className="w-4 h-4 mr-2" />
+                           Nhắn tin
+                         </Button>
+                       </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -387,49 +389,23 @@ export default function RankingPage() {
                         </div>
                       </div>
 
-                      {/* Action Button */}
-                      <div className="flex flex-col items-end gap-2">
-                        <Link href={`/profile/tutor/${tutor.profileSlug}`}>
-                          <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6">
-                            <Eye className="w-4 h-4 mr-2" />
-                            Xem Profile
-                          </Button>
-                        </Link>
-                        <div className="flex items-center gap-4 text-xs text-gray-500">
-                          <span className="flex items-center gap-1">
-                            <Heart className="w-3 h-3" />
-                            {Math.floor(Math.random() * 100) + 20}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <MessageCircle className="w-3 h-3" />
-                            {Math.floor(Math.random() * 50) + 10}
-                          </span>
-                        </div>
-                      </div>
+                                             {/* Action Button */}
+                       <div className="flex flex-col items-end gap-2">
+                         <Link href={`/profile/tutor/${tutor.profileSlug}`}>
+                           <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6">
+                             <Eye className="w-4 h-4 mr-2" />
+                             Xem Profile
+                           </Button>
+                         </Link>
+                       </div>
                     </div>
                   </CardContent>
                 </Card>
               ))}
             </div>
           </TabsContent>
-        </Tabs>
-
-        {/* Bottom Stats */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-            <div className="text-3xl font-bold text-blue-600 mb-2">1,247</div>
-            <div className="text-gray-600">Học sinh tham gia</div>
-          </Card>
-          <Card className="text-center p-6 bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
-            <div className="text-3xl font-bold text-purple-600 mb-2">89</div>
-            <div className="text-gray-600">Gia sư đã xác thực</div>
-          </Card>
-          <Card className="text-center p-6 bg-gradient-to-br from-green-50 to-green-100 border-green-200">
-            <div className="text-3xl font-bold text-green-600 mb-2">12,450</div>
-            <div className="text-gray-600">Giờ học hoàn thành</div>
-          </Card>
-        </div>
-      </div>
-    </div>
-  );
+                 </Tabs>
+       </div>
+     </div>
+   );
 }
