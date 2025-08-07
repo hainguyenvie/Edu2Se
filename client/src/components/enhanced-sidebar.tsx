@@ -365,26 +365,11 @@ export default function EnhancedSidebar({
                 className="w-full"
               />
               
-              {/* Scale markers */}
-              <div className="flex justify-between text-xs text-gray-400">
-                <span>50K</span>
-                <span>100K</span>
-                <span>200K</span>
-                <span>500K</span>
-                <span>5M</span>
-              </div>
-              
               {/* Current values display */}
               <div className="flex justify-between items-center">
-                <div className="text-center">
-                  <div className="text-xs text-gray-500">Từ:</div>
-                  <div className="font-bold text-green-600">{formatPrice(priceRange[0])}₫</div>
-                </div>
-                <div className="text-gray-400">→</div>
-                <div className="text-center">
-                  <div className="text-xs text-gray-500">Đến:</div>
-                  <div className="font-bold text-green-600">{formatPrice(priceRange[1])}₫</div>
-                </div>
+                <div className="font-bold text-green-600">{formatPrice(priceRange[0])}₫</div>
+                <div className="text-gray-400">-</div>
+                <div className="font-bold text-green-600">{formatPrice(priceRange[1])}₫</div>
               </div>
             </div>
           </CardContent>
