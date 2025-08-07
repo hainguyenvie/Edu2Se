@@ -63,9 +63,11 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
 
         {/* Navigation Menu */}
         <nav className="hidden md:flex items-center space-x-6">
-          <Button variant="outline" className="text-gray-600 hover:text-primary">
-            Học cùng tôi
-          </Button>
+          <Link href="/study-with-me">
+            <Button variant="outline" className="text-gray-600 hover:text-primary">
+              Học cùng tôi
+            </Button>
+          </Link>
           <Button variant="outline" className="text-gray-600 hover:text-primary">
             Bảng xếp hạng
           </Button>
