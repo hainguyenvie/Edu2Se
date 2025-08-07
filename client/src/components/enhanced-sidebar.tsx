@@ -327,12 +327,7 @@ export default function EnhancedSidebar({
         {/* Price Range */}
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm flex items-center justify-between">
-              <span>Khoảng giá (VNĐ/giờ)</span>
-              <Badge variant="outline" className="text-xs">
-                {getCurrentRangeLabel()}
-              </Badge>
-            </CardTitle>
+            <CardTitle className="text-sm">Giá tối đa (VNĐ/giờ)</CardTitle>
           </CardHeader>
           <CardContent className="pt-0 space-y-4">
             {/* Quick Selection Buttons */}
@@ -344,9 +339,9 @@ export default function EnhancedSidebar({
                   size="sm"
                   onClick={() => handlePriceRangeSelect(range.value)}
                   className={`relative h-10 rounded-lg border-2 transition-all text-xs ${
-                    priceRange[0] === range.value[0] && priceRange[1] === range.value[1] && !customPriceMode
-                      ? "border-green-500 bg-green-50 text-green-700 shadow-md"
-                      : "border-gray-200 hover:border-green-300 hover:bg-green-50"
+                    priceRange[0] === range.value[0] && priceRange[1] === range.value[1]
+                      ? "border-green-500 bg-green-50 text-green-700"
+                      : "border-gray-200 hover:border-gray-300"
                   }`}
                 >
                   {range.popular && (
@@ -359,86 +354,38 @@ export default function EnhancedSidebar({
               ))}
             </div>
 
-            {/* Custom Range Slider */}
-            <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <div className="flex items-center justify-between">
-                <Label className="text-xs font-medium text-gray-700">Tùy chỉnh khoảng giá</Label>
-                {customPriceMode && (
-                  <Badge variant="secondary" className="text-xs">
-                    Đang tùy chỉnh
-                  </Badge>
-                )}
+            {/* Simple Dual-Handle Slider */}
+            <div className="space-y-3">
+              <Slider
+                value={priceRange}
+                onValueChange={handleCustomPriceChange}
+                max={5000000}
+                min={50000}
+                step={50000}
+                className="w-full"
+              />
+              
+              {/* Scale markers */}
+              <div className="flex justify-between text-xs text-gray-400">
+                <span>50K</span>
+                <span>100K</span>
+                <span>200K</span>
+                <span>500K</span>
+                <span>5M</span>
               </div>
               
-              <div className="relative">
-                <Slider
-                  value={priceRange}
-                  onValueChange={handleCustomPriceChange}
-                  max={5000000}
-                  min={50000}
-                  step={50000}
-                  className={`w-full ${customPriceMode ? 'opacity-100' : 'opacity-75'}`}
-                />
-                {/* Visual indicators for predefined ranges */}
-                <div className="absolute top-6 left-0 right-0 flex justify-between text-xs">
-                  <div className="flex flex-col items-center">
-                    <div className="w-1 h-3 bg-gray-300 rounded"></div>
-                    <span className="text-gray-400 mt-1">50K</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <div className="w-1 h-3 bg-orange-400 rounded"></div>
-                    <span className="text-orange-600 mt-1">100K</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <div className="w-1 h-3 bg-orange-400 rounded"></div>
-                    <span className="text-orange-600 mt-1">200K</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <div className="w-1 h-3 bg-green-400 rounded"></div>
-                    <span className="text-green-600 mt-1">500K</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <div className="w-1 h-3 bg-gray-300 rounded"></div>
-                    <span className="text-gray-400 mt-1">5M</span>
-                  </div>
+              {/* Current values display */}
+              <div className="flex justify-between items-center">
+                <div className="text-center">
+                  <div className="text-xs text-gray-500">Từ:</div>
+                  <div className="font-bold text-green-600">{formatPrice(priceRange[0])}₫</div>
+                </div>
+                <div className="text-gray-400">→</div>
+                <div className="text-center">
+                  <div className="text-xs text-gray-500">Đến:</div>
+                  <div className="font-bold text-green-600">{formatPrice(priceRange[1])}₫</div>
                 </div>
               </div>
-
-              {/* Current Range Display */}
-              <div className="bg-white rounded-lg p-3 border border-gray-200">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="flex items-center space-x-1">
-                      <span className="text-xs text-gray-500">Từ:</span>
-                      <span className="font-bold text-green-600 text-sm">
-                        {formatPrice(priceRange[0])}₫
-                      </span>
-                    </div>
-                    <span className="text-gray-400">→</span>
-                    <div className="flex items-center space-x-1">
-                      <span className="text-xs text-gray-500">Đến:</span>
-                      <span className="font-bold text-green-600 text-sm">
-                        {formatPrice(priceRange[1])}₫
-                      </span>
-                    </div>
-                  </div>
-                  <div className="text-xs text-gray-500">
-                    Chênh lệch: {formatPrice(priceRange[1] - priceRange[0])}₫
-                  </div>
-                </div>
-              </div>
-
-              {/* Reset to Popular Range */}
-              {customPriceMode && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handlePriceRangeSelect([100000, 200000])}
-                  className="w-full text-xs bg-white hover:bg-gray-50"
-                >
-                  🔄 Đặt lại về khoảng phổ biến (100K - 200K)
-                </Button>
-              )}
             </div>
           </CardContent>
         </Card>
