@@ -81,9 +81,11 @@ export default function Header({ onToggleSidebar, onSubjectSelect }: HeaderProps
               Bảng xếp hạng
             </Button>
           </Link>
-          <Button variant="outline" className="text-gray-600 hover:text-primary">
-            Mã giảm giá
-          </Button>
+          <Link href="/coupons">
+            <Button variant="outline" className="text-gray-600 hover:text-primary">
+              Mã giảm giá
+            </Button>
+          </Link>
           <Button variant="outline" className="text-gray-600 hover:text-primary">
             Hỏi đáp
           </Button>
