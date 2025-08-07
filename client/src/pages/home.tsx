@@ -69,10 +69,18 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header onToggleSidebar={toggleSidebar} />
+      <Header 
+        onToggleSidebar={toggleSidebar}
+        onSubjectSelect={(subject) => setFilters(prev => ({ ...prev, subject }))}
+      />
       
       <div className="flex pt-16">
-        <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} onToggle={toggleSidebar} />
+        <Sidebar 
+          isOpen={sidebarOpen} 
+          onClose={closeSidebar} 
+          onToggle={toggleSidebar}
+          onSubjectSelect={(subject) => setFilters(prev => ({ ...prev, subject }))}
+        />
         
         {/* Mobile overlay */}
         {sidebarOpen && (

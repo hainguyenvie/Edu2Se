@@ -13,16 +13,20 @@ import {
   Beaker,
   Leaf,
   Earth,
-  X
+  X,
+  BookOpen
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { SUBJECT_COLORS } from "@/config/constants";
+import SubjectsOverlay from "@/components/subjects-overlay";
+import { useState } from "react";
 
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
   onToggle?: () => void;
+  onSubjectSelect?: (subject: string) => void;
 }
 
 const iconMap = {
@@ -40,10 +44,19 @@ const iconMap = {
   GlobeEurope: Earth,
 };
 
-export default function Sidebar({ isOpen, onClose, onToggle }: SidebarProps) {
+export default function Sidebar({ isOpen, onClose, onToggle, onSubjectSelect }: SidebarProps) {
+  const [showSubjectsOverlay, setShowSubjectsOverlay] = useState(false);
+  
   const { data: subjects = [] } = useQuery<Subject[]>({
     queryKey: ['/api/subjects'],
   });
+
+  const handleSubjectClick = (subject: string) => {
+    if (onSubjectSelect) {
+      onSubjectSelect(subject);
+    }
+    onClose(); // Close sidebar after selection
+  };
 
   return (
     <aside
@@ -68,20 +81,31 @@ export default function Sidebar({ isOpen, onClose, onToggle }: SidebarProps) {
             </Button>
           )}
         </div>
-        <nav className="space-y-2">
-          {subjects.map((subject) => {
+
+        {/* Modern Subject Selector Button */}
+        <Button
+          onClick={() => setShowSubjectsOverlay(true)}
+          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 mb-4"
+        >
+          <BookOpen className="w-5 h-5 mr-2" />
+          Chọn môn học
+        </Button>
+
+        {/* Quick Access - Popular Subjects */}
+        <div className="space-y-2">
+          <h3 className="text-sm font-medium text-gray-600 mb-3">Môn học phổ biến</h3>
+          {subjects.slice(0, 6).map((subject) => {
             const IconComponent = iconMap[subject.icon as keyof typeof iconMap] || Calculator;
             const iconColor = SUBJECT_COLORS[subject.icon as keyof typeof SUBJECT_COLORS] || SUBJECT_COLORS.Calculator;
             
             return (
-              <a
+              <button
                 key={subject.id}
-                href="#"
-                className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-50 text-gray-700 font-medium border border-gray-200 transition-all hover:shadow-sm"
-                onClick={onClose}
+                onClick={() => handleSubjectClick(subject.name)}
+                className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-50 text-gray-700 font-medium transition-all hover:shadow-sm group"
               >
                 <div 
-                  className="w-8 h-8 rounded-lg flex items-center justify-center"
+                  className="w-8 h-8 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform"
                   style={{ backgroundColor: iconColor + '20' }}
                 >
                   <IconComponent 
@@ -89,12 +113,31 @@ export default function Sidebar({ isOpen, onClose, onToggle }: SidebarProps) {
                     style={{ color: iconColor }}
                   />
                 </div>
-                <span>{subject.nameVi}</span>
-              </a>
+                <span className="text-sm group-hover:text-blue-600 transition-colors">
+                  {subject.nameVi}
+                </span>
+              </button>
             );
           })}
-        </nav>
+          
+          {subjects.length > 6 && (
+            <Button
+              variant="ghost"
+              onClick={() => setShowSubjectsOverlay(true)}
+              className="w-full text-blue-600 hover:text-blue-700 text-sm mt-2"
+            >
+              Xem tất cả ({subjects.length} môn) →
+            </Button>
+          )}
+        </div>
       </div>
+
+      {/* Subjects Overlay */}
+      <SubjectsOverlay
+        isOpen={showSubjectsOverlay}
+        onClose={() => setShowSubjectsOverlay(false)}
+        onSubjectSelect={handleSubjectClick}
+      />
     </aside>
   );
 }
