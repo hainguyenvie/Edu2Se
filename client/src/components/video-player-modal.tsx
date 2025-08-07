@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { X, Play, Pause, Volume2, VolumeX, MoreVertical, Heart, MessageCircle, Share, Bookmark } from "lucide-react";
+import { X, Play, Pause, Volume2, VolumeX, MoreVertical, Heart, MessageCircle, Share, Bookmark, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface VideoPlayerModalProps {
@@ -94,6 +94,12 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
     setShowComments(!showComments);
   };
 
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
@@ -113,22 +119,26 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div 
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      onClick={handleOverlayClick}
+    >
       {/* Video Player Popup - Extends width when comments are open */}
       <div 
         className={`relative w-full h-[85vh] bg-black rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 ${
           showComments ? 'max-w-4xl' : 'max-w-sm'
         }`}
         onMouseMove={handleMouseMove}
+        onClick={(e) => e.stopPropagation()}
       >
-        {/* Close Button */}
+        {/* Close Button - Always stays in video section */}
         <Button
           variant="ghost"
           size="icon"
           onClick={onClose}
           className={`absolute top-4 right-4 z-20 text-white hover:bg-white/20 transition-opacity duration-300 ${
             showControls ? 'opacity-100' : 'opacity-0'
-          }`}
+          } ${showComments ? 'right-[336px]' : 'right-4'}`}
         >
           <X className="w-6 h-6" />
         </Button>
@@ -256,14 +266,6 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
               {/* Comments Header */}
               <div className="flex items-center justify-between p-4 border-b border-white/20">
                 <h3 className="text-white font-semibold">Bình luận</h3>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={toggleComments}
-                  className="text-white hover:bg-white/20"
-                >
-                  <X className="w-5 h-5" />
-                </Button>
               </div>
 
               {/* Comments List */}
@@ -309,12 +311,19 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
                     <span className="text-white text-xs font-bold">B</span>
                   </div>
-                  <div className="flex-1">
+                  <div className="flex-1 relative">
                     <input
                       type="text"
                       placeholder="Thêm bình luận..."
-                      className="w-full bg-white/10 border border-white/20 rounded-full px-4 py-2 text-white placeholder-white/60 focus:outline-none focus:border-white/40"
+                      className="w-full bg-white/10 border border-white/20 rounded-full px-4 py-2 pr-12 text-white placeholder-white/60 focus:outline-none focus:border-white/40"
                     />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-1 top-1/2 transform -translate-y-1/2 text-white hover:bg-white/20 w-8 h-8"
+                    >
+                      <Send className="w-4 h-4" />
+                    </Button>
                   </div>
                 </div>
               </div>
