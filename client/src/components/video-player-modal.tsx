@@ -125,8 +125,8 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
     >
       {/* Video Player Popup - Extends width when comments are open */}
       <div 
-        className={`relative w-full h-[85vh] bg-black rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 ${
-          showComments ? 'max-w-4xl' : 'max-w-sm'
+        className={`relative h-[85vh] bg-black rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 flex ${
+          showComments ? 'w-full max-w-4xl' : 'w-full max-w-sm'
         }`}
         onMouseMove={handleMouseMove}
         onClick={(e) => e.stopPropagation()}
@@ -136,17 +136,15 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
           variant="ghost"
           size="icon"
           onClick={onClose}
-          className={`absolute top-4 right-4 z-20 text-white hover:bg-white/20 transition-opacity duration-300 ${
+          className={`absolute top-4 z-20 text-white hover:bg-white/20 transition-opacity duration-300 ${
             showControls ? 'opacity-100' : 'opacity-0'
-          } ${showComments ? 'right-[336px]' : 'right-4'}`}
+          } ${showComments ? 'right-[calc(100%-320px-16px)]' : 'right-4'}`}
         >
           <X className="w-6 h-6" />
         </Button>
 
-        {/* Main Content Area */}
-        <div className="flex h-full">
-          {/* Video Player */}
-          <div className={`relative flex-1 flex items-center justify-center ${showComments ? 'max-w-sm' : ''}`}>
+        {/* Video Player Section */}
+        <div className={`relative flex items-center justify-center ${showComments ? 'w-80' : 'flex-1'}`}>
             <video
               ref={videoRef}
               src={video.videoUrl}
@@ -258,14 +256,22 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
                 </div>
               </div>
             </div>
-          </div>
+        </div>
 
-          {/* Comments Section - Extends popup to the right */}
-          {showComments && (
+        {/* Comments Section - Extends popup to the right */}
+        {showComments && (
             <div className="w-80 bg-black/95 backdrop-blur-md border-l border-white/20 flex flex-col">
               {/* Comments Header */}
               <div className="flex items-center justify-between p-4 border-b border-white/20">
                 <h3 className="text-white font-semibold">Bình luận</h3>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleComments}
+                  className="text-white hover:bg-white/20"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
               </div>
 
               {/* Comments List */}
@@ -328,8 +334,7 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
                 </div>
               </div>
             </div>
-          )}
-        </div>
+        )}
       </div>
     </div>
   );
