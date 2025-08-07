@@ -20,6 +20,7 @@ import {
   Filter,
   Search
 } from "lucide-react";
+import Header from "@/components/header";
 
 interface Coupon {
   id: string;
@@ -288,6 +289,7 @@ export default function CouponsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
+      <Header />
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">

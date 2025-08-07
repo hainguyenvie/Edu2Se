@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Users, HelpCircle, Trophy } from "lucide-react";
+import { Link } from "wouter";
 
 export default function CommunityFeatures() {
   const features = [
@@ -9,6 +10,7 @@ export default function CommunityFeatures() {
       description: "47 phòng đang hoạt động",
       buttonText: "Tham gia ngay",
       buttonColor: "bg-green-500 hover:bg-green-600",
+      link: "/study-with-me",
     },
     {
       icon: HelpCircle,
@@ -16,6 +18,7 @@ export default function CommunityFeatures() {
       description: "123 câu hỏi hôm nay",
       buttonText: "Đặt câu hỏi",
       buttonColor: "bg-yellow-500 hover:bg-yellow-600",
+      link: "#", // Placeholder for future Q&A forum page
     },
     {
       icon: Trophy,
@@ -23,6 +26,7 @@ export default function CommunityFeatures() {
       description: "Thi đua học tập",
       buttonText: "Xem thứ hạng",
       buttonColor: "bg-purple-500 hover:bg-purple-600",
+      link: "/ranking",
     },
   ];
 
@@ -41,9 +45,11 @@ export default function CommunityFeatures() {
                 <p className="text-sm text-gray-600">{feature.description}</p>
               </div>
             </div>
-            <Button className={`w-full ${feature.buttonColor} text-white text-sm font-medium`}>
-              {feature.buttonText}
-            </Button>
+            <Link href={feature.link}>
+              <Button className={`w-full ${feature.buttonColor} text-white text-sm font-medium`}>
+                {feature.buttonText}
+              </Button>
+            </Link>
           </div>
         ))}
       </div>

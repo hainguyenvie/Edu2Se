@@ -18,6 +18,7 @@ import {
   MessageCircle
 } from "lucide-react";
 import { Link } from "wouter";
+import Header from "@/components/header";
 
 interface StudentRanking {
   id: string;
@@ -210,6 +211,7 @@ export default function RankingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <Header />
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">
