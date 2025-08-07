@@ -72,6 +72,22 @@
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
+/* Responsive layout helpers */
+.responsive-container {
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* Ensure no horizontal overflow */
+html, body {
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 :root {
   --background: hsl(0, 0%, 100%);
   --foreground: hsl(20, 14.3%, 4.1%);

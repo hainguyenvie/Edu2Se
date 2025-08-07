@@ -68,13 +68,13 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
       <Header 
         onToggleSidebar={toggleSidebar}
         onSubjectSelect={(subject) => setFilters(prev => ({ ...prev, subject }))}
       />
       
-      <div className="flex pt-16">
+      <div className="pt-16 relative overflow-x-hidden">
         <EnhancedSidebar 
           isOpen={sidebarOpen} 
           onClose={closeSidebar} 
@@ -91,8 +91,13 @@ export default function Home() {
           />
         )}
 
-        {/* Main content */}
-        <main className={cn("flex-1 transition-all duration-300", sidebarOpen ? "lg:ml-96" : "lg:ml-0")}>
+        {/* Main content - responsive layout */}
+        <main className={cn(
+          "transition-all duration-300 min-h-screen overflow-x-hidden",
+          sidebarOpen 
+            ? "lg:ml-96 lg:max-w-[calc(100vw-24rem)]" 
+            : "lg:ml-0 max-w-full"
+        )}>
           {/* Auto-Rotating Promotional Banner */}
           <AutoRotatingBanner />
 
@@ -126,7 +131,12 @@ export default function Home() {
 
             {/* Tutors Grid */}
             {isLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div className={cn(
+                "grid gap-6", 
+                sidebarOpen 
+                  ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3" 
+                  : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+              )}>
                 {Array.from({ length: 8 }).map((_, i) => (
                   <div key={i} className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 animate-pulse">
                     <div className="w-full h-48 bg-gray-200 rounded-lg mb-4"></div>
@@ -153,7 +163,12 @@ export default function Home() {
                 </Button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div className={cn(
+                "grid gap-6", 
+                sidebarOpen 
+                  ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3" 
+                  : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+              )}>
                 {tutors.map((tutor) => (
                   <TutorCard 
                     key={tutor.id} 
