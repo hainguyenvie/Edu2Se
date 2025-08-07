@@ -106,8 +106,8 @@ export default function EnhancedSidebar({
   return (
     <aside
       className={cn(
-        "fixed right-0 top-16 h-full w-96 bg-white border-l border-gray-200 z-30 sidebar-transition overflow-y-auto",
-        isOpen ? "translate-x-0" : "translate-x-full"
+        "fixed left-0 top-16 h-full w-96 bg-white border-r border-gray-200 z-30 sidebar-transition overflow-y-auto",
+        isOpen ? "translate-x-0" : "-translate-x-full"
       )}
     >
       <div className="p-6 space-y-6">

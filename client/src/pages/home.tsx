@@ -92,7 +92,7 @@ export default function Home() {
         )}
 
         {/* Main content */}
-        <main className={cn("flex-1 transition-all duration-300", sidebarOpen ? "lg:mr-96" : "lg:mr-0")}>
+        <main className={cn("flex-1 transition-all duration-300", sidebarOpen ? "lg:ml-96" : "lg:ml-0")}>
           {/* Auto-Rotating Promotional Banner */}
           <AutoRotatingBanner />
 
