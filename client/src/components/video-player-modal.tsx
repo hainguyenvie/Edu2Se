@@ -152,47 +152,55 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
 
         </div>
 
-        {/* Side Action Buttons (TikTok style) */}
-        <div className="absolute right-4 bottom-16 top-1/2 flex flex-col justify-center space-y-6">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-white hover:bg-white/20 flex flex-col items-center bg-black/20 backdrop-blur-sm rounded-full w-12 h-12"
-          >
-            <Heart className="w-6 h-6" />
-            <span className="text-xs mt-1">123</span>
-          </Button>
+        {/* Side Action Buttons (TikTok style) - Enhanced icons */}
+        <div className="absolute right-3 bottom-20 flex flex-col space-y-4">
+          <div className="flex flex-col items-center">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 p-2"
+            >
+              <Heart className="w-7 h-7 fill-white" />
+            </Button>
+            <span className="text-white text-xs mt-1 font-medium">123</span>
+          </div>
           
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-white hover:bg-white/20 flex flex-col items-center bg-black/20 backdrop-blur-sm rounded-full w-12 h-12"
-          >
-            <MessageCircle className="w-6 h-6" />
-            <span className="text-xs mt-1">45</span>
-          </Button>
+          <div className="flex flex-col items-center">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 p-2"
+            >
+              <MessageCircle className="w-7 h-7" />
+            </Button>
+            <span className="text-white text-xs mt-1 font-medium">45</span>
+          </div>
           
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-white hover:bg-white/20 flex flex-col items-center bg-black/20 backdrop-blur-sm rounded-full w-12 h-12"
-          >
-            <Bookmark className="w-6 h-6" />
-          </Button>
+          <div className="flex flex-col items-center">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 p-2"
+            >
+              <Bookmark className="w-7 h-7" />
+            </Button>
+          </div>
           
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-white hover:bg-white/20 flex flex-col items-center bg-black/20 backdrop-blur-sm rounded-full w-12 h-12"
-          >
-            <Share className="w-6 h-6" />
-          </Button>
+          <div className="flex flex-col items-center">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 p-2"
+            >
+              <Share className="w-7 h-7" />
+            </Button>
+          </div>
         </div>
 
-        {/* Bottom Controls & Info */}
-        <div className="absolute bottom-0 left-0 right-20 p-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent rounded-bl-2xl">
+        {/* Bottom Controls & Info - Full width gradient */}
+        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 via-black/60 to-transparent rounded-b-2xl">
           {/* Tutor Info - positioned lower */}
-          <div className="flex items-center space-x-3 mb-2">
+          <div className="flex items-center space-x-3 mb-3">
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
               <span className="text-white text-xs font-bold">
                 {video.tutor.charAt(0)}
@@ -204,19 +212,19 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
             </div>
           </div>
 
-          {/* Volume Control and Progress Bar - positioned together */}
-          <div className="flex items-center space-x-3">
+          {/* Volume Control and Progress Bar - properly aligned */}
+          <div className="flex items-center space-x-3 pr-16">
             <Button
               variant="ghost"
               size="icon"
               onClick={toggleMute}
-              className="text-white hover:bg-white/20 w-8 h-8 flex-shrink-0"
+              className="text-white hover:bg-white/20 w-8 h-8 flex-shrink-0 p-0"
             >
               {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
             </Button>
             
-            {/* Progress Bar next to speaker */}
-            <div className="flex-1">
+            {/* Progress Bar next to speaker - same line alignment */}
+            <div className="flex-1 flex items-center">
               <div 
                 className="w-full h-1 bg-white/30 rounded-full cursor-pointer"
                 onClick={handleProgressClick}
@@ -226,10 +234,13 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
                   style={{ width: `${progress}%` }}
                 />
               </div>
-              <div className="flex justify-between text-white text-[10px] mt-1">
-                <span>{formatTime(currentTime)}</span>
-                <span>{formatTime(duration)}</span>
-              </div>
+            </div>
+            
+            {/* Time display on same line */}
+            <div className="flex items-center space-x-2 text-white text-[10px] min-w-[60px]">
+              <span>{formatTime(currentTime)}</span>
+              <span>:</span>
+              <span>{formatTime(duration)}</span>
             </div>
           </div>
         </div>
