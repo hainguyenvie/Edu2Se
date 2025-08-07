@@ -27,6 +27,7 @@ interface SidebarProps {
   onClose: () => void;
   onToggle?: () => void;
   onSubjectSelect?: (subject: string) => void;
+  onFiltersChange?: (filters: SearchFilters) => void;
 }
 
 const iconMap = {
@@ -61,8 +62,8 @@ export default function Sidebar({ isOpen, onClose, onToggle, onSubjectSelect }: 
   return (
     <aside
       className={cn(
-        "fixed left-0 top-16 h-full w-64 bg-white border-r border-gray-200 z-30 sidebar-transition",
-        isOpen ? "translate-x-0" : "-translate-x-full"
+        "fixed right-0 top-16 h-full w-96 bg-white border-l border-gray-200 z-30 sidebar-transition overflow-y-auto",
+        isOpen ? "translate-x-0" : "translate-x-full"
       )}
     >
       <div className="p-4">

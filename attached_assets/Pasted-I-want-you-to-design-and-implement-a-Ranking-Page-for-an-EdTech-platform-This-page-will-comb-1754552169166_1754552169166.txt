@@ -1,0 +1,90 @@
+I want you to design and implement a **"Ranking Page"** for an EdTech platform.
+
+This page will combine:
+
+1. **Student Leaderboard** – Highlight top learners (Study With Me, activity, achievements)
+2. **Tutor Leaderboard** – Highlight most trusted tutors (ratings, hours, engagement)
+3. **KOL/KOC-style profiles** – For both students and tutors, with blog/social links
+
+---
+
+### 🧩 Functional Requirements
+
+#### 🥇 Section 1: Student Ranking Table
+- Display top learners by points, study time, or badges earned
+- For each student entry, show:
+  - Avatar
+  - Name
+  - Level or title (e.g. “Top Learner”, “Study Marathoner”)
+  - Points / badges
+  - Link to their public profile (mini blog or study diary)
+  - Optional: School name or nickname
+  - Rank position (#1, #2...)
+
+#### 🧑‍🏫 Section 2: Tutor Ranking Table
+- Display top tutors by:
+  - Star rating
+  - Total teaching hours
+  - Number of completed sessions
+- For each tutor, show:
+  - Avatar
+  - Name
+  - Tags: subject(s), vibe, location
+  - Rating (1–5 stars)
+  - Short intro (max 100 chars)
+  - Button/link to tutor’s public profile
+
+#### 🌟 Section 3: Public Profile (for KOL/KOC/Influencer style)
+- Each student and tutor can have a public profile page with:
+  - Cover banner + avatar
+  - Bio and fun facts
+  - Blog section (study tips, teaching stories, reflections)
+  - Embedded short videos (if available)
+  - Social media links (Facebook, TikTok, Instagram, Zalo, etc.)
+  - Button to follow or connect
+
+---
+
+### 🖥️ UI Requirements
+
+- Responsive layout
+- Tabs or toggle to switch between Student and Tutor ranking
+- Modern Gen-Z friendly design (like TikTok + Notion + LinkedIn blend)
+- Leaderboard entries with hover effect
+- Highlight top 3 users with special icons (🥇🥈🥉)
+- Use placeholder images, mock data, and font/icons (e.g. FontAwesome)
+
+---
+
+### 🔧 Technical Suggestions
+
+- Use **HTML + CSS + JavaScript** (or **React + Tailwind CSS** for cleaner structure)
+- Keep data in mock JSON or JS array
+- Build at least:
+  - `RankingPage` component
+  - `UserCard` component (used in both tables)
+  - `ProfilePage` for individual user (linked from leaderboard)
+
+---
+
+### 📁 Suggested file structure
+
+- `/index.html` or `App.jsx`
+- `/components/RankingTabs.jsx`
+- `/components/UserCard.jsx`
+- `/pages/ProfilePage.jsx`
+- `/data/users.js`
+- `/style.css` or use Tailwind
+
+---
+
+### 🏁 Goal
+
+- Deliver a **fully functional Ranking Page** that includes:
+  - Student and tutor leaderboards
+  - Public profile pages (KOL-style)
+  - Blog/social/media embedding
+
+- Focus on UX and design scalability for a social-learning platform
+
+Please generate the full working code based on this spec.

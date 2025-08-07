@@ -1,8 +1,8 @@
 import { useState } from "react";
 import Header from "@/components/header";
-import Sidebar from "@/components/sidebar";
+import EnhancedSidebar from "@/components/enhanced-sidebar";
 import VideoCarousel from "@/components/video-carousel";
-import SearchFilters from "@/components/search-filters";
+
 import TutorCard from "@/components/tutor-card";
 import TutorDetailSidebar from "@/components/tutor-detail-sidebar";
 import MessagesPopup from "@/components/messages-popup";
@@ -75,11 +75,12 @@ export default function Home() {
       />
       
       <div className="flex pt-16">
-        <Sidebar 
+        <EnhancedSidebar 
           isOpen={sidebarOpen} 
           onClose={closeSidebar} 
           onToggle={toggleSidebar}
           onSubjectSelect={(subject) => setFilters(prev => ({ ...prev, subject }))}
+          onFiltersChange={handleFilterChange}
         />
         
         {/* Mobile overlay */}
@@ -91,15 +92,12 @@ export default function Home() {
         )}
 
         {/* Main content */}
-        <main className={cn("flex-1 transition-all duration-300", sidebarOpen ? "lg:ml-64" : "lg:ml-0")}>
+        <main className={cn("flex-1 transition-all duration-300", sidebarOpen ? "lg:mr-96" : "lg:mr-0")}>
           {/* Auto-Rotating Promotional Banner */}
           <AutoRotatingBanner />
 
           {/* Video Carousel */}
           <VideoCarousel />
-
-          {/* Search Filters */}
-          <SearchFilters onFiltersChange={handleFilterChange} />
 
           {/* Tutors Section */}
           <div className="p-4">
