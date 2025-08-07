@@ -12,6 +12,9 @@ import Dashboard from "@/pages/dashboard";
 import Messages from "@/pages/messages";
 import VirtualClassroom from "@/pages/virtual-classroom";
 import StudyWithMe from "@/pages/study-with-me";
+import RankingPage from "@/pages/ranking";
+import StudentProfilePage from "@/pages/profile-student";
+import TutorProfilePage from "@/pages/profile-tutor";
 import LoginPage from "@/pages/login";
 import RegisterPage from "@/pages/register";
 import NotFound from "@/pages/not-found";
@@ -27,8 +30,17 @@ function Router() {
       <Route path="/favorites" component={Favorites} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/messages" component={Messages} />
-      <Route path="/virtual-classroom" component={() => <VirtualClassroom classInfo={{}} />} />
+      <Route path="/virtual-classroom" component={() => <VirtualClassroom classInfo={{
+        name: "Demo Class",
+        subject: "Toán",
+        tutor: "Demo Tutor", 
+        time: "19:00",
+        duration: "60 phút"
+      }} />} />
       <Route path="/study-with-me" component={StudyWithMe} />
+      <Route path="/ranking" component={RankingPage} />
+      <Route path="/profile/student/:slug" component={StudentProfilePage} />
+      <Route path="/profile/tutor/:slug" component={TutorProfilePage} />
       <Route component={NotFound} />
     </Switch>
   );
