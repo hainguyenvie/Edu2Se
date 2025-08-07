@@ -125,10 +125,8 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
     >
       {/* Video Player Popup - Extends width when comments are open */}
       <div 
-        className={`relative h-[85vh] bg-black rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 ${
-          showComments ? 'flex' : 'w-full max-w-sm'
-        }`}
-        style={{ width: showComments ? '640px' : undefined }}
+        className="relative h-[85vh] bg-black rounded-2xl overflow-hidden shadow-2xl flex transition-all duration-300"
+        style={{ width: showComments ? '640px' : '320px' }}
         onMouseMove={handleMouseMove}
         onClick={(e) => e.stopPropagation()}
       >
@@ -145,7 +143,7 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
         </Button>
 
         {/* Video Player Section */}
-        <div className={`relative flex items-center justify-center ${showComments ? 'w-80 flex-shrink-0' : 'w-full'}`}>
+        <div className="relative flex items-center justify-center w-80 flex-shrink-0">
             <video
               ref={videoRef}
               src={video.videoUrl}
