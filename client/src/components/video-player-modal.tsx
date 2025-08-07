@@ -24,11 +24,8 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
   const [showControls, setShowControls] = useState(true);
   const [isLiked, setIsLiked] = useState(false);
   const [showComments, setShowComments] = useState(false);
-  const [showTimeDisplay, setShowTimeDisplay] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const controlsTimeoutRef = useRef<NodeJS.Timeout>();
-  const timeDisplayTimeoutRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     if (isOpen && videoRef.current) {
@@ -86,27 +83,7 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
       const newTime = (newProgress / 100) * duration;
       videoRef.current.currentTime = newTime;
       setProgress(newProgress);
-      
-      // Show time display when user interacts with timeline
-      setShowTimeDisplay(true);
-      clearTimeout(timeDisplayTimeoutRef.current);
-      timeDisplayTimeoutRef.current = setTimeout(() => {
-        setShowTimeDisplay(false);
-      }, 2000);
     }
-  };
-
-  const handleProgressMouseDown = () => {
-    setIsDragging(true);
-    setShowTimeDisplay(true);
-  };
-
-  const handleProgressMouseUp = () => {
-    setIsDragging(false);
-    clearTimeout(timeDisplayTimeoutRef.current);
-    timeDisplayTimeoutRef.current = setTimeout(() => {
-      setShowTimeDisplay(false);
-    }, 2000);
   };
 
   const toggleLike = () => {
@@ -137,9 +114,11 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      {/* Video Player Popup - Vertical/Portrait orientation */}
+      {/* Video Player Popup - Extends width when comments are open */}
       <div 
-        className="relative w-full max-w-sm h-[85vh] bg-black rounded-2xl overflow-hidden shadow-2xl"
+        className={`relative w-full h-[85vh] bg-black rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 ${
+          showComments ? 'max-w-4xl' : 'max-w-sm'
+        }`}
         onMouseMove={handleMouseMove}
       >
         {/* Close Button */}
@@ -154,138 +133,126 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
           <X className="w-6 h-6" />
         </Button>
 
-        {/* Video Player */}
-        <div className="relative flex-1 flex items-center justify-center">
-          <video
-            ref={videoRef}
-            src={video.videoUrl}
-            className="w-full h-full object-cover"
-            loop
-            playsInline
-            poster={video.thumbnail}
-            style={{ aspectRatio: '9/16' }}
-          />
+        {/* Main Content Area */}
+        <div className="flex h-full">
+          {/* Video Player */}
+          <div className={`relative flex-1 flex items-center justify-center ${showComments ? 'max-w-sm' : ''}`}>
+            <video
+              ref={videoRef}
+              src={video.videoUrl}
+              className="w-full h-full object-cover"
+              loop
+              playsInline
+              poster={video.thumbnail}
+              style={{ aspectRatio: '9/16' }}
+            />
 
-          {/* Center Play/Pause Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={togglePlay}
-            className="absolute inset-0 w-full h-full bg-transparent hover:bg-black/10 transition-opacity duration-300"
-          >
-            {!isPlaying && (
-              <div className="bg-white/30 backdrop-blur-sm rounded-full p-6 shadow-lg">
-                <Play className="w-12 h-12 text-white fill-white" />
+            {/* Center Play/Pause Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={togglePlay}
+              className="absolute inset-0 w-full h-full bg-transparent hover:bg-black/10 transition-opacity duration-300"
+            >
+              {!isPlaying && (
+                <div className="bg-white/30 backdrop-blur-sm rounded-full p-6 shadow-lg">
+                  <Play className="w-12 h-12 text-white fill-white" />
+                </div>
+              )}
+            </Button>
+
+            {/* Side Action Buttons (TikTok style) - Enhanced icons */}
+            <div className="absolute right-3 bottom-20 flex flex-col space-y-4">
+              <div className="flex flex-col items-center">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleLike}
+                  className="text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 p-2"
+                >
+                  <Heart className={`w-7 h-7 ${isLiked ? 'fill-red-500 text-red-500' : 'fill-white text-white'}`} />
+                </Button>
+                <span className="text-white text-xs mt-1 font-medium">123</span>
               </div>
-            )}
-          </Button>
-
-
-        </div>
-
-        {/* Side Action Buttons (TikTok style) - Enhanced icons */}
-        <div className="absolute right-3 bottom-20 flex flex-col space-y-4">
-          <div className="flex flex-col items-center">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleLike}
-              className="text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 p-2"
-            >
-              <Heart className={`w-7 h-7 ${isLiked ? 'fill-red-500 text-red-500' : 'fill-white text-white'}`} />
-            </Button>
-            <span className="text-white text-xs mt-1 font-medium">123</span>
-          </div>
-          
-          <div className="flex flex-col items-center">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleComments}
-              className="text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 p-2"
-            >
-              <MessageCircle className="w-7 h-7" />
-            </Button>
-            <span className="text-white text-xs mt-1 font-medium">45</span>
-          </div>
-          
-          <div className="flex flex-col items-center">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 p-2"
-            >
-              <Bookmark className="w-7 h-7" />
-            </Button>
-          </div>
-          
-          <div className="flex flex-col items-center">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 p-2"
-            >
-              <Share className="w-7 h-7" />
-            </Button>
-          </div>
-        </div>
-
-        {/* Bottom Controls & Info - Full width gradient */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 via-black/60 to-transparent rounded-b-2xl">
-          {/* Tutor Info - positioned lower */}
-          <div className="flex items-center space-x-3 mb-3">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-              <span className="text-white text-xs font-bold">
-                {video.tutor.charAt(0)}
-              </span>
-            </div>
-            <div>
-              <p className="text-white font-semibold text-xs">{video.tutor}</p>
-              <p className="text-white/70 text-[10px]">Gia sư • Bài giảng</p>
-            </div>
-          </div>
-
-          {/* Volume Control and Progress Bar - properly aligned */}
-          <div className="flex items-center space-x-3 pr-16">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleMute}
-              className="text-white hover:bg-white/20 w-8 h-8 flex-shrink-0 p-0"
-            >
-              {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-            </Button>
-            
-            {/* Progress Bar next to speaker - extended without time */}
-            <div className="flex-1 flex items-center">
-              <div 
-                className="w-full h-1 bg-white/30 rounded-full cursor-pointer"
-                onClick={handleProgressClick}
-                onMouseDown={handleProgressMouseDown}
-                onMouseUp={handleProgressMouseUp}
-              >
-                <div 
-                  className="h-full bg-white rounded-full transition-all"
-                  style={{ width: `${progress}%` }}
-                />
+              
+              <div className="flex flex-col items-center">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleComments}
+                  className="text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 p-2"
+                >
+                  <MessageCircle className="w-7 h-7" />
+                </Button>
+                <span className="text-white text-xs mt-1 font-medium">45</span>
+              </div>
+              
+              <div className="flex flex-col items-center">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 p-2"
+                >
+                  <Bookmark className="w-7 h-7" />
+                </Button>
+              </div>
+              
+              <div className="flex flex-col items-center">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 p-2"
+                >
+                  <Share className="w-7 h-7" />
+                </Button>
               </div>
             </div>
-          </div>
 
-          {/* Time display - only shown when interacting with timeline */}
-          {showTimeDisplay && (
-            <div className="flex justify-center mt-2">
-              <div className="bg-black/70 backdrop-blur-sm rounded-full px-3 py-1 text-white text-xs">
-                {formatTime(currentTime)} / {formatTime(duration)}
+            {/* Bottom Controls & Info - Full width gradient */}
+            <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 via-black/60 to-transparent rounded-bl-2xl">
+              {/* Tutor Info - positioned lower */}
+              <div className="flex items-center space-x-3 mb-3">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                  <span className="text-white text-xs font-bold">
+                    {video.tutor.charAt(0)}
+                  </span>
+                </div>
+                <div>
+                  <p className="text-white font-semibold text-xs">{video.tutor}</p>
+                  <p className="text-white/70 text-[10px]">Gia sư • Bài giảng</p>
+                </div>
+              </div>
+
+              {/* Volume Control and Progress Bar - properly aligned */}
+              <div className="flex items-center space-x-3 pr-16">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleMute}
+                  className="text-white hover:bg-white/20 w-8 h-8 flex-shrink-0 p-0"
+                >
+                  {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                </Button>
+                
+                {/* Progress Bar next to speaker - extended without time */}
+                <div className="flex-1 flex items-center">
+                  <div 
+                    className="w-full h-1 bg-white/30 rounded-full cursor-pointer"
+                    onClick={handleProgressClick}
+                  >
+                    <div 
+                      className="h-full bg-white rounded-full transition-all"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
-          )}
-        </div>
+          </div>
 
-        {/* Comments Section - TikTok style slide-in */}
-        {showComments && (
-          <div className="absolute right-0 top-0 bottom-0 w-80 bg-black/90 backdrop-blur-md border-l border-white/20 overflow-hidden animate-in slide-in-from-right duration-300">
-            <div className="flex flex-col h-full">
+          {/* Comments Section - Extends popup to the right */}
+          {showComments && (
+            <div className="w-80 bg-black/95 backdrop-blur-md border-l border-white/20 flex flex-col">
               {/* Comments Header */}
               <div className="flex items-center justify-between p-4 border-b border-white/20">
                 <h3 className="text-white font-semibold">Bình luận</h3>
@@ -319,7 +286,7 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
                   </div>
                   <div className="flex-1">
                     <p className="text-white text-sm font-medium">Mai Anh</p>
-                    <p className="text-white/80 text-sm">Thầy giải thích rất chi tiết, em hiểu hết rồi ạ</p>
+                    <p className="text-white/80 text-sm">Thầy giải thích rát chi tiết, em hiểu hết rồi ạ</p>
                     <span className="text-white/60 text-xs">5 phút trước</span>
                   </div>
                 </div>
@@ -352,8 +319,8 @@ export default function VideoPlayerModal({ video, isOpen, onClose }: VideoPlayer
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
