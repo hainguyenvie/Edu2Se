@@ -5,8 +5,6 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
-import { Card, CardContent } from "@/components/ui/card";
-import { Calculator, FileText, Zap, FlaskConical, Microscope, Globe2, Languages, BookOpen } from "lucide-react";
 import { type SearchFilters } from "@shared/schema";
 
 interface SearchFiltersProps {
@@ -19,18 +17,6 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
   const [priceRange, setPriceRange] = useState([200000]);
   const [timeSlots, setTimeSlots] = useState<string[]>([]);
   const [keywords, setKeywords] = useState("");
-
-  // Subject data with icons and colors
-  const subjects = [
-    { value: "Toán", label: "TOÁN", icon: Calculator, color: "bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200" },
-    { value: "Văn", label: "VĂN", icon: FileText, color: "bg-green-100 text-green-700 border-green-200 hover:bg-green-200" },
-    { value: "Lý", label: "LÝ", icon: Zap, color: "bg-orange-100 text-orange-700 border-orange-200 hover:bg-orange-200" },
-    { value: "Hóa", label: "HÓA", icon: FlaskConical, color: "bg-purple-100 text-purple-700 border-purple-200 hover:bg-purple-200" },
-    { value: "Sinh", label: "SINH", icon: Microscope, color: "bg-emerald-100 text-emerald-700 border-emerald-200 hover:bg-emerald-200" },
-    { value: "Tiếng Anh", label: "TIẾNG ANH", icon: Globe2, color: "bg-indigo-100 text-indigo-700 border-indigo-200 hover:bg-indigo-200" },
-    { value: "Tiếng Pháp", label: "TIẾNG PHÁP", icon: Languages, color: "bg-rose-100 text-rose-700 border-rose-200 hover:bg-rose-200" },
-    { value: "Tiếng Nga", label: "TIẾNG NGA", icon: BookOpen, color: "bg-amber-100 text-amber-700 border-amber-200 hover:bg-amber-200" },
-  ];
 
   const handleTimeSlotChange = (slot: string, checked: boolean) => {
     const newTimeSlots = checked
@@ -57,38 +43,26 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
 
   return (
     <div className="bg-white mx-4 p-6 rounded-lg shadow-sm border border-gray-200">
-      {/* Subject Selection Pills */}
-      <div className="mb-6">
-        <Label className="block text-sm font-medium text-gray-700 mb-3">
-          Môn học
-        </Label>
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
-          {subjects.map((subj) => {
-            const Icon = subj.icon;
-            const isSelected = subject === subj.value;
-            return (
-              <button
-                key={subj.value}
-                onClick={() => setSubject(isSelected ? "" : subj.value)}
-                className={`
-                  flex flex-col items-center p-3 rounded-lg border-2 transition-all duration-200 group hover:scale-105
-                  ${isSelected 
-                    ? subj.color.replace('hover:bg-', 'bg-').replace('-100', '-200') + ' ring-2 ring-offset-1 ring-blue-500' 
-                    : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'
-                  }
-                `}
-              >
-                <Icon className={`w-6 h-6 mb-1 ${isSelected ? '' : 'text-gray-400 group-hover:text-gray-600'}`} />
-                <span className="text-xs font-medium text-center leading-tight">
-                  {subj.label}
-                </span>
-              </button>
-            );
-          })}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+        {/* Subject Dropdown */}
+        <div>
+          <Label className="block text-sm font-medium text-gray-700 mb-2">
+            Môn học
+          </Label>
+          <Select value={subject} onValueChange={setSubject}>
+            <SelectTrigger>
+              <SelectValue placeholder="Chọn môn học" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Toán">Toán</SelectItem>
+              <SelectItem value="Văn">Văn</SelectItem>
+              <SelectItem value="Tiếng Anh">Tiếng Anh</SelectItem>
+              <SelectItem value="Lý">Lý</SelectItem>
+              <SelectItem value="Hóa">Hóa</SelectItem>
+              <SelectItem value="Sinh">Sinh</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
 
         {/* Course Type Dropdown */}
         <div>
