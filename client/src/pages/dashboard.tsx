@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, FileText, Users, ChevronLeft, ChevronRight } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Calendar, Clock, FileText, Users, ChevronLeft, ChevronRight, X, BookOpen, DollarSign, TrendingUp } from "lucide-react";
 import Header from "@/components/header";
 import MeetingRoomModal from "@/features/meeting-room/components/meeting-room-modal";
 
@@ -11,13 +12,15 @@ export default function Dashboard() {
   const [isMeetingRoomOpen, setIsMeetingRoomOpen] = useState(false);
   const [selectedClass, setSelectedClass] = useState<any>(null);
   const [activeStatIndex, setActiveStatIndex] = useState(0);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [selectedStatIndex, setSelectedStatIndex] = useState<number | null>(null);
   
   // Mock data for dashboard
   const stats = [
     { title: "Lớp Học Đã Tham Gia", count: 5, icon: "📚", color: "bg-blue-100" },
     { title: "Giờ Đã Học", count: "16h", icon: "🕐", color: "bg-purple-100" },
-    { title: "Chỉ Chú Đã Được Tạo", count: 17, icon: "📝", color: "bg-green-100" },
-    { title: "Bài Tập Đã Hoàn Thành", count: 100, icon: "✅", color: "bg-orange-100" }
+    { title: "Tiền đã học", count: 17, icon: "💰", color: "bg-green-100" },
+    { title: "Tỉ lệ hoàn thành", count: "100%", icon: "📊", color: "bg-orange-100" }
   ];
 
   const upcomingClasses = [
@@ -78,8 +81,11 @@ export default function Dashboard() {
 
   const handleStatClick = (index: number) => {
     setActiveStatIndex(index);
-    // Simulate opening detailed view
-    console.log(`Opening details for stat: ${stats[index].title}`);
+  };
+
+  const handleDetailClick = (index: number) => {
+    setSelectedStatIndex(index);
+    setIsDetailModalOpen(true);
   };
 
   // Auto-rotate stats every 5 seconds
@@ -138,6 +144,10 @@ export default function Dashboard() {
                     w-full mt-3 font-medium transition-all duration-300
                     ${activeStatIndex === index ? 'text-white bg-blue-600' : 'text-blue-600 hover:bg-blue-50'}
                   `}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDetailClick(index);
+                  }}
                 >
                   Chi Tiết →
                 </Button>
@@ -387,6 +397,287 @@ export default function Dashboard() {
           classInfo={selectedClass}
         />
       )}
+
+      {/* Detailed Statistics Modal */}
+      <Dialog open={isDetailModalOpen} onOpenChange={setIsDetailModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
+          {selectedStatIndex !== null && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center space-x-3 text-xl">
+                  <span className="text-2xl">{stats[selectedStatIndex].icon}</span>
+                  <span>{stats[selectedStatIndex].title}</span>
+                </DialogTitle>
+              </DialogHeader>
+              
+              <div className="space-y-6">
+                {selectedStatIndex === 0 && (
+                  // Lớp Học Đã Tham Gia Details
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Card>
+                        <CardContent className="p-4">
+                          <h3 className="font-semibold text-gray-900 mb-3">Thống kê tổng quan</h3>
+                          <div className="space-y-2">
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Tổng lớp học:</span>
+                              <span className="font-semibold">5 lớp</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Đang học:</span>
+                              <span className="font-semibold text-green-600">3 lớp</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Đã hoàn thành:</span>
+                              <span className="font-semibold text-blue-600">2 lớp</span>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                      
+                      <Card>
+                        <CardContent className="p-4">
+                          <h3 className="font-semibold text-gray-900 mb-3">Môn học</h3>
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-gray-600">Toán học</span>
+                              <Badge className="bg-blue-100 text-blue-800">2 lớp</Badge>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-gray-600">Vật lý</span>
+                              <Badge className="bg-purple-100 text-purple-800">2 lớp</Badge>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-gray-600">Hóa học</span>
+                              <Badge className="bg-green-100 text-green-800">1 lớp</Badge>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                    
+                    <Card>
+                      <CardContent className="p-4">
+                        <h3 className="font-semibold text-gray-900 mb-3">Danh sách lớp học</h3>
+                        <div className="space-y-3">
+                          {[
+                            { name: "Toán 12 - Cô Huyền", status: "Đang học", progress: 75, nextClass: "Thứ 2, 19:00" },
+                            { name: "Vật lý 12 - Thầy Nam", status: "Đang học", progress: 60, nextClass: "Thứ 4, 20:00" },
+                            { name: "Hóa học 12 - Cô Linh", status: "Đang học", progress: 45, nextClass: "Chủ nhật, 15:00" },
+                            { name: "Toán 11 - Cô Mai", status: "Hoàn thành", progress: 100, nextClass: "-" },
+                            { name: "Vật lý 11 - Thầy Đức", status: "Hoàn thành", progress: 100, nextClass: "-" }
+                          ].map((course, idx) => (
+                            <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                              <div className="flex-1">
+                                <div className="font-medium text-gray-900">{course.name}</div>
+                                <div className="text-sm text-gray-600">Buổi học tiếp theo: {course.nextClass}</div>
+                              </div>
+                              <div className="text-right">
+                                <Badge className={course.status === "Đang học" ? "bg-green-100 text-green-800" : "bg-blue-100 text-blue-800"}>
+                                  {course.status}
+                                </Badge>
+                                <div className="text-sm text-gray-600 mt-1">{course.progress}%</div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                )}
+
+                {selectedStatIndex === 1 && (
+                  // Giờ Đã Học Details
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <Card>
+                        <CardContent className="p-4 text-center">
+                          <div className="text-2xl font-bold text-blue-600 mb-1">16</div>
+                          <div className="text-sm text-gray-600">Tổng giờ học</div>
+                        </CardContent>
+                      </Card>
+                      <Card>
+                        <CardContent className="p-4 text-center">
+                          <div className="text-2xl font-bold text-green-600 mb-1">12</div>
+                          <div className="text-sm text-gray-600">Giờ học tuần này</div>
+                        </CardContent>
+                      </Card>
+                      <Card>
+                        <CardContent className="p-4 text-center">
+                          <div className="text-2xl font-bold text-purple-600 mb-1">4</div>
+                          <div className="text-sm text-gray-600">Giờ học hôm nay</div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                    
+                    <Card>
+                      <CardContent className="p-4">
+                        <h3 className="font-semibold text-gray-900 mb-3">Lịch sử học tập</h3>
+                        <div className="space-y-3">
+                          {[
+                            { date: "08/01/2025", subject: "Toán 12", duration: "2h", time: "19:00-21:00" },
+                            { date: "06/01/2025", subject: "Vật lý 12", duration: "1.5h", time: "20:00-21:30" },
+                            { date: "05/01/2025", subject: "Hóa học 12", duration: "2h", time: "15:00-17:00" },
+                            { date: "03/01/2025", subject: "Toán 12", duration: "2h", time: "19:00-21:00" },
+                            { date: "01/01/2025", subject: "Vật lý 12", duration: "1.5h", time: "20:00-21:30" }
+                          ].map((session, idx) => (
+                            <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                              <div className="flex-1">
+                                <div className="font-medium text-gray-900">{session.subject}</div>
+                                <div className="text-sm text-gray-600">{session.date} • {session.time}</div>
+                              </div>
+                              <div className="text-right">
+                                <div className="font-semibold text-blue-600">{session.duration}</div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                )}
+
+                {selectedStatIndex === 2 && (
+                  // Tiền đã học Details
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Card>
+                        <CardContent className="p-4">
+                          <h3 className="font-semibold text-gray-900 mb-3">Thống kê chi phí</h3>
+                          <div className="space-y-2">
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Tổng đã thanh toán:</span>
+                              <span className="font-semibold text-green-600">17,000,000₫</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Chi phí tháng này:</span>
+                              <span className="font-semibold">4,500,000₫</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Trung bình/giờ:</span>
+                              <span className="font-semibold">1,062,500₫</span>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                      
+                      <Card>
+                        <CardContent className="p-4">
+                          <h3 className="font-semibold text-gray-900 mb-3">Phân bổ theo môn</h3>
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-gray-600">Toán học</span>
+                              <span className="font-semibold">8,000,000₫</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-gray-600">Vật lý</span>
+                              <span className="font-semibold">6,000,000₫</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-gray-600">Hóa học</span>
+                              <span className="font-semibold">3,000,000₫</span>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                    
+                    <Card>
+                      <CardContent className="p-4">
+                        <h3 className="font-semibold text-gray-900 mb-3">Lịch sử thanh toán</h3>
+                        <div className="space-y-3">
+                          {[
+                            { date: "01/01/2025", description: "Học phí tháng 1 - Toán 12", amount: "2,000,000₫", status: "Đã thanh toán" },
+                            { date: "01/01/2025", description: "Học phí tháng 1 - Vật lý 12", amount: "1,500,000₫", status: "Đã thanh toán" },
+                            { date: "01/01/2025", description: "Học phí tháng 1 - Hóa học 12", amount: "1,000,000₫", status: "Đã thanh toán" },
+                            { date: "01/12/2024", description: "Học phí tháng 12 - Toán 12", amount: "2,000,000₫", status: "Đã thanh toán" },
+                            { date: "01/12/2024", description: "Học phí tháng 12 - Vật lý 12", amount: "1,500,000₫", status: "Đã thanh toán" }
+                          ].map((payment, idx) => (
+                            <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                              <div className="flex-1">
+                                <div className="font-medium text-gray-900">{payment.description}</div>
+                                <div className="text-sm text-gray-600">{payment.date}</div>
+                              </div>
+                              <div className="text-right">
+                                <div className="font-semibold text-green-600">{payment.amount}</div>
+                                <Badge className="bg-green-100 text-green-800 text-xs">{payment.status}</Badge>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                )}
+
+                {selectedStatIndex === 3 && (
+                  // Tỉ lệ hoàn thành Details
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <Card>
+                        <CardContent className="p-4 text-center">
+                          <div className="text-2xl font-bold text-green-600 mb-1">100%</div>
+                          <div className="text-sm text-gray-600">Tỉ lệ hoàn thành tổng</div>
+                        </CardContent>
+                      </Card>
+                      <Card>
+                        <CardContent className="p-4 text-center">
+                          <div className="text-2xl font-bold text-blue-600 mb-1">95%</div>
+                          <div className="text-sm text-gray-600">Hoàn thành bài tập</div>
+                        </CardContent>
+                      </Card>
+                      <Card>
+                        <CardContent className="p-4 text-center">
+                          <div className="text-2xl font-bold text-purple-600 mb-1">98%</div>
+                          <div className="text-sm text-gray-600">Tham gia lớp học</div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                    
+                    <Card>
+                      <CardContent className="p-4">
+                        <h3 className="font-semibold text-gray-900 mb-3">Chi tiết theo môn học</h3>
+                        <div className="space-y-4">
+                          {[
+                            { subject: "Toán 12", completion: 100, assignments: "24/24", attendance: "16/16", grade: "A+" },
+                            { subject: "Vật lý 12", completion: 95, assignments: "19/20", attendance: "15/16", grade: "A" },
+                            { subject: "Hóa học 12", completion: 90, assignments: "18/20", attendance: "14/15", grade: "A-" },
+                            { subject: "Toán 11 (Hoàn thành)", completion: 100, assignments: "30/30", attendance: "24/24", grade: "A+" },
+                            { subject: "Vật lý 11 (Hoàn thành)", completion: 98, assignments: "29/30", attendance: "23/24", grade: "A" }
+                          ].map((course, idx) => (
+                            <div key={idx} className="p-3 bg-gray-50 rounded-lg">
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="font-medium text-gray-900">{course.subject}</div>
+                                <Badge className={course.completion >= 95 ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}>
+                                  {course.grade}
+                                </Badge>
+                              </div>
+                              <div className="grid grid-cols-3 gap-4 text-sm">
+                                <div>
+                                  <div className="text-gray-600">Hoàn thành</div>
+                                  <div className="font-semibold text-green-600">{course.completion}%</div>
+                                </div>
+                                <div>
+                                  <div className="text-gray-600">Bài tập</div>
+                                  <div className="font-semibold">{course.assignments}</div>
+                                </div>
+                                <div>
+                                  <div className="text-gray-600">Tham gia</div>
+                                  <div className="font-semibold">{course.attendance}</div>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
