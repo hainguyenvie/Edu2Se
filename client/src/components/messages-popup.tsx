@@ -103,29 +103,29 @@ export default function MessagesPopup({ isOpen, onClose, selectedTutorName }: Me
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 w-80">
-      <Card className="shadow-lg border">
+    <div className="fixed bottom-4 right-4 z-50 w-[900px]">
+      <Card className="shadow-2xl border-0 overflow-hidden">
         {/* Header */}
-        <CardHeader className="flex flex-row items-center justify-between p-3 bg-blue-600 text-white rounded-t-lg">
-          <CardTitle className="text-sm font-medium">
-            {isMinimized ? "Tin nhắn" : selectedConversation.name}
+        <CardHeader className="flex flex-row items-center justify-between p-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+          <CardTitle className="text-lg font-semibold">
+            {isMinimized ? "Tin nhắn" : `Đang trò chuyện với ${selectedConversation.name}`}
           </CardTitle>
           <div className="flex items-center space-x-1">
             <Button 
               variant="ghost" 
               size="icon" 
               onClick={() => setIsMinimized(!isMinimized)}
-              className="h-6 w-6 text-white hover:bg-blue-700"
+              className="h-8 w-8 text-white hover:bg-white/20 rounded-full"
             >
-              <Minimize2 className="h-3 w-3" />
+              <Minimize2 className="h-4 w-4" />
             </Button>
             <Button 
               variant="ghost" 
               size="icon" 
               onClick={onClose}
-              className="h-6 w-6 text-white hover:bg-blue-700"
+              className="h-8 w-8 text-white hover:bg-white/20 rounded-full"
             >
-              <X className="h-3 w-3" />
+              <X className="h-4 w-4" />
             </Button>
           </div>
         </CardHeader>
@@ -134,7 +134,7 @@ export default function MessagesPopup({ isOpen, onClose, selectedTutorName }: Me
           <CardContent className="p-0">
             <div className="flex h-[500px]">
               {/* Conversation List */}
-              <div className="w-80 border-r border-gray-200 bg-gray-50">
+              <div className="w-80 border-r border-gray-200 bg-gray-50 flex-shrink-0">
                 <div className="p-3 border-b border-gray-200 bg-white">
                   <div className="relative">
                     <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
