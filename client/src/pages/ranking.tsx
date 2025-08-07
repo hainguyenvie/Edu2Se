@@ -223,17 +223,17 @@ export default function RankingPage() {
 
         {/* Rankings Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-8 bg-white border border-gray-200 rounded-xl p-1">
+          <TabsList className="grid w-full grid-cols-2 mb-8 bg-white border border-gray-200 rounded-xl p-1 h-auto">
             <TabsTrigger 
               value="students" 
-              className="flex items-center gap-2 text-base py-3 data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+              className="flex items-center justify-center gap-2 text-base py-4 px-6 rounded-lg transition-all duration-200 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50"
             >
               <BookOpen className="w-5 h-5" />
               Học Sinh Xuất Sắc
             </TabsTrigger>
             <TabsTrigger 
               value="tutors"
-              className="flex items-center gap-2 text-base py-3 data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+              className="flex items-center justify-center gap-2 text-base py-4 px-6 rounded-lg transition-all duration-200 data-[state=active]:bg-purple-600 data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50"
             >
               <Users className="w-5 h-5" />
               Gia Sư Hàng Đầu
