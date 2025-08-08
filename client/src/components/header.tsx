@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Menu, Heart, User, Bell, MessageCircle } from "lucide-react";
-import FloatingSubjectsButton from "@/components/floating-subjects-button";
 import { Link } from "wouter";
 import { AuthNav } from "./auth-nav";
 import TutorRegistrationModal from "./tutor-registration-modal";
@@ -65,12 +64,6 @@ export default function Header({ onToggleSidebar, onSubjectSelect }: HeaderProps
 
         {/* Navigation Menu */}
         <nav className="hidden md:flex items-center space-x-6">
-          {onSubjectSelect && (
-            <FloatingSubjectsButton 
-              onSubjectSelect={onSubjectSelect}
-              className="px-4 py-2"
-            />
-          )}
           <Link href="/study-with-me">
             <Button variant="outline" className="text-gray-600 hover:text-primary">
               Học cùng tôi
