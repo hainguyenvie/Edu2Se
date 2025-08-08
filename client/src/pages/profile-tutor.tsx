@@ -19,7 +19,14 @@ import {
   Award,
   ExternalLink,
   GraduationCap,
-  CheckCircle
+  CheckCircle,
+  Calculator,
+  Book,
+  Languages,
+  Zap,
+  Beaker,
+  Leaf,
+  Globe
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -40,6 +47,24 @@ interface Certification {
   date: string;
   icon: string;
 }
+
+// Simple subject icon mapping (same as ranking page)
+const getSubjectIcon = (subjectName: string) => {
+  const subjectMap: { [key: string]: any } = {
+    'Toán': Calculator,
+    'Văn': Book,
+    'Anh': Languages,
+    'Lý': Zap,
+    'Hóa': Beaker,
+    'Sinh': Leaf,
+    'Sử': Globe,
+    'Địa': Globe,
+    'Tin học': Calculator,
+    'default': BookOpen
+  };
+  
+  return subjectMap[subjectName] || subjectMap['default'];
+};
 
 export default function TutorProfilePage() {
   const [match, params] = useRoute("/profile/tutor/:slug");
@@ -198,8 +223,11 @@ export default function TutorProfilePage() {
                   <div className="flex items-center gap-2 mb-2">
                     <h1 className="text-3xl font-bold text-gray-900">{tutor.name}</h1>
                     {tutor.isVerified && (
-                      <Badge className="bg-blue-600 text-white">
-                        ✓ Verified
+                      <Badge className="bg-blue-600 text-white flex items-center gap-2 px-3 py-1 rounded-full">
+                        <div className="w-4 h-4 rounded-full border-2 border-white flex items-center justify-center">
+                          <CheckCircle className="w-2.5 h-2.5 fill-current text-white" />
+                        </div>
+                        VERIFIED
                       </Badge>
                     )}
                   </div>
@@ -236,11 +264,14 @@ export default function TutorProfilePage() {
                 </div>
 
                 <div className="flex flex-wrap gap-3 mb-4">
-                  {tutor.subjects.map((subject, index) => (
-                    <Badge key={index} className="bg-gradient-to-r from-green-100 to-blue-100 text-green-700 border-green-200">
-                      📚 {subject}
-                    </Badge>
-                  ))}
+                  {tutor.subjects.map((subject, index) => {
+                    const Icon = getSubjectIcon(subject);
+                    return (
+                      <Badge key={index} className="bg-gradient-to-r from-green-100 to-blue-100 text-green-700 border-green-200">
+                        <Icon className="w-4 h-4 mr-1" /> {subject}
+                      </Badge>
+                    );
+                  })}
                 </div>
 
                 <div className="flex items-center gap-6 text-sm text-gray-600">

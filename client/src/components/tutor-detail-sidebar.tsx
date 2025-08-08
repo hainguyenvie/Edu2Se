@@ -103,8 +103,10 @@ export default function TutorDetailSidebar({ tutor, isOpen, onClose, onStartChat
                 <div className="flex items-center space-x-2 mb-2 flex-wrap">
                   <h2 className="text-xl font-bold text-white truncate">{tutor.name}</h2>
                   {getStatusBadge(tutor.status)}
-                  <Badge className="bg-blue-500/30 text-white border-white/20 text-xs">
-                    <CheckCircle className="w-3 h-3 mr-1" />
+                  <Badge className="bg-blue-600 text-white flex items-center gap-2 px-3 py-1 rounded-full">
+                    <div className="w-4 h-4 rounded-full border-2 border-white flex items-center justify-center">
+                      <CheckCircle className="w-2.5 h-2.5 fill-current text-white" />
+                    </div>
                     VERIFIED
                   </Badge>
                 </div>

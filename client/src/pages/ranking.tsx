@@ -14,7 +14,16 @@ import {
   Users, 
   TrendingUp,
   Eye,
-  MessageCircle
+  MessageCircle,
+  CheckCircle,
+  Calculator,
+  Book,
+  Languages,
+  Zap,
+  Beaker,
+  Leaf,
+  Globe,
+  Info
 } from "lucide-react";
 import { Link } from "wouter";
 import Header from "@/components/header";
@@ -44,6 +53,24 @@ interface TutorRanking {
   profileSlug: string;
   isVerified: boolean;
 }
+
+// Simple subject icon mapping
+const getSubjectIcon = (subjectName: string) => {
+  const subjectMap: { [key: string]: any } = {
+    'Toán': Calculator,
+    'Văn': Book,
+    'Anh': Languages,
+    'Lý': Zap,
+    'Hóa': Beaker,
+    'Sinh': Leaf,
+    'Sử': Globe,
+    'Địa': Globe,
+    'Tin học': Calculator,
+    'default': BookOpen
+  };
+  
+  return subjectMap[subjectName] || subjectMap['default'];
+};
 
 export default function RankingPage() {
   const [activeTab, setActiveTab] = useState("tutors");
@@ -133,7 +160,7 @@ export default function RankingPage() {
   // Mock data for tutor rankings
   const tutorRankings: TutorRanking[] = [
     {
-      id: "1",
+      id: "24dd3973-3c7f-4cac-92a1-c59cae149cbb",
       name: "Thầy Việt Hoàng",
       avatar: "https://images.unsplash.com/photo-1556157382-97eda2d62296?w=100&h=100&fit=crop",
       rank: 1,
@@ -146,7 +173,7 @@ export default function RankingPage() {
       isVerified: true
     },
     {
-      id: "2",
+      id: "72fc434e-e191-4d0c-aeac-4199d12a057c",
       name: "Cô Jennifer Smith",
       avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&h=100&fit=crop",
       rank: 2,
@@ -159,7 +186,7 @@ export default function RankingPage() {
       isVerified: true
     },
     {
-      id: "3",
+      id: "8a9b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d",
       name: "Thầy Đức Anh",
       avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop",
       rank: 3,
@@ -172,7 +199,7 @@ export default function RankingPage() {
       isVerified: true
     },
     {
-      id: "4",
+      id: "1b2c3d4e-5f6a-7b8c-9d0e-1f2a3b4c5d6e",
       name: "Cô Thanh Huyền", 
       avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=100&h=100&fit=crop",
       rank: 4,
@@ -185,7 +212,7 @@ export default function RankingPage() {
       isVerified: true
     },
     {
-      id: "5",
+      id: "2c3d4e5f-6a7b-8c9d-0e1f-2a3b4c5d6e7f",
       name: "Thầy Quang Minh",
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
       rank: 5,
@@ -239,27 +266,83 @@ export default function RankingPage() {
           </p>
         </div>
 
-                 {/* Rankings Tabs */}
-         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-           <TabsList className="grid w-full grid-cols-2 mb-8 bg-white border border-gray-200 rounded-xl p-1 h-auto">
-             <TabsTrigger 
-               value="tutors"
-               className="flex items-center justify-center gap-2 text-base py-4 px-6 rounded-lg transition-all duration-200 data-[state=active]:bg-purple-600 data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50"
-             >
-               <Users className="w-5 h-5" />
-               Gia Sư Hàng Đầu
-             </TabsTrigger>
-             <TabsTrigger 
-               value="students" 
-               className="flex items-center justify-center gap-2 text-base py-4 px-6 rounded-lg transition-all duration-200 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50"
-             >
-               <BookOpen className="w-5 h-5" />
-               Học Sinh Xuất Sắc
-             </TabsTrigger>
-           </TabsList>
+        {/* Rankings Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-2 mb-8 bg-white border border-gray-200 rounded-xl p-1 h-auto">
+            <TabsTrigger 
+              value="tutors"
+              className="flex items-center justify-center gap-2 text-base py-4 px-6 rounded-lg transition-all duration-200 data-[state=active]:bg-purple-600 data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50"
+            >
+              <Users className="w-5 h-5" />
+              Gia Sư Hàng Đầu
+            </TabsTrigger>
+            <TabsTrigger 
+              value="students" 
+              className="flex items-center justify-center gap-2 text-base py-4 px-6 rounded-lg transition-all duration-200 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50"
+            >
+              <BookOpen className="w-5 h-5" />
+              Học Sinh Xuất Sắc
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Ranking Criteria Info */}
+          {activeTab === "tutors" && (
+            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <Info className="w-4 h-4 text-blue-600" />
+                <h3 className="font-semibold text-blue-900">Tiêu chí xếp hạng gia sư</h3>
+              </div>
+              <div className="flex flex-wrap gap-4 text-sm text-blue-800">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4" />
+                  <span>Giờ dạy học: {tutorRankings[0]?.teachingHours || 0}+ giờ</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Star className="w-4 h-4 fill-current" />
+                  <span>Đánh giá: {tutorRankings[0]?.rating || 0}/5.0</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Users className="w-4 h-4" />
+                  <span>Số buổi dạy: {tutorRankings[0]?.completedSessions || 0}+ buổi</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "students" && (
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <Info className="w-4 h-4 text-green-600" />
+                <h3 className="font-semibold text-green-900">Tiêu chí xếp hạng học sinh</h3>
+              </div>
+              <div className="flex flex-wrap gap-4 text-sm text-green-800">
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4" />
+                  <span>Tỷ lệ hoàn thành: {studentRankings[0]?.completionRate || 0}%</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4" />
+                  <span>Giờ học: {studentRankings[0]?.studyHours || 0}+ giờ</span>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Student Rankings */}
           <TabsContent value="students" className="space-y-4">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-gray-900">Học Sinh Xuất Sắc</h2>
+              <div className="flex items-center gap-4 text-sm text-gray-600">
+                <span className="flex items-center gap-1">
+                  <TrendingUp className="w-4 h-4 text-green-500" />
+                  Xếp hạng theo tỷ lệ hoàn thành
+                </span>
+                <span className="flex items-center gap-1">
+                  <Clock className="w-4 h-4 text-blue-500" />
+                  và giờ học
+                </span>
+              </div>
+            </div>
             <div className="grid gap-4">
               {studentRankings.map((student) => (
                 <Card key={student.id} className="group hover:shadow-lg transition-all duration-300 hover:scale-[1.02] border-0 bg-white/80 backdrop-blur-sm">
@@ -279,51 +362,71 @@ export default function RankingPage() {
                         </Avatar>
                       </div>
 
-                                             {/* Student Info */}
-                       <div className="flex-1">
-                         <div className="flex items-center gap-3 mb-2">
-                           <h3 className="text-xl font-bold text-gray-900">{student.name}</h3>
-                         </div>
-                         
-                         {student.school && (
-                           <p className="text-sm text-gray-600 mb-2">🏫 {student.school}</p>
-                         )}
+                      {/* Student Info */}
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <h3 className="text-xl font-bold text-gray-900">{student.name}</h3>
+                        </div>
+                        
+                        {student.school && (
+                          <p className="text-sm text-gray-600 mb-2">🏫 {student.school}</p>
+                        )}
 
-                         <div className="flex items-center gap-6 text-sm text-gray-600 mb-3">
-                           <div className="flex items-center gap-1">
-                             <TrendingUp className="w-4 h-4 text-green-500" />
-                             <span className="font-semibold text-green-600">{student.completionRate}%</span>
-                             <span>hoàn thành</span>
-                           </div>
-                           <div className="flex items-center gap-1">
-                             <Clock className="w-4 h-4 text-blue-500" />
-                             <span className="font-semibold text-blue-600">{student.studyHours}</span>
-                             <span>giờ học</span>
-                           </div>
-                         </div>
+                        <div className="flex items-center gap-6 text-sm text-gray-600 mb-3">
+                          <div className="flex items-center gap-1">
+                            <TrendingUp className="w-4 h-4 text-green-500" />
+                            <span className="font-semibold text-green-600">{student.completionRate}%</span>
+                            <span>hoàn thành</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-4 h-4 text-blue-500" />
+                            <span className="font-semibold text-blue-600">{student.studyHours}</span>
+                            <span>giờ học</span>
+                          </div>
+                        </div>
 
-                         <div className="flex flex-wrap gap-2">
-                           {student.subjects.map((subject, index) => (
-                             <Badge key={index} variant="outline" className="text-xs bg-gradient-to-r from-purple-100 to-blue-100 border-purple-200">
-                               📚 {subject.name} ({subject.hours}h)
-                             </Badge>
-                           ))}
-                         </div>
-                       </div>
+                        {/* Ranking Score */}
+                        <div className="mb-3">
+                          <div className="flex items-center gap-2 text-xs text-gray-500">
+                            <span className="font-medium">Điểm xếp hạng:</span>
+                            <div className="flex items-center gap-1">
+                              <TrendingUp className="w-3 h-3 text-green-500" />
+                              <span className="font-semibold text-green-600">{student.completionRate}</span>
+                              <span>+</span>
+                              <Clock className="w-3 h-3 text-blue-500" />
+                              <span className="font-semibold text-blue-600">{student.studyHours}</span>
+                              <span>=</span>
+                              <span className="font-bold text-purple-600">{Math.round(student.completionRate * 0.8 + student.studyHours * 0.2)}</span>
+                            </div>
+                          </div>
+                        </div>
 
-                                             {/* Action Button */}
-                       <div className="flex flex-col items-end gap-2">
-                         <Button 
-                           className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6"
-                           onClick={() => {
-                             // TODO: Open chat box for messaging
-                             console.log(`Open chat with ${student.name}`);
-                           }}
-                         >
-                           <MessageCircle className="w-4 h-4 mr-2" />
-                           Nhắn tin
-                         </Button>
-                       </div>
+                        <div className="flex flex-wrap gap-2">
+                          {student.subjects.map((subject, index) => {
+                            const SubjectIcon = getSubjectIcon(subject.name);
+                            return (
+                              <Badge key={index} variant="outline" className="text-xs bg-gray-100 border-gray-200 text-gray-700 flex items-center gap-1">
+                                <SubjectIcon className="w-3 h-3" />
+                                {subject.name} ({subject.hours}h)
+                              </Badge>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Action Button */}
+                      <div className="flex flex-col items-end gap-2">
+                        <Button 
+                          className="bg-gray-700 hover:bg-gray-800 text-white px-6"
+                          onClick={() => {
+                            // TODO: Open chat box for messaging
+                            console.log(`Open chat with ${student.name}`);
+                          }}
+                        >
+                          <MessageCircle className="w-4 h-4 mr-2" />
+                          Nhắn tin
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -333,6 +436,19 @@ export default function RankingPage() {
 
           {/* Tutor Rankings */}
           <TabsContent value="tutors" className="space-y-4">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-gray-900">Gia Sư Hàng Đầu</h2>
+              <div className="flex items-center gap-4 text-sm text-gray-600">
+                <span className="flex items-center gap-1">
+                  <Clock className="w-4 h-4 text-blue-500" />
+                  Xếp hạng theo giờ dạy học
+                </span>
+                <span className="flex items-center gap-1">
+                  <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                  và đánh giá
+                </span>
+              </div>
+            </div>
             <div className="grid gap-4">
               {tutorRankings.map((tutor) => (
                 <Card key={tutor.id} className="group hover:shadow-lg transition-all duration-300 hover:scale-[1.02] border-0 bg-white/80 backdrop-blur-sm">
@@ -353,7 +469,7 @@ export default function RankingPage() {
                           </Avatar>
                           {tutor.isVerified && (
                             <div className="absolute -bottom-1 -right-1 bg-blue-600 text-white rounded-full p-1">
-                              <Star className="w-3 h-3 fill-current" />
+                              <CheckCircle className="w-3 h-3 fill-current" />
                             </div>
                           )}
                         </div>
@@ -364,8 +480,11 @@ export default function RankingPage() {
                         <div className="flex items-center gap-3 mb-2">
                           <h3 className="text-xl font-bold text-gray-900">{tutor.name}</h3>
                           {tutor.isVerified && (
-                            <Badge className="bg-blue-600 text-white">
-                              ✓ Verified
+                            <Badge className="bg-blue-600 text-white flex items-center gap-2 px-3 py-1 rounded-full">
+                              <div className="w-4 h-4 rounded-full border-2 border-white flex items-center justify-center">
+                                <CheckCircle className="w-2.5 h-2.5 fill-current text-white" />
+                              </div>
+                              VERIFIED
                             </Badge>
                           )}
                         </div>
@@ -383,34 +502,54 @@ export default function RankingPage() {
                           </div>
                         </div>
 
+                        {/* Ranking Score */}
+                        <div className="mb-3">
+                          <div className="flex items-center gap-2 text-xs text-gray-500">
+                            <span className="font-medium">Điểm xếp hạng:</span>
+                            <div className="flex items-center gap-1">
+                              <Clock className="w-3 h-3 text-blue-500" />
+                              <span className="font-semibold text-blue-600">{tutor.teachingHours}</span>
+                              <span>+</span>
+                              <Star className="w-3 h-3 text-yellow-500 fill-current" />
+                              <span className="font-semibold text-yellow-600">{tutor.rating}</span>
+                              <span>=</span>
+                              <span className="font-bold text-purple-600">{Math.round(tutor.teachingHours * 0.7 + tutor.rating * 100)}</span>
+                            </div>
+                          </div>
+                        </div>
+
                         <p className="text-sm text-gray-700 mb-3 line-clamp-2">{tutor.intro}</p>
 
                         <div className="flex flex-wrap gap-2">
-                          {tutor.subjects.map((subject, index) => (
-                            <Badge key={index} variant="outline" className="text-xs bg-gradient-to-r from-green-100 to-blue-100 border-green-200">
-                              📚 {subject}
-                            </Badge>
-                          ))}
+                          {tutor.subjects.map((subject, index) => {
+                            const SubjectIcon = getSubjectIcon(subject);
+                            return (
+                              <Badge key={index} variant="outline" className="text-xs bg-gray-100 border-gray-200 text-gray-700 flex items-center gap-1">
+                                <SubjectIcon className="w-3 h-3" />
+                                {subject}
+                              </Badge>
+                            );
+                          })}
                         </div>
                       </div>
 
-                                             {/* Action Button */}
-                       <div className="flex flex-col items-end gap-2">
-                         <Link href={`/profile/tutor/${tutor.profileSlug}`}>
-                           <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6">
-                             <Eye className="w-4 h-4 mr-2" />
-                             Xem Profile
-                           </Button>
-                         </Link>
-                       </div>
+                      {/* Action Button */}
+                      <div className="flex flex-col items-end gap-2">
+                        <Link href={`/tutor/${tutor.id}`}>
+                          <Button className="bg-gray-800 hover:bg-gray-900 text-white px-6">
+                            <Eye className="w-4 h-4 mr-2" />
+                            Xem Profile
+                          </Button>
+                        </Link>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
               ))}
             </div>
           </TabsContent>
-                 </Tabs>
-       </div>
-     </div>
-   );
+        </Tabs>
+      </div>
+    </div>
+  );
 }
