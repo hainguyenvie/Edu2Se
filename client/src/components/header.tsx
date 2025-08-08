@@ -79,9 +79,11 @@ export default function Header({ onToggleSidebar, onSubjectSelect }: HeaderProps
               Mã giảm giá
             </Button>
           </Link>
-          <Button variant="outline" className="text-gray-600 hover:text-primary">
-            Hỏi đáp
-          </Button>
+          <Link href="/qa-forum">
+            <Button variant="outline" className="text-gray-600 hover:text-primary">
+              Hỏi đáp
+            </Button>
+          </Link>
         </nav>
 
         {/* User Actions */}
