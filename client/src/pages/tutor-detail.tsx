@@ -480,18 +480,7 @@ export default function TutorDetail() {
                     <GraduationCap className="w-6 h-6 mr-3" />
                     Học vấn & Kinh nghiệm
                   </CardTitle>
-                  {isEditMode && isOwnerView && (
-                    <div className="flex gap-2">
-                      <Button size="sm" variant="outline" onClick={addEducation}>
-                        <Plus className="h-4 w-4 mr-1" />
-                        Học vấn
-                      </Button>
-                      <Button size="sm" variant="outline" onClick={addExperience}>
-                        <Plus className="h-4 w-4 mr-1" />
-                        Kinh nghiệm
-                      </Button>
-                    </div>
-                  )}
+
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -500,6 +489,11 @@ export default function TutorDetail() {
                   <h4 className="font-semibold text-lg mb-4 flex items-center">
                     <GraduationCap className="w-5 h-5 mr-2 text-blue-600" />
                     Học vấn
+                    {isEditMode && isOwnerView && (
+                      <Button size="sm" variant="outline" onClick={addEducation} className="ml-auto">
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    )}
                   </h4>
                   <div className="space-y-4">
                     {editableEducation.map((education, index) => (
@@ -584,6 +578,11 @@ export default function TutorDetail() {
                   <h4 className="font-semibold text-lg mb-4 flex items-center">
                     <Briefcase className="w-5 h-5 mr-2 text-green-600" />
                     Kinh nghiệm
+                    {isEditMode && isOwnerView && (
+                      <Button size="sm" variant="outline" onClick={addExperience} className="ml-auto">
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    )}
                   </h4>
                   <div className="space-y-4">
                     {editableExperience.map((experience, index) => (
