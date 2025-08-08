@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Star, Users, Clock, Plus, MessageCircle, Trophy, Video, HelpCircle, Home } from "lucide-react";
+import { Star, Users, Clock, MessageCircle, Plus } from "lucide-react";
 import Header from "@/components/header";
 import LoginModal from "@/components/modals/login-modal";
 import PaymentModal from "@/components/modals/payment-modal";
 import RoomViewModal from "@/components/modals/room-view-modal";
 
 export default function StudyWithMe() {
-  const [activeTab, setActiveTab] = useState("study-with-me");
   const [selectedRoom, setSelectedRoom] = useState<any>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -28,7 +27,7 @@ export default function StudyWithMe() {
       maxParticipants: 20,
       bio: "Cùng ôn thi đại học môn Toán. Không gian yên tĩnh, tập trung cao.",
       startTime: "2 giờ trước",
-      vibes: ["🔥", "📚", "🎯", "💪"],
+      vibes: ["\"Học tập là chìa khóa của thành công\"", "\"Kiên trì là sức mạnh\"", "\"Mục tiêu rõ ràng, kết quả tốt đẹp\"", "\"Nỗ lực hôm nay, thành công ngày mai\""],
       isLive: true
     },
     {
@@ -42,7 +41,7 @@ export default function StudyWithMe() {
       maxParticipants: 15,
       bio: "Study session cho IELTS Speaking. Practice cùng nhau nhé!",
       startTime: "1 giờ trước",
-      vibes: ["🗣️", "📖", "🌟", "⚡"],
+      vibes: ["\"Thực hành tạo nên hoàn hảo\"", "\"Kiến thức là sức mạnh\"", "\"Ánh sáng của trí tuệ\"", "\"Năng lượng tích cực\""],
       isLive: true
     },
     {
@@ -56,7 +55,7 @@ export default function StudyWithMe() {
       maxParticipants: 25,
       bio: "Học nhóm Hóa học lớp 12. Giải bài tập và thảo luận công thức.",
       startTime: "3 giờ trước",
-      vibes: ["🧪", "📝", "🎓", "💡"],
+      vibes: ["\"Khoa học là chân lý\"", "\"Ghi chép là ghi nhớ\"", "\"Học vấn mở ra tương lai\"", "\"Ý tưởng sáng tạo\""],
       isLive: true
     },
     {
@@ -70,7 +69,7 @@ export default function StudyWithMe() {
       maxParticipants: 12,
       bio: "Pomodoro session 25/5. Chill study, lo-fi music background.",
       startTime: "30 phút trước",
-      vibes: ["🎵", "⏰", "🌿", "☕"],
+      vibes: ["\"Âm nhạc nuôi dưỡng tâm hồn\"", "\"Thời gian là vàng bạc\"", "\"Thiên nhiên chữa lành\"", "\"Cà phê và tri thức\""],
       isLive: true
     },
     {
@@ -84,7 +83,7 @@ export default function StudyWithMe() {
       maxParticipants: 30,
       bio: "Coding bootcamp prep. Javascript fundamentals và algorithms.",
       startTime: "45 phút trước",
-      vibes: ["💻", "⚡", "🚀", "🔥"],
+      vibes: ["\"Code là nghệ thuật\"", "\"Tốc độ và hiệu quả\"", "\"Bay cao với công nghệ\"", "\"Lửa nhiệt huyết\""],
       isLive: true
     },
     {
@@ -98,7 +97,7 @@ export default function StudyWithMe() {
       maxParticipants: 20,
       bio: "Silent study room. Chỉ học im lặng, không chat.",
       startTime: "2 giờ trước",
-      vibes: ["🤫", "📚", "🧘", "🎯"],
+      vibes: ["\"Im lặng là vàng\"", "\"Sách là bạn tốt nhất\"", "\"Thiền định trong học tập\"", "\"Tập trung cao độ\""],
       isLive: true
     },
     {
@@ -112,17 +111,9 @@ export default function StudyWithMe() {
       maxParticipants: 25,
       bio: "Late night study grind. Cùng thức khuya ôn bài nhé.",
       startTime: "1 giờ trước",
-      vibes: ["🌙", "💪", "📚", "☕"],
+      vibes: ["\"Đêm khuya là thời gian của sự sáng tạo\"", "\"Sức mạnh ý chí\"", "\"Tri thức không ngủ\"", "\"Cà phê đêm\""],
       isLive: true
     }
-  ];
-
-  const tabs = [
-    { id: "study-with-me", label: "Study With Me", icon: Home, active: true },
-    { id: "ranking", label: "Ranking", icon: Trophy },
-    { id: "videos", label: "Videos & Vibes", icon: Video },
-    { id: "qa-forum", label: "Q&A Forum", icon: HelpCircle },
-    { id: "my-room", label: "My Study Room", icon: Users }
   ];
 
   const renderStars = (rating: number) => {
@@ -170,37 +161,18 @@ export default function StudyWithMe() {
     <div className="min-h-screen bg-gray-50">
       <Header />
       
+      {/* Create Room Button - Top Right */}
+      <div className="fixed top-20 right-6 z-50">
+        <Button 
+          className="bg-blue-600 hover:bg-blue-700 shadow-lg rounded-full px-6 py-3"
+          onClick={() => setShowLoginModal(true)}
+        >
+          <Plus className="w-5 h-5 mr-2" />
+          Tạo Room
+        </Button>
+      </div>
+      
       <div className="container mx-auto px-6 py-8 pt-24">
-        {/* Navigation Tabs */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center space-x-1 bg-white rounded-xl p-1 shadow-sm">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`
-                    flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
-                    ${isActive 
-                      ? "bg-blue-600 text-white shadow-md" 
-                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                    }
-                  `}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span className="hidden md:block">{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
-          
-          <Button className="bg-blue-600 hover:bg-blue-700 shadow-lg">
-            <Plus className="w-4 h-4 mr-2" />
-            Tạo Room
-          </Button>
-        </div>
 
         {/* Banner Section */}
         <Card className="mb-8 overflow-hidden border-0 shadow-lg">
@@ -245,10 +217,15 @@ export default function StudyWithMe() {
                         </span>
                       </div>
                       
-                      {/* Vibe Icons */}
-                      <div className="flex items-center space-x-1 mb-2">
+                      {/* Vibe Quotes */}
+                      <div className="flex flex-wrap items-center gap-2 mb-2">
                         {room.vibes.map((vibe, index) => (
-                          <span key={index} className="text-lg">{vibe}</span>
+                          <span 
+                            key={index} 
+                            className="text-xs bg-gradient-to-r from-blue-100 to-purple-100 text-blue-800 px-2 py-1 rounded-full border border-blue-200"
+                          >
+                            {vibe}
+                          </span>
                         ))}
                       </div>
                       
