@@ -17,6 +17,7 @@ import StudentProfilePage from "@/pages/profile-student";
 import TutorProfilePage from "@/pages/profile-tutor";
 import CouponsPage from "@/pages/coupons";
 import QAForum from "@/pages/qa-forum";
+import CreateStudyRoom from "@/pages/create-study-room";
 import LoginPage from "@/pages/login";
 import RegisterPage from "@/pages/register";
 import NotFound from "@/pages/not-found";
@@ -45,6 +46,7 @@ function Router() {
       <Route path="/profile/tutor/:slug" component={TutorProfilePage} />
       <Route path="/coupons" component={CouponsPage} />
       <Route path="/qa-forum" component={QAForum} />
+      <Route path="/create-study-room" component={CreateStudyRoom} />
       <Route component={NotFound} />
     </Switch>
   );

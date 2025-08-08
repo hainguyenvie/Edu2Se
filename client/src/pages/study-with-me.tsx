@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Star, Users, Clock, MessageCircle, Plus } from "lucide-react";
+import { Star, Users, Clock, Plus } from "lucide-react";
+import { Link } from "wouter";
 import Header from "@/components/header";
 import LoginModal from "@/components/modals/login-modal";
 import PaymentModal from "@/components/modals/payment-modal";
@@ -27,7 +28,8 @@ export default function StudyWithMe() {
       maxParticipants: 20,
       bio: "Cùng ôn thi đại học môn Toán. Không gian yên tĩnh, tập trung cao.",
       startTime: "2 giờ trước",
-      vibes: ["\"Học tập là chìa khóa của thành công\"", "\"Kiên trì là sức mạnh\"", "\"Mục tiêu rõ ràng, kết quả tốt đẹp\"", "\"Nỗ lực hôm nay, thành công ngày mai\""],
+      subject: "Toán",
+      targetAudience: "Lớp 12 • Đại học",
       isLive: true
     },
     {
@@ -41,7 +43,8 @@ export default function StudyWithMe() {
       maxParticipants: 15,
       bio: "Study session cho IELTS Speaking. Practice cùng nhau nhé!",
       startTime: "1 giờ trước",
-      vibes: ["\"Thực hành tạo nên hoàn hảo\"", "\"Kiến thức là sức mạnh\"", "\"Ánh sáng của trí tuệ\"", "\"Năng lượng tích cực\""],
+      subject: "Tiếng Anh",
+      targetAudience: "Lớp 6-12 • IELTS 8.0",
       isLive: true
     },
     {
@@ -55,7 +58,8 @@ export default function StudyWithMe() {
       maxParticipants: 25,
       bio: "Học nhóm Hóa học lớp 12. Giải bài tập và thảo luận công thức.",
       startTime: "3 giờ trước",
-      vibes: ["\"Khoa học là chân lý\"", "\"Ghi chép là ghi nhớ\"", "\"Học vấn mở ra tương lai\"", "\"Ý tưởng sáng tạo\""],
+      subject: "Hóa",
+      targetAudience: "Lớp 12 • THPT Quốc gia",
       isLive: true
     },
     {
@@ -69,7 +73,8 @@ export default function StudyWithMe() {
       maxParticipants: 12,
       bio: "Pomodoro session 25/5. Chill study, lo-fi music background.",
       startTime: "30 phút trước",
-      vibes: ["\"Âm nhạc nuôi dưỡng tâm hồn\"", "\"Thời gian là vàng bạc\"", "\"Thiên nhiên chữa lành\"", "\"Cà phê và tri thức\""],
+      subject: "Tất cả",
+      targetAudience: "Mọi lứa tuổi • Tập trung",
       isLive: true
     },
     {
@@ -83,7 +88,8 @@ export default function StudyWithMe() {
       maxParticipants: 30,
       bio: "Coding bootcamp prep. Javascript fundamentals và algorithms.",
       startTime: "45 phút trước",
-      vibes: ["\"Code là nghệ thuật\"", "\"Tốc độ và hiệu quả\"", "\"Bay cao với công nghệ\"", "\"Lửa nhiệt huyết\""],
+      subject: "Tin học",
+      targetAudience: "Lớp 10-12 • Đại học",
       isLive: true
     },
     {
@@ -97,7 +103,8 @@ export default function StudyWithMe() {
       maxParticipants: 20,
       bio: "Silent study room. Chỉ học im lặng, không chat.",
       startTime: "2 giờ trước",
-      vibes: ["\"Im lặng là vàng\"", "\"Sách là bạn tốt nhất\"", "\"Thiền định trong học tập\"", "\"Tập trung cao độ\""],
+      subject: "Tất cả",
+      targetAudience: "Mọi lứa tuổi • Im lặng",
       isLive: true
     },
     {
@@ -111,7 +118,8 @@ export default function StudyWithMe() {
       maxParticipants: 25,
       bio: "Late night study grind. Cùng thức khuya ôn bài nhé.",
       startTime: "1 giờ trước",
-      vibes: ["\"Đêm khuya là thời gian của sự sáng tạo\"", "\"Sức mạnh ý chí\"", "\"Tri thức không ngủ\"", "\"Cà phê đêm\""],
+      subject: "Tất cả",
+      targetAudience: "Mọi lứa tuổi • Đêm khuya",
       isLive: true
     }
   ];
@@ -163,13 +171,14 @@ export default function StudyWithMe() {
       
       {/* Create Room Button - Top Right */}
       <div className="fixed top-20 right-6 z-50">
-        <Button 
-          className="bg-blue-600 hover:bg-blue-700 shadow-lg rounded-full px-6 py-3"
-          onClick={() => setShowLoginModal(true)}
-        >
-          <Plus className="w-5 h-5 mr-2" />
-          Tạo Room
-        </Button>
+        <Link href="/create-study-room">
+          <Button 
+            className="bg-blue-600 hover:bg-blue-700 shadow-lg rounded-full px-6 py-3"
+          >
+            <Plus className="w-5 h-5 mr-2" />
+            Tạo Room
+          </Button>
+        </Link>
       </div>
       
       <div className="container mx-auto px-6 py-8 pt-24">
@@ -217,16 +226,11 @@ export default function StudyWithMe() {
                         </span>
                       </div>
                       
-                      {/* Vibe Quotes */}
+                      {/* Subject and Target Audience */}
                       <div className="flex flex-wrap items-center gap-2 mb-2">
-                        {room.vibes.map((vibe, index) => (
-                          <span 
-                            key={index} 
-                            className="text-xs bg-gradient-to-r from-blue-100 to-purple-100 text-blue-800 px-2 py-1 rounded-full border border-blue-200"
-                          >
-                            {vibe}
-                          </span>
-                        ))}
+                        <span className="text-sm text-gray-700">
+                          {room.subject} • {room.targetAudience}
+                        </span>
                       </div>
                       
                       {/* Bio */}
@@ -256,13 +260,6 @@ export default function StudyWithMe() {
 
                     {/* Action Buttons */}
                     <div className="flex space-x-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        className="border-gray-300 hover:border-gray-400"
-                      >
-                        <MessageCircle className="w-4 h-4" />
-                      </Button>
                       <Button 
                         size="sm"
                         className="bg-blue-600 hover:bg-blue-700 px-6 shadow-sm"
