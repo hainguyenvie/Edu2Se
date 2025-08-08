@@ -76,8 +76,6 @@ export default function TutorDetail() {
 
   const [selectedMedia, setSelectedMedia] = useState<any>(null);
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
-  const [selectedWeek, setSelectedWeek] = useState(0); // 0 = this week, 1 = next week, etc.
-  const [scheduleView, setScheduleView] = useState<'week' | 'month'>('week');
 
   const [editableInfo, setEditableInfo] = useState("Tôi là giáo viên có 5+ năm kinh nghiệm dạy Toán, Lý cấp 2-3. Chuyên luyện thi đại học với phương pháp dạy dễ hiểu, tận tâm với từng học viên.");
 
@@ -187,81 +185,6 @@ export default function TutorDetail() {
     }
     
     setSelectedMedia(editableVideos[newIndex]);
-  };
-
-  const getWeekData = (weekOffset: number) => {
-    const baseDate = new Date();
-    baseDate.setDate(baseDate.getDate() + (weekOffset * 7));
-    
-    const weekStart = new Date(baseDate);
-    weekStart.setDate(baseDate.getDate() - baseDate.getDay() + 1); // Start from Monday
-    
-    const formatDate = (date: Date) => {
-      return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}`;
-    };
-
-    const scheduleData = [
-      { 
-        day: "Thứ 2", 
-        date: formatDate(new Date(weekStart.getTime() + 0 * 24 * 60 * 60 * 1000)),
-        slots: [
-          { time: "19:00 - 21:00", status: "available", subject: "Toán", price: "200k", students: 0 },
-          { time: "21:00 - 23:00", status: "booked", subject: "Toán", price: "200k", students: 2 }
-        ]
-      },
-      { 
-        day: "Thứ 3", 
-        date: formatDate(new Date(weekStart.getTime() + 1 * 24 * 60 * 60 * 1000)),
-        slots: [
-          { time: "18:30 - 20:30", status: "available", subject: "Lý", price: "250k", students: 0 }
-        ]
-      },
-      { 
-        day: "Thứ 4", 
-        date: formatDate(new Date(weekStart.getTime() + 2 * 24 * 60 * 60 * 1000)),
-        slots: [
-          { time: "19:00 - 21:00", status: "available", subject: "Toán", price: "200k", students: 0 },
-          { time: "21:00 - 23:00", status: "available", subject: "Lý", price: "250k", students: 0 }
-        ]
-      },
-      { 
-        day: "Thứ 5", 
-        date: formatDate(new Date(weekStart.getTime() + 3 * 24 * 60 * 60 * 1000)),
-        slots: []
-      },
-      { 
-        day: "Thứ 6", 
-        date: formatDate(new Date(weekStart.getTime() + 4 * 24 * 60 * 60 * 1000)),
-        slots: [
-          { time: "19:30 - 21:30", status: "booked", subject: "Toán", price: "200k", students: 3 }
-        ]
-      },
-      { 
-        day: "Thứ 7", 
-        date: formatDate(new Date(weekStart.getTime() + 5 * 24 * 60 * 60 * 1000)),
-        slots: [
-          { time: "14:00 - 16:00", status: "available", subject: "Lý", price: "250k", students: 0 },
-          { time: "16:30 - 18:30", status: "available", subject: "Toán", price: "200k", students: 0 },
-          { time: "19:00 - 21:00", status: "booked", subject: "Lý", price: "250k", students: 1 }
-        ]
-      },
-      { 
-        day: "Chủ nhật", 
-        date: formatDate(new Date(weekStart.getTime() + 6 * 24 * 60 * 60 * 1000)),
-        slots: [
-          { time: "09:00 - 11:00", status: "available", subject: "Toán", price: "200k", students: 0 },
-          { time: "15:00 - 17:00", status: "available", subject: "Lý", price: "250k", students: 0 }
-        ]
-      }
-    ];
-
-    return scheduleData;
-  };
-
-  const getWeekTitle = (weekOffset: number) => {
-    if (weekOffset === 0) return "Tuần này";
-    if (weekOffset === 1) return "Tuần sau";
-    return `Tuần ${weekOffset + 1}`;
   };
 
   const removeVideo = (index: number) => {
@@ -1259,141 +1182,80 @@ export default function TutorDetail() {
               </CardContent>
             </Card>
 
-            {/* Smart Schedule with Week Navigation */}
+            {/* Enhanced Schedule with Multiple Time Slots */}
             <Card className="shadow-lg border-0">
               <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="flex items-center">
-                    <Calendar className="w-6 h-6 mr-3" />
-                    Lịch dạy - {getWeekTitle(selectedWeek)}
-                  </CardTitle>
-                  <div className="flex items-center gap-2">
-                    {/* Week Navigation */}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setSelectedWeek(Math.max(0, selectedWeek - 1))}
-                      disabled={selectedWeek === 0}
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setSelectedWeek(selectedWeek + 1)}
-                      disabled={selectedWeek >= 3}
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-                {/* Quick Stats */}
-                <div className="flex gap-4 mt-4 text-sm">
-                  <div className="flex items-center gap-1">
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                    <span className="text-gray-600">
-                      {getWeekData(selectedWeek).reduce((acc, day) => acc + day.slots.filter(s => s.status === 'available').length, 0)} slot trống
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                    <span className="text-gray-600">
-                      {getWeekData(selectedWeek).reduce((acc, day) => acc + day.slots.filter(s => s.status === 'booked').length, 0)} slot đã đặt
-                    </span>
-                  </div>
-                </div>
+                <CardTitle className="flex items-center">
+                  <Calendar className="w-6 h-6 mr-3" />
+                  Lịch dạy tuần này
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {getWeekData(selectedWeek).map((daySchedule, dayIndex) => (
-                  <div key={dayIndex} className="border rounded-lg overflow-hidden bg-white">
-                    {/* Day Header */}
-                    <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 border-b">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="font-semibold text-gray-900">{daySchedule.day}</div>
-                          <div className="text-sm text-gray-600">{daySchedule.date}</div>
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          {daySchedule.slots.length === 0 ? "Nghỉ" : `${daySchedule.slots.length} buổi`}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Time Slots */}
-                    {daySchedule.slots.length > 0 ? (
-                      <div className="p-4 space-y-3">
-                        {daySchedule.slots.map((slot, slotIndex) => (
-                          <div 
-                            key={slotIndex} 
-                            className={`flex items-center justify-between p-4 rounded-lg border-2 transition-all hover:shadow-md cursor-pointer ${
-                              slot.status === 'available' 
-                                ? 'bg-green-50 border-green-200 hover:bg-green-100' 
-                                : 'bg-gray-50 border-gray-200'
-                            }`}
-                            onClick={() => slot.status === 'available' && console.log('Book slot:', slot)}
-                          >
-                            <div className="flex items-center space-x-3">
-                              <div className={`p-2 rounded-full ${
-                                slot.status === 'available' ? 'bg-green-500' : 'bg-gray-400'
-                              }`}>
-                                <Clock className="w-4 h-4 text-white" />
-                              </div>
-                              <div>
-                                <div className="font-medium text-gray-900">{slot.time}</div>
-                                <div className="text-sm text-gray-600 flex items-center gap-2">
-                                  <span>{slot.subject}</span>
-                                  <span>•</span>
-                                  <span className="font-medium text-green-600">{slot.price}</span>
-                                  {slot.status === 'booked' && (
-                                    <>
-                                      <span>•</span>
-                                      <span>{slot.students} học viên</span>
-                                    </>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              {slot.status === 'available' ? (
-                                <>
-                                  <Badge className="bg-green-500 hover:bg-green-600">
-                                    Đặt lịch
-                                  </Badge>
-                                  <Button size="sm" variant="outline" className="h-8">
-                                    Xem chi tiết
-                                  </Button>
-                                </>
-                              ) : (
-                                <Badge variant="secondary" className="bg-gray-200">
-                                  Đã đầy ({slot.students} học viên)
-                                </Badge>
-                              )}
-                            </div>
+                {[
+                  { 
+                    day: "Thứ 2", 
+                    slots: [
+                      { time: "19:00 - 21:00", status: "available" },
+                      { time: "21:00 - 23:00", status: "booked" }
+                    ]
+                  },
+                  { 
+                    day: "Thứ 3", 
+                    slots: [
+                      { time: "18:30 - 20:30", status: "available" }
+                    ]
+                  },
+                  { 
+                    day: "Thứ 4", 
+                    slots: [
+                      { time: "19:00 - 21:00", status: "available" },
+                      { time: "21:00 - 23:00", status: "available" }
+                    ]
+                  },
+                  { 
+                    day: "Thứ 6", 
+                    slots: [
+                      { time: "19:30 - 21:30", status: "booked" }
+                    ]
+                  },
+                  { 
+                    day: "Thứ 7", 
+                    slots: [
+                      { time: "14:00 - 16:00", status: "available" },
+                      { time: "16:30 - 18:30", status: "available" },
+                      { time: "19:00 - 21:00", status: "booked" }
+                    ]
+                  }
+                ].map((daySchedule, dayIndex) => (
+                  <div key={dayIndex} className="border rounded-lg p-4 bg-gray-50">
+                    <div className="font-semibold text-sm mb-3 text-gray-900">{daySchedule.day}</div>
+                    <div className="space-y-2">
+                      {daySchedule.slots.map((slot, slotIndex) => (
+                        <div 
+                          key={slotIndex} 
+                          className={`flex items-center justify-between p-3 rounded-lg border ${
+                            slot.status === 'available' 
+                              ? 'bg-green-50 border-green-200' 
+                              : 'bg-red-50 border-red-200'
+                          }`}
+                        >
+                          <div className="flex items-center space-x-2">
+                            <Clock className={`w-4 h-4 ${
+                              slot.status === 'available' ? 'text-green-600' : 'text-red-600'
+                            }`} />
+                            <span className="text-sm font-medium">{slot.time}</span>
                           </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="p-8 text-center text-gray-500">
-                        <Calendar className="w-8 h-8 mx-auto mb-2 text-gray-300" />
-                        <div className="text-sm">Không có lịch dạy</div>
-                      </div>
-                    )}
+                          <Badge 
+                            variant={slot.status === 'available' ? 'default' : 'secondary'}
+                            className={slot.status === 'available' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}
+                          >
+                            {slot.status === 'available' ? 'Còn trống' : 'Đã đặt'}
+                          </Badge>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ))}
-                
-                {/* Quick Actions */}
-                <div className="flex gap-2 pt-4 border-t">
-                  <Button variant="outline" className="flex-1" size="sm">
-                    <Calendar className="h-4 w-4 mr-2" />
-                    Xem lịch tháng
-                  </Button>
-                  {isOwnerView && (
-                    <Button variant="outline" className="flex-1" size="sm">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Thêm lịch dạy
-                    </Button>
-                  )}
-                </div>
               </CardContent>
             </Card>
           </div>
