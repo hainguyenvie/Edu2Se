@@ -130,76 +130,50 @@ export default function TutorDetail() {
       <Header />
       
       <div className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* Hero Section */}
-        <div className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-3xl p-8 mb-8 text-white overflow-hidden">
-          <div className="absolute inset-0 bg-black/20" />
-          <div className="relative z-10 flex flex-col lg:flex-row items-center space-y-6 lg:space-y-0 lg:space-x-8">
-            <Avatar className="w-32 h-32 border-4 border-white/50">
-              <AvatarImage src="" alt="MINH TIẾN" />
-              <AvatarFallback className="text-4xl font-bold bg-gradient-to-br from-blue-500 to-purple-600 text-white">
-                MT
-              </AvatarFallback>
-            </Avatar>
-            
-            <div className="flex-1 text-center lg:text-left">
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 mb-4">
-                <h1 className="text-4xl font-bold">MINH TIẾN</h1>
-                <Badge className="bg-green-500 text-white border-0">
-                  <Shield className="w-4 h-4 mr-1" />
-                  Đã xác thực
-                </Badge>
-                <Badge className="bg-yellow-500 text-white border-0">
-                  <Star className="w-4 h-4 mr-1" />
-                  Top Rated
-                </Badge>
-              </div>
-              
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mb-6">
-                <div className="flex items-center space-x-1">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                  ))}
-                  <span className="ml-2 font-semibold">4.8 (150 đánh giá)</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Users className="w-5 h-5" />
-                  <span>200+ học viên</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Clock className="w-5 h-5" />
-                  <span>8000+ giờ dạy</span>
-                </div>
-              </div>
-              
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
-                <div className="bg-white/20 px-4 py-2 rounded-full">
-                  <span className="font-semibold">📚 TOÁN - LÝ</span>
-                </div>
-                <div className="bg-white/20 px-4 py-2 rounded-full">
-                  <span className="font-semibold">🎓 CẤP 2-3</span>
-                </div>
-                <div className="bg-white/20 px-4 py-2 rounded-full">
-                  <span className="font-semibold">💰 150k/h</span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="text-center">
-              <Button 
-                size="lg" 
-                className="bg-white text-blue-600 hover:bg-gray-100 font-bold px-8 py-3 text-lg"
-                onClick={() => setIsBookingModalOpen(true)}
-              >
-                ĐẶT LỊCH NGAY
-              </Button>
-            </div>
-          </div>
-        </div>
+
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Left Sidebar */}
           <div className="lg:col-span-1 space-y-6">
+            {/* Simple Profile Card */}
+            <Card className="shadow-lg border-0">
+              <CardContent className="p-6 text-center">
+                <Avatar className="w-20 h-20 mx-auto mb-4">
+                  <AvatarImage src="" alt="MINH TIẾN" />
+                  <AvatarFallback className="text-2xl font-bold bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+                    MT
+                  </AvatarFallback>
+                </Avatar>
+                
+                <h2 className="text-xl font-bold mb-2">MINH TIẾN</h2>
+                
+                <div className="flex justify-center gap-2 mb-3">
+                  <Badge className="bg-green-500 text-white border-0 text-xs">
+                    <Shield className="w-3 h-3 mr-1" />
+                    Đã xác thực
+                  </Badge>
+                  <Badge className="bg-yellow-500 text-white border-0 text-xs">
+                    <Star className="w-3 h-3 mr-1" />
+                    Top Rated
+                  </Badge>
+                </div>
+                
+                <div className="flex justify-center items-center mb-3">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                  <span className="ml-2 text-sm font-medium">4.8 (150)</span>
+                </div>
+                
+                <div className="text-sm text-gray-600 space-y-1">
+                  <div>📚 TOÁN - LÝ</div>
+                  <div>🎓 CẤP 2-3</div>
+                  <div className="font-semibold text-blue-600">💰 150k/h</div>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Quick Actions */}
             {isOwnerView && (
               <Card className="shadow-lg border-0 bg-gradient-to-br from-indigo-50 to-purple-50">
