@@ -1231,14 +1231,14 @@ export default function TutorDetail() {
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Day Selection Buttons */}
-                <div className="flex gap-1 justify-center">
+                <div className="flex gap-1 justify-center px-2">
                   {weekDays.map((day) => (
                     <Button
                       key={day.full}
                       variant={selectedDay === day.full ? "default" : "outline"}
                       size="sm"
                       onClick={() => setSelectedDay(day.full)}
-                      className={`relative transition-all duration-200 w-10 h-8 text-xs ${
+                      className={`relative transition-all duration-200 w-8 h-7 text-xs px-1 ${
                         selectedDay === day.full 
                           ? "bg-blue-600 hover:bg-blue-700 text-white shadow-lg" 
                           : "hover:bg-blue-50 hover:border-blue-300"
@@ -1247,9 +1247,7 @@ export default function TutorDetail() {
                       {day.short}
                       {/* Available slots indicator */}
                       {weeklySchedule[day.full] && weeklySchedule[day.full].filter(slot => slot.status === 'available').length > 0 && (
-                        <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full text-xs text-white flex items-center justify-center">
-                          {weeklySchedule[day.full].filter(slot => slot.status === 'available').length}
-                        </div>
+                        <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-green-500 rounded-full"></div>
                       )}
                     </Button>
                   ))}
@@ -1264,37 +1262,23 @@ export default function TutorDetail() {
                     </Badge>
                   </div>
                   
-                  {weeklySchedule[selectedDay] && weeklySchedule[selectedDay].length > 0 ? (
+                  {weeklySchedule[selectedDay] && weeklySchedule[selectedDay].filter(slot => slot.status === 'available').length > 0 ? (
                     <div className="grid grid-cols-1 gap-4">
-                      {weeklySchedule[selectedDay].map((slot, index) => (
+                      {weeklySchedule[selectedDay]
+                        .filter(slot => slot.status === 'available')
+                        .map((slot, index) => (
                         <Card 
                           key={index} 
-                          className={`p-4 transition-all duration-200 cursor-pointer ${
-                            slot.status === 'available' 
-                              ? 'bg-green-50 border-green-200 hover:bg-green-100 hover:shadow-md' 
-                              : 'bg-gray-100 border-gray-200 opacity-60'
-                          }`}
+                          className="p-4 transition-all duration-200 cursor-pointer bg-green-50 border-green-200 hover:bg-green-100 hover:shadow-md"
                         >
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-3">
-                              <div className={`p-2 rounded-full ${
-                                slot.status === 'available' ? 'bg-green-100' : 'bg-gray-200'
-                              }`}>
-                                <Clock className={`w-4 h-4 ${
-                                  slot.status === 'available' ? 'text-green-600' : 'text-gray-500'
-                                }`} />
-                              </div>
-                              <div>
-                                <div className="font-semibold text-sm">{slot.time}</div>
-                                <div className="text-xs text-gray-600">{slot.subject}</div>
-                              </div>
+                          <div className="flex items-center space-x-3">
+                            <div className="p-2 rounded-full bg-green-100">
+                              <Clock className="w-4 h-4 text-green-600" />
                             </div>
-                            <Badge 
-                              variant={slot.status === 'available' ? 'default' : 'secondary'}
-                              className="text-xs"
-                            >
-                              {slot.status === 'available' ? 'Còn trống' : 'Đã đặt'}
-                            </Badge>
+                            <div>
+                              <div className="font-semibold text-sm">{slot.time}</div>
+                              <div className="text-xs text-gray-600">{slot.subject}</div>
+                            </div>
                           </div>
                         </Card>
                       ))}
