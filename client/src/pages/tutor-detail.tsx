@@ -71,6 +71,44 @@ export default function TutorDetail() {
 
   const [editableInfo, setEditableInfo] = useState("Tôi là giáo viên có 5+ năm kinh nghiệm dạy Toán, Lý cấp 2-3. Chuyên luyện thi đại học với phương pháp dạy dễ hiểu, tận tâm với từng học viên.");
 
+  const [editableEducation, setEditableEducation] = useState([
+    {
+      id: 1,
+      degree: "Kỹ sư Toán ứng dụng",
+      school: "Đại học Bách Khoa Hà Nội",
+      gpa: "GPA: 3.8/4.0",
+      year: "2015-2019"
+    }
+  ]);
+
+  const [editableExperience, setEditableExperience] = useState([
+    {
+      id: 1,
+      title: "Giáo viên dạy kèm",
+      description: "5+ năm dạy kèm",
+      details: "Chuyên Toán, Lý cấp 2-3",
+      period: "2019-2024"
+    }
+  ]);
+
+  const [editableSpecialties, setEditableSpecialties] = useState([
+    {
+      id: 1,
+      title: "Luyện thi Đại học",
+      description: "THPT Quốc gia, A00, A01",
+      details: "Chuyên môn chính"
+    }
+  ]);
+
+  const [editableCertificates, setEditableCertificates] = useState([
+    {
+      id: 1,
+      name: "Chứng chỉ giảng dạy",
+      issuer: "TESOL, Pedagogy Certificate",
+      year: "2020"
+    }
+  ]);
+
   const tutor = {
     id: "current-user",
     name: "MINH TIẾN",
@@ -123,6 +161,64 @@ export default function TutorDetail() {
 
   const removeVideo = (index: number) => {
     setEditableVideos(editableVideos.filter((_, i) => i !== index));
+  };
+
+  const addEducation = () => {
+    const newId = Math.max(...editableEducation.map(e => e.id)) + 1;
+    setEditableEducation([...editableEducation, { 
+      id: newId, 
+      degree: "Bằng cấp mới", 
+      school: "Trường đại học", 
+      gpa: "GPA: /4.0", 
+      year: "Năm tốt nghiệp" 
+    }]);
+  };
+
+  const removeEducation = (index: number) => {
+    setEditableEducation(editableEducation.filter((_, i) => i !== index));
+  };
+
+  const addExperience = () => {
+    const newId = Math.max(...editableExperience.map(e => e.id)) + 1;
+    setEditableExperience([...editableExperience, { 
+      id: newId, 
+      title: "Vị trí công việc", 
+      description: "Mô tả công việc", 
+      details: "Chi tiết kinh nghiệm", 
+      period: "Thời gian" 
+    }]);
+  };
+
+  const removeExperience = (index: number) => {
+    setEditableExperience(editableExperience.filter((_, i) => i !== index));
+  };
+
+  const addSpecialty = () => {
+    const newId = Math.max(...editableSpecialties.map(s => s.id)) + 1;
+    setEditableSpecialties([...editableSpecialties, { 
+      id: newId, 
+      title: "Chuyên môn mới", 
+      description: "Mô tả chuyên môn", 
+      details: "Chi tiết" 
+    }]);
+  };
+
+  const removeSpecialty = (index: number) => {
+    setEditableSpecialties(editableSpecialties.filter((_, i) => i !== index));
+  };
+
+  const addCertificate = () => {
+    const newId = Math.max(...editableCertificates.map(c => c.id)) + 1;
+    setEditableCertificates([...editableCertificates, { 
+      id: newId, 
+      name: "Chứng chỉ mới", 
+      issuer: "Tổ chức cấp", 
+      year: "Năm cấp" 
+    }]);
+  };
+
+  const removeCertificate = (index: number) => {
+    setEditableCertificates(editableCertificates.filter((_, i) => i !== index));
   };
 
   return (
@@ -376,62 +472,345 @@ export default function TutorDetail() {
               </CardContent>
             </Card>
 
-            {/* Education & Experience - Moved after Subjects */}
+            {/* Education & Experience - LinkedIn Style */}
             <Card className="shadow-lg border-0">
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <GraduationCap className="w-6 h-6 mr-3" />
-                  Học vấn & Kinh nghiệm
-                </CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center">
+                    <GraduationCap className="w-6 h-6 mr-3" />
+                    Học vấn & Kinh nghiệm
+                  </CardTitle>
+                  {isEditMode && isOwnerView && (
+                    <div className="flex gap-2">
+                      <Button size="sm" variant="outline" onClick={addEducation}>
+                        <Plus className="h-4 w-4 mr-1" />
+                        Học vấn
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={addExperience}>
+                        <Plus className="h-4 w-4 mr-1" />
+                        Kinh nghiệm
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Education Section */}
+                <div>
+                  <h4 className="font-semibold text-lg mb-4 flex items-center">
+                    <GraduationCap className="w-5 h-5 mr-2 text-blue-600" />
+                    Học vấn
+                  </h4>
                   <div className="space-y-4">
-                    <div className="flex items-start space-x-3">
-                      <div className="p-2 bg-blue-100 rounded-lg">
-                        <GraduationCap className="w-5 h-5 text-blue-600" />
+                    {editableEducation.map((education, index) => (
+                      <div key={education.id} className="flex items-start space-x-4 p-4 border border-gray-200 rounded-lg bg-gray-50 relative">
+                        {isEditMode && isOwnerView && (
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            className="absolute top-2 right-2 h-6 w-6 p-0"
+                            onClick={() => removeEducation(index)}
+                          >
+                            <Minus className="h-3 w-3" />
+                          </Button>
+                        )}
+                        <div className="p-2 bg-blue-100 rounded-lg">
+                          <GraduationCap className="w-5 h-5 text-blue-600" />
+                        </div>
+                        <div className="flex-1">
+                          {isEditMode && isOwnerView ? (
+                            <div className="space-y-2">
+                              <Input
+                                value={education.degree}
+                                onChange={(e) => {
+                                  const newEducation = [...editableEducation];
+                                  newEducation[index].degree = e.target.value;
+                                  setEditableEducation(newEducation);
+                                }}
+                                className="font-semibold"
+                                placeholder="Bằng cấp"
+                              />
+                              <Input
+                                value={education.school}
+                                onChange={(e) => {
+                                  const newEducation = [...editableEducation];
+                                  newEducation[index].school = e.target.value;
+                                  setEditableEducation(newEducation);
+                                }}
+                                placeholder="Trường đại học"
+                              />
+                              <div className="flex gap-2">
+                                <Input
+                                  value={education.gpa}
+                                  onChange={(e) => {
+                                    const newEducation = [...editableEducation];
+                                    newEducation[index].gpa = e.target.value;
+                                    setEditableEducation(newEducation);
+                                  }}
+                                  placeholder="GPA"
+                                  className="text-sm"
+                                />
+                                <Input
+                                  value={education.year}
+                                  onChange={(e) => {
+                                    const newEducation = [...editableEducation];
+                                    newEducation[index].year = e.target.value;
+                                    setEditableEducation(newEducation);
+                                  }}
+                                  placeholder="Năm tốt nghiệp"
+                                  className="text-sm"
+                                />
+                              </div>
+                            </div>
+                          ) : (
+                            <div>
+                              <h5 className="font-semibold text-gray-900">{education.degree}</h5>
+                              <p className="text-gray-600">{education.school}</p>
+                              <div className="flex items-center gap-3 text-sm text-gray-500">
+                                <span>{education.gpa}</span>
+                                <span>•</span>
+                                <span>{education.year}</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-900">Học vấn</h4>
-                        <p className="text-gray-600">Đại học Bách Khoa Hà Nội</p>
-                        <p className="text-sm text-gray-500">Kỹ sư Toán ứng dụng - GPA: 3.8/4.0</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start space-x-3">
-                      <div className="p-2 bg-green-100 rounded-lg">
-                        <Briefcase className="w-5 h-5 text-green-600" />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-900">Kinh nghiệm</h4>
-                        <p className="text-gray-600">5+ năm dạy kèm</p>
-                        <p className="text-sm text-gray-500">Chuyên Toán, Lý cấp 2-3</p>
-                      </div>
-                    </div>
+                    ))}
                   </div>
-                  
+                </div>
+
+                {/* Experience Section */}
+                <div>
+                  <h4 className="font-semibold text-lg mb-4 flex items-center">
+                    <Briefcase className="w-5 h-5 mr-2 text-green-600" />
+                    Kinh nghiệm
+                  </h4>
                   <div className="space-y-4">
-                    <div className="flex items-start space-x-3">
-                      <div className="p-2 bg-purple-100 rounded-lg">
-                        <Target className="w-5 h-5 text-purple-600" />
+                    {editableExperience.map((experience, index) => (
+                      <div key={experience.id} className="flex items-start space-x-4 p-4 border border-gray-200 rounded-lg bg-gray-50 relative">
+                        {isEditMode && isOwnerView && (
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            className="absolute top-2 right-2 h-6 w-6 p-0"
+                            onClick={() => removeExperience(index)}
+                          >
+                            <Minus className="h-3 w-3" />
+                          </Button>
+                        )}
+                        <div className="p-2 bg-green-100 rounded-lg">
+                          <Briefcase className="w-5 h-5 text-green-600" />
+                        </div>
+                        <div className="flex-1">
+                          {isEditMode && isOwnerView ? (
+                            <div className="space-y-2">
+                              <Input
+                                value={experience.title}
+                                onChange={(e) => {
+                                  const newExperience = [...editableExperience];
+                                  newExperience[index].title = e.target.value;
+                                  setEditableExperience(newExperience);
+                                }}
+                                className="font-semibold"
+                                placeholder="Vị trí công việc"
+                              />
+                              <Input
+                                value={experience.description}
+                                onChange={(e) => {
+                                  const newExperience = [...editableExperience];
+                                  newExperience[index].description = e.target.value;
+                                  setEditableExperience(newExperience);
+                                }}
+                                placeholder="Mô tả công việc"
+                              />
+                              <div className="flex gap-2">
+                                <Input
+                                  value={experience.details}
+                                  onChange={(e) => {
+                                    const newExperience = [...editableExperience];
+                                    newExperience[index].details = e.target.value;
+                                    setEditableExperience(newExperience);
+                                  }}
+                                  placeholder="Chi tiết"
+                                  className="text-sm"
+                                />
+                                <Input
+                                  value={experience.period}
+                                  onChange={(e) => {
+                                    const newExperience = [...editableExperience];
+                                    newExperience[index].period = e.target.value;
+                                    setEditableExperience(newExperience);
+                                  }}
+                                  placeholder="Thời gian"
+                                  className="text-sm"
+                                />
+                              </div>
+                            </div>
+                          ) : (
+                            <div>
+                              <h5 className="font-semibold text-gray-900">{experience.title}</h5>
+                              <p className="text-gray-600">{experience.description}</p>
+                              <div className="flex items-center gap-3 text-sm text-gray-500">
+                                <span>{experience.details}</span>
+                                <span>•</span>
+                                <span>{experience.period}</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-900">Chuyên môn</h4>
-                        <p className="text-gray-600">Luyện thi Đại học</p>
-                        <p className="text-sm text-gray-500">THPT Quốc gia, A00, A01</p>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Specialties Section */}
+                <div>
+                  <h4 className="font-semibold text-lg mb-4 flex items-center">
+                    <Target className="w-5 h-5 mr-2 text-purple-600" />
+                    Chuyên môn
+                    {isEditMode && isOwnerView && (
+                      <Button size="sm" variant="outline" onClick={addSpecialty} className="ml-auto">
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </h4>
+                  <div className="space-y-4">
+                    {editableSpecialties.map((specialty, index) => (
+                      <div key={specialty.id} className="flex items-start space-x-4 p-4 border border-gray-200 rounded-lg bg-gray-50 relative">
+                        {isEditMode && isOwnerView && (
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            className="absolute top-2 right-2 h-6 w-6 p-0"
+                            onClick={() => removeSpecialty(index)}
+                          >
+                            <Minus className="h-3 w-3" />
+                          </Button>
+                        )}
+                        <div className="p-2 bg-purple-100 rounded-lg">
+                          <Target className="w-5 h-5 text-purple-600" />
+                        </div>
+                        <div className="flex-1">
+                          {isEditMode && isOwnerView ? (
+                            <div className="space-y-2">
+                              <Input
+                                value={specialty.title}
+                                onChange={(e) => {
+                                  const newSpecialties = [...editableSpecialties];
+                                  newSpecialties[index].title = e.target.value;
+                                  setEditableSpecialties(newSpecialties);
+                                }}
+                                className="font-semibold"
+                                placeholder="Chuyên môn"
+                              />
+                              <Input
+                                value={specialty.description}
+                                onChange={(e) => {
+                                  const newSpecialties = [...editableSpecialties];
+                                  newSpecialties[index].description = e.target.value;
+                                  setEditableSpecialties(newSpecialties);
+                                }}
+                                placeholder="Mô tả"
+                              />
+                              <Input
+                                value={specialty.details}
+                                onChange={(e) => {
+                                  const newSpecialties = [...editableSpecialties];
+                                  newSpecialties[index].details = e.target.value;
+                                  setEditableSpecialties(newSpecialties);
+                                }}
+                                placeholder="Chi tiết"
+                                className="text-sm"
+                              />
+                            </div>
+                          ) : (
+                            <div>
+                              <h5 className="font-semibold text-gray-900">{specialty.title}</h5>
+                              <p className="text-gray-600">{specialty.description}</p>
+                              <p className="text-sm text-gray-500">{specialty.details}</p>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                    
-                    <div className="flex items-start space-x-3">
-                      <div className="p-2 bg-orange-100 rounded-lg">
-                        <Award className="w-5 h-5 text-orange-600" />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Certificates Section */}
+                <div>
+                  <h4 className="font-semibold text-lg mb-4 flex items-center">
+                    <Award className="w-5 h-5 mr-2 text-orange-600" />
+                    Chứng chỉ
+                    {isEditMode && isOwnerView && (
+                      <Button size="sm" variant="outline" onClick={addCertificate} className="ml-auto">
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </h4>
+                  <div className="space-y-4">
+                    {editableCertificates.map((certificate, index) => (
+                      <div key={certificate.id} className="flex items-start space-x-4 p-4 border border-gray-200 rounded-lg bg-gray-50 relative">
+                        {isEditMode && isOwnerView && (
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            className="absolute top-2 right-2 h-6 w-6 p-0"
+                            onClick={() => removeCertificate(index)}
+                          >
+                            <Minus className="h-3 w-3" />
+                          </Button>
+                        )}
+                        <div className="p-2 bg-orange-100 rounded-lg">
+                          <Award className="w-5 h-5 text-orange-600" />
+                        </div>
+                        <div className="flex-1">
+                          {isEditMode && isOwnerView ? (
+                            <div className="space-y-2">
+                              <Input
+                                value={certificate.name}
+                                onChange={(e) => {
+                                  const newCertificates = [...editableCertificates];
+                                  newCertificates[index].name = e.target.value;
+                                  setEditableCertificates(newCertificates);
+                                }}
+                                className="font-semibold"
+                                placeholder="Tên chứng chỉ"
+                              />
+                              <div className="flex gap-2">
+                                <Input
+                                  value={certificate.issuer}
+                                  onChange={(e) => {
+                                    const newCertificates = [...editableCertificates];
+                                    newCertificates[index].issuer = e.target.value;
+                                    setEditableCertificates(newCertificates);
+                                  }}
+                                  placeholder="Tổ chức cấp"
+                                />
+                                <Input
+                                  value={certificate.year}
+                                  onChange={(e) => {
+                                    const newCertificates = [...editableCertificates];
+                                    newCertificates[index].year = e.target.value;
+                                    setEditableCertificates(newCertificates);
+                                  }}
+                                  placeholder="Năm"
+                                  className="w-24"
+                                />
+                              </div>
+                            </div>
+                          ) : (
+                            <div>
+                              <h5 className="font-semibold text-gray-900">{certificate.name}</h5>
+                              <div className="flex items-center gap-3 text-sm text-gray-500">
+                                <span>{certificate.issuer}</span>
+                                <span>•</span>
+                                <span>{certificate.year}</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-900">Chứng chỉ</h4>
-                        <p className="text-gray-600">Chứng chỉ giảng dạy</p>
-                        <p className="text-sm text-gray-500">TESOL, Pedagogy Certificate</p>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
               </CardContent>
