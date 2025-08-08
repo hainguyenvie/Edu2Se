@@ -263,41 +263,6 @@ export default function TutorView() {
               </CardContent>
             </Card>
 
-            {/* Action Buttons - REPLACING Quick Actions */}
-            <Card className="shadow-lg border-0 bg-gradient-to-br from-indigo-50 to-purple-50">
-              <CardHeader>
-                <CardTitle className="flex items-center text-indigo-700">
-                  <Settings className="w-6 h-6 mr-3" />
-                  Thao tác
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Button 
-                  variant={isFollowing ? "default" : "outline"}
-                  className="w-full justify-start"
-                  onClick={() => setIsFollowing(!isFollowing)}
-                >
-                  <Heart className={`h-5 w-5 mr-3 ${isFollowing ? 'fill-current' : ''}`} />
-                  {isFollowing ? 'ĐANG THEO DÕI' : 'THEO DÕI'}
-                </Button>
-                <Button 
-                  className="w-full justify-start bg-blue-600 hover:bg-blue-700 text-white"
-                  onClick={() => setIsBookingModalOpen(true)}
-                >
-                  <Calendar className="h-5 w-5 mr-3" />
-                  ĐẶT LỊCH
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  <MessageCircle className="h-5 w-5 mr-3" />
-                  NHẮN TIN
-                </Button>
-                <Button variant="outline" className="w-full justify-start text-red-600 hover:text-red-700 hover:border-red-300">
-                  <Flag className="h-5 w-5 mr-3" />
-                  BÁO CÁO
-                </Button>
-              </CardContent>
-            </Card>
-
             {/* Quick Stats */}
             <Card className="shadow-lg border-0">
               <CardHeader>
@@ -470,6 +435,35 @@ export default function TutorView() {
 
           {/* Right Sidebar - Special Offers & Schedule */}
           <div className="lg:col-span-1 space-y-6">
+            {/* Action Buttons */}
+            <Card className="shadow-lg border-0 bg-gradient-to-br from-indigo-50 to-purple-50">
+              <CardContent className="p-6 space-y-3">
+                <Button 
+                  variant={isFollowing ? "default" : "outline"}
+                  className="w-full justify-start"
+                  onClick={() => setIsFollowing(!isFollowing)}
+                >
+                  <Heart className={`h-5 w-5 mr-3 ${isFollowing ? 'fill-current' : ''}`} />
+                  {isFollowing ? 'ĐANG THEO DÕI' : 'THEO DÕI'}
+                </Button>
+                <Button 
+                  className="w-full justify-start bg-blue-600 hover:bg-blue-700 text-white"
+                  onClick={() => setIsBookingModalOpen(true)}
+                >
+                  <Calendar className="h-5 w-5 mr-3" />
+                  ĐẶT LỊCH
+                </Button>
+                <Button variant="outline" className="w-full justify-start">
+                  <MessageCircle className="h-5 w-5 mr-3" />
+                  NHẮN TIN
+                </Button>
+                <Button variant="outline" className="w-full justify-start text-red-600 hover:text-red-700 hover:border-red-300">
+                  <Flag className="h-5 w-5 mr-3" />
+                  BÁO CÁO
+                </Button>
+              </CardContent>
+            </Card>
+
             {/* Special Offers */}
             <Card className="shadow-lg border-0 bg-gradient-to-br from-orange-50 to-red-50">
               <CardHeader>
