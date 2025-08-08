@@ -64,12 +64,12 @@ export default function TutorDetail() {
   ]);
 
   const [editableVideos, setEditableVideos] = useState([
-    { id: 1, title: "Video giới thiệu", type: "video", duration: "02:30", thumbnail: "" },
-    { id: 2, title: "Phương pháp dạy", type: "video", duration: "03:45", thumbnail: "" },
-    { id: 3, title: "Thành tích học viên", type: "image", duration: "", thumbnail: "" },
-    { id: 4, title: "Bảng điểm học viên", type: "image", duration: "", thumbnail: "" },
-    { id: 5, title: "Tài liệu giảng dạy", type: "image", duration: "", thumbnail: "" },
-    { id: 6, title: "Lớp học trực tiếp", type: "video", duration: "01:20", thumbnail: "" }
+    { id: 1, title: "Video giới thiệu", type: "video", duration: "02:30", thumbnail: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400" },
+    { id: 2, title: "Phương pháp dạy", type: "video", duration: "03:45", thumbnail: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400" },
+    { id: 3, title: "Thành tích học viên", type: "image", duration: "", thumbnail: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400" },
+    { id: 4, title: "Bảng điểm học viên", type: "image", duration: "", thumbnail: "https://images.unsplash.com/photo-1606092195730-5d7b9af1efc5?w=400" },
+    { id: 5, title: "Tài liệu giảng dạy", type: "image", duration: "", thumbnail: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400" },
+    { id: 6, title: "Lớp học trực tiếp", type: "video", duration: "01:20", thumbnail: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400" }
   ]);
 
   const [selectedMedia, setSelectedMedia] = useState<any>(null);
@@ -162,7 +162,7 @@ export default function TutorDetail() {
 
   const addVideo = () => {
     const newId = Math.max(...editableVideos.map(v => v.id)) + 1;
-    setEditableVideos([...editableVideos, { id: newId, title: "Media mới", type: "video", duration: "00:00", thumbnail: "" }]);
+    setEditableVideos([...editableVideos, { id: newId, title: "Media mới", type: "video", duration: "00:00", thumbnail: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400" }]);
   };
 
   const openMediaModal = (media: any) => {
@@ -890,42 +890,36 @@ export default function TutorDetail() {
                       )}
                       
                       {/* Media Thumbnail */}
-                      <div className="aspect-square bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center relative overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20" />
+                      <div className="aspect-square rounded-lg flex items-center justify-center relative overflow-hidden">
+                        {/* Background Image */}
+                        <img 
+                          src={media.thumbnail || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400"} 
+                          alt={media.title}
+                          className="absolute inset-0 w-full h-full object-cover"
+                        />
                         
-                        {media.type === "video" ? (
-                          <>
-                            <Play className="h-8 w-8 text-blue-600 relative z-10" />
-                            {media.duration && (
-                              <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                                {media.duration}
-                              </div>
-                            )}
-                          </>
-                        ) : (
-                          <div className="relative z-10 text-center">
-                            <div className="w-8 h-8 mx-auto mb-1 bg-white/80 rounded flex items-center justify-center">
-                              📷
+                        {/* Play icon for videos only */}
+                        {media.type === "video" && (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-12 h-12 bg-black/60 rounded-full flex items-center justify-center">
+                              <Play className="h-6 w-6 text-white ml-1" fill="white" />
                             </div>
                           </div>
                         )}
                         
                         {/* Hover overlay */}
-                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                           <div className="text-white text-center">
-                            <div className="text-lg mb-1">
-                              {media.type === "video" ? "▶️" : "🔍"}
-                            </div>
-                            <div className="text-xs">
-                              {media.type === "video" ? "Xem video" : "Xem ảnh"}
+                            <div className="text-sm font-medium">
+                              {media.type === "video" ? "Phát video" : "Xem ảnh"}
                             </div>
                           </div>
                         </div>
                       </div>
                       
-                      {/* Media Info */}
-                      <div className="p-3">
-                        {isEditMode && isOwnerView ? (
+                      {/* Media Info - Only show in edit mode */}
+                      {isEditMode && isOwnerView && (
+                        <div className="p-3">
                           <div className="space-y-2">
                             <Input
                               value={media.title}
@@ -950,6 +944,17 @@ export default function TutorDetail() {
                               <option value="video">Video</option>
                               <option value="image">Hình ảnh</option>
                             </select>
+                            <Input
+                              value={media.thumbnail}
+                              onChange={(e) => {
+                                const newVideos = [...editableVideos];
+                                newVideos[index].thumbnail = e.target.value;
+                                setEditableVideos(newVideos);
+                              }}
+                              placeholder="URL hình ảnh"
+                              className="text-xs"
+                              onClick={(e) => e.stopPropagation()}
+                            />
                             {media.type === "video" && (
                               <Input
                                 value={media.duration}
@@ -964,73 +969,61 @@ export default function TutorDetail() {
                               />
                             )}
                           </div>
-                        ) : (
-                          <>
-                            <p className="text-xs text-center font-medium mb-1 line-clamp-2">
-                              {media.title}
-                            </p>
-                            <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
-                              <Badge variant="outline" className="text-xs">
-                                {media.type === "video" ? "Video" : "Hình ảnh"}
-                              </Badge>
-                            </div>
-                          </>
-                        )}
-                      </div>
+                        </div>
+                      )}
                     </Card>
                   ))}
                 </div>
                 
-                {/* Media count info */}
-                <div className="mt-4 text-center text-sm text-gray-500">
-                  {editableVideos.filter(m => m.type === "video").length} video • {editableVideos.filter(m => m.type === "image").length} hình ảnh
-                </div>
+
               </CardContent>
             </Card>
 
             {/* Media Popup Modal */}
             {isMediaModalOpen && selectedMedia && (
-              <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-                <div className="relative max-w-4xl w-full max-h-[90vh] bg-white rounded-lg overflow-hidden">
+              <div 
+                className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                style={{ backdropFilter: 'blur(8px)', backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
+                onClick={() => setIsMediaModalOpen(false)}
+              >
+                <div 
+                  className="relative max-w-5xl w-full max-h-[90vh] bg-white rounded-xl overflow-hidden shadow-2xl"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   {/* Close button */}
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="absolute top-4 right-4 z-10 bg-black/20 hover:bg-black/40 text-white"
+                    className="absolute top-4 right-4 z-10 bg-black/30 hover:bg-black/50 text-white rounded-full h-10 w-10 p-0"
                     onClick={() => setIsMediaModalOpen(false)}
                   >
                     ✕
                   </Button>
                   
                   {/* Media content */}
-                  <div className="aspect-video bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center relative">
+                  <div className="w-full h-full">
                     {selectedMedia.type === "video" ? (
-                      <div className="text-center">
-                        <Play className="h-16 w-16 text-blue-600 mb-4" />
-                        <p className="text-gray-700">Video Player Placeholder</p>
-                        <p className="text-sm text-gray-500 mt-2">Duration: {selectedMedia.duration}</p>
+                      <div className="aspect-video bg-black flex items-center justify-center relative">
+                        <img 
+                          src={selectedMedia.thumbnail} 
+                          alt={selectedMedia.title}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-20 h-20 bg-black/60 rounded-full flex items-center justify-center">
+                            <Play className="h-10 w-10 text-white ml-2" fill="white" />
+                          </div>
+                        </div>
                       </div>
                     ) : (
-                      <div className="text-center">
-                        <div className="w-16 h-16 mx-auto mb-4 bg-blue-600 rounded-full flex items-center justify-center">
-                          <span className="text-2xl">📷</span>
-                        </div>
-                        <p className="text-gray-700">High Resolution Image Placeholder</p>
+                      <div className="flex items-center justify-center min-h-[60vh]">
+                        <img 
+                          src={selectedMedia.thumbnail} 
+                          alt={selectedMedia.title}
+                          className="max-w-full max-h-full object-contain rounded-lg"
+                        />
                       </div>
                     )}
-                  </div>
-                  
-                  {/* Media info */}
-                  <div className="p-6">
-                    <h3 className="text-lg font-semibold mb-2">{selectedMedia.title}</h3>
-                    <div className="flex items-center gap-4 text-sm text-gray-500">
-                      <Badge variant="outline">
-                        {selectedMedia.type === "video" ? "Video" : "Hình ảnh"}
-                      </Badge>
-                      {selectedMedia.type === "video" && selectedMedia.duration && (
-                        <span>Thời lượng: {selectedMedia.duration}</span>
-                      )}
-                    </div>
                   </div>
                 </div>
               </div>
