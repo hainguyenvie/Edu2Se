@@ -323,7 +323,13 @@ export default function TutorView() {
 
             {/* Subjects */}
             <Card className="shadow-lg border-0">
-              <CardContent className="pt-6">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <BookOpen className="w-6 h-6 mr-3" />
+                  Môn học giảng dạy
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {subjects.map((subject, index) => (
                     <Card key={index} className={`p-4 h-full ${subject.color} hover:shadow-lg transition-all duration-200 cursor-pointer`}>
