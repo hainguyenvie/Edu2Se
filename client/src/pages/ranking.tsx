@@ -47,6 +47,11 @@ interface TutorRanking {
 
 export default function RankingPage() {
   const [activeTab, setActiveTab] = useState("tutors");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
 
   // Mock data for student rankings
   const studentRankings: StudentRanking[] = [
@@ -222,7 +227,7 @@ export default function RankingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <Header />
+      <Header onToggleSidebar={toggleSidebar} />
       <div className="container mx-auto px-4 py-8 pt-24 max-w-4xl">
         {/* Header */}
         <div className="text-center mb-8">

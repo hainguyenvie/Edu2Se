@@ -15,6 +15,11 @@ export default function Dashboard() {
   const [activeStatIndex, setActiveStatIndex] = useState(0);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("0");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
   
   // Mock data for dashboard
   const stats = [
@@ -99,7 +104,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+      <Header onToggleSidebar={toggleSidebar} />
       
       <div className="container mx-auto px-6 py-8 pt-24">
         {/* Welcome Section */}

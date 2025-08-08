@@ -21,6 +21,11 @@ export default function Favorites() {
 
   // Mock favorites for now - in real app this would come from user preferences
   const favoriteTutors = tutors.slice(0, 4);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('vi-VN').format(price);
@@ -29,7 +34,7 @@ export default function Favorites() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header />
+        <Header onToggleSidebar={toggleSidebar} />
         <div className="flex items-center justify-center py-20">
           <div className="text-center">
             <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"></div>
@@ -42,7 +47,7 @@ export default function Favorites() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+      <Header onToggleSidebar={toggleSidebar} />
       
       <div className="container mx-auto px-4 py-6 pt-20">
         {/* Page Header */}

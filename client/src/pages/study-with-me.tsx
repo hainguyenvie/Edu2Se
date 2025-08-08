@@ -13,6 +13,11 @@ export default function StudyWithMe() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showRoomView, setShowRoomView] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
 
   // Mock data for study rooms
   const studyRooms = [
@@ -159,7 +164,7 @@ export default function StudyWithMe() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+      <Header onToggleSidebar={toggleSidebar} />
       
       {/* Create Room Button - Top Right */}
       <div className="fixed top-20 right-6 z-50">

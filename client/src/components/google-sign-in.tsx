@@ -62,8 +62,8 @@ export function GoogleSignIn() {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
     if (!clientId) {
       toast({
-        title: "Lỗi cấu hình",
-        description: "Google Client ID chưa được cấu hình.",
+        title: "Tính năng đang phát triển",
+        description: "Đăng nhập Google sẽ có sẵn sớm. Vui lòng sử dụng đăng nhập thường.",
         variant: "destructive",
       });
       setIsLoading(false);

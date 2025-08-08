@@ -92,11 +92,11 @@ export default function Header({ onToggleSidebar, onSubjectSelect }: HeaderProps
           <Button 
             variant="ghost" 
             size="icon" 
-            className="hidden sm:block text-gray-600 hover:text-primary relative"
+            className="hidden sm:block text-gray-600 hover:text-primary relative hover:bg-transparent"
             onClick={() => setIsMessagesOpen(!isMessagesOpen)}
           >
             <MessageCircle className="h-5 w-5" />
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+            <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
               3
             </span>
           </Button>
@@ -106,9 +106,12 @@ export default function Header({ onToggleSidebar, onSubjectSelect }: HeaderProps
             <Button
               variant="ghost"
               size="icon"
-              className="hidden sm:block text-gray-600 hover:text-primary"
+              className="hidden sm:block text-gray-600 hover:text-primary hover:bg-transparent relative"
             >
               <Heart className="h-5 w-5" />
+              <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                2
+              </span>
             </Button>
           </Link>
 
@@ -116,11 +119,11 @@ export default function Header({ onToggleSidebar, onSubjectSelect }: HeaderProps
           <Button 
             variant="ghost" 
             size="icon" 
-            className="hidden sm:block text-gray-600 hover:text-primary relative"
+            className="hidden sm:block text-gray-600 hover:text-primary relative hover:bg-transparent"
             onClick={() => setIsNotificationOpen(!isNotificationOpen)}
           >
             <Bell className="h-5 w-5" />
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+            <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
               5
             </span>
           </Button>

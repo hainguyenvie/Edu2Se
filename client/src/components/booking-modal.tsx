@@ -17,8 +17,8 @@ type BookingStage = 'packages' | 'schedule' | 'confirmation' | 'success';
 export default function BookingModal({ tutor, isOpen, onClose }: BookingModalProps) {
   const [stage, setStage] = useState<BookingStage>('packages');
   const [selectedPackage, setSelectedPackage] = useState<string>('');
-  const [selectedDay, setSelectedDay] = useState<string>('');
-  const [selectedTime, setSelectedTime] = useState<string>('');
+  const [selectedDay, setSelectedDay] = useState<string>('t2');
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>('');
 
   if (!tutor) return null;
 
@@ -61,13 +61,31 @@ export default function BookingModal({ tutor, isOpen, onClose }: BookingModalPro
     }
   ];
 
-  const days = ['Hôm nay', 'Ngày mai', 'Thứ 7', 'Chủ nhật', 'Thứ 2', 'Thứ 3'];
-  const times = ['9h AM', '10h AM', '11h AM', '12h AM', '1h PM'];
+  const weekDays = [
+    { id: 't2', label: 'T2', name: 'Thứ 2', available: true },
+    { id: 't3', label: 'T3', name: 'Thứ 3', available: true },
+    { id: 't4', label: 'T4', name: 'Thứ 4', available: false },
+    { id: 't5', label: 'T5', name: 'Thứ 5', available: true },
+    { id: 't6', label: 'T6', name: 'Thứ 6', available: false },
+    { id: 't7', label: 'T7', name: 'Thứ 7', available: true },
+    { id: 'cn', label: 'CN', name: 'Chủ nhật', available: true }
+  ];
+
+  const timeSlots = [
+    { id: '1', start: '9h00', end: '10h00', label: '9h00 - 10h00', available: true },
+    { id: '2', start: '10h00', end: '11h00', label: '10h00 - 11h00', available: false },
+    { id: '3', start: '11h00', end: '12h00', label: '11h00 - 12h00', available: true },
+    { id: '4', start: '14h00', end: '15h00', label: '14h00 - 15h00', available: true },
+    { id: '5', start: '15h00', end: '16h00', label: '15h00 - 16h00', available: false },
+    { id: '6', start: '16h00', end: '17h00', label: '16h00 - 17h00', available: true },
+    { id: '7', start: '19h00', end: '20h00', label: '19h00 - 20h00', available: true },
+    { id: '8', start: '20h00', end: '21h00', label: '20h00 - 21h00', available: true }
+  ];
 
   const handleNext = () => {
     if (stage === 'packages' && selectedPackage) {
       setStage('schedule');
-    } else if (stage === 'schedule' && selectedDay && selectedTime) {
+    } else if (stage === 'schedule' && selectedDay && selectedTimeSlot) {
       setStage('confirmation');
     } else if (stage === 'confirmation') {
       setStage('success');
@@ -86,7 +104,7 @@ export default function BookingModal({ tutor, isOpen, onClose }: BookingModalPro
     setStage('packages');
     setSelectedPackage('');
     setSelectedDay('');
-    setSelectedTime('');
+    setSelectedTimeSlot('');
     onClose();
   };
 
@@ -162,79 +180,104 @@ export default function BookingModal({ tutor, isOpen, onClose }: BookingModalPro
     </div>
   );
 
-  const renderScheduleStage = () => (
-    <div className="relative">
-      {/* Header */}
-      <div className="flex items-center justify-between p-6 border-b border-gray-100">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={handleBack} className="hover:bg-gray-100">
-            <ArrowLeft className="h-5 w-5 text-gray-600" />
+  const renderScheduleStage = () => {
+    const selectedWeekDay = weekDays.find(day => day.id === selectedDay);
+    const availableSlots = timeSlots.filter(slot => slot.available);
+    const selectedSlot = timeSlots.find(slot => slot.id === selectedTimeSlot);
+
+    return (
+      <div className="relative">
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="icon" onClick={handleBack} className="hover:bg-gray-100 rounded-full">
+              <ArrowLeft className="h-5 w-5 text-gray-600" />
+            </Button>
+            <div className="flex items-center gap-3">
+              <div className="w-14 h-14 bg-gradient-to-br from-orange-100 to-orange-200 rounded-full flex items-center justify-center ring-4 ring-orange-50 shadow-lg">
+                <span className="text-2xl">👩‍🏫</span>
+              </div>
+              <div>
+                <h3 className="font-bold text-xl text-gray-900">{tutor.name}</h3>
+                <p className="text-sm text-green-600 font-semibold bg-green-50 px-2 py-1 rounded-full">ĐẶT LỊCH</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-6">
+          {/* Week Day Selection */}
+          <div className="mb-6">
+            <div className="flex gap-2 mb-4">
+              {weekDays.map((day) => (
+                <Button
+                  key={day.id}
+                  variant={selectedDay === day.id ? "default" : "outline"}
+                  className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                    selectedDay === day.id 
+                      ? 'bg-blue-600 text-white shadow-lg' 
+                      : 'border-gray-200 hover:border-blue-400 hover:bg-blue-50'
+                  } ${!day.available ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  onClick={() => day.available && setSelectedDay(day.id)}
+                  disabled={!day.available}
+                >
+                  {day.label}
+                  {day.available && day.id !== selectedDay && (
+                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full"></div>
+                  )}
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          {/* Time Slot Card */}
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="text-lg font-bold text-gray-900">{selectedWeekDay?.name}</h4>
+              <span className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+                {availableSlots.length} slot trống
+              </span>
+            </div>
+
+            {/* Available Time Slots */}
+            <div className="space-y-3">
+              {timeSlots.filter(slot => slot.available).map((slot) => (
+                <Button
+                  key={slot.id}
+                  variant={selectedTimeSlot === slot.id ? "default" : "outline"}
+                  className={`w-full h-14 text-base font-medium rounded-xl transition-all duration-200 ${
+                    selectedTimeSlot === slot.id 
+                      ? 'bg-green-100 border-green-500 text-green-700 shadow-md' 
+                      : 'border-gray-200 hover:border-green-400 hover:bg-green-50'
+                  }`}
+                  onClick={() => setSelectedTimeSlot(slot.id)}
+                >
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
+                        selectedTimeSlot === slot.id ? 'bg-green-500' : 'bg-green-400'
+                      }`}>
+                        <span className="text-white text-xs">🕐</span>
+                      </div>
+                      <span className="text-left">{slot.label}</span>
+                    </div>
+                  </div>
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          <Button 
+            onClick={handleNext}
+            disabled={!selectedDay || !selectedTimeSlot}
+            className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 text-lg rounded-xl shadow-lg disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-200"
+          >
+            TIẾP TỤC
           </Button>
-          <div className="flex items-center gap-3">
-            <div className="w-14 h-14 bg-gradient-to-br from-orange-100 to-orange-200 rounded-full flex items-center justify-center ring-4 ring-orange-50">
-              <span className="text-2xl">👩‍🏫</span>
-            </div>
-            <div>
-              <h3 className="font-bold text-xl text-gray-900">{tutor.name}</h3>
-              <p className="text-sm text-green-600 font-semibold">ĐẶT LỊCH</p>
-            </div>
-          </div>
         </div>
       </div>
-
-      <div className="p-6">
-        {/* Day Selection */}
-        <div className="mb-8">
-          <h4 className="text-lg font-bold text-gray-900 mb-4">Chọn ngày học</h4>
-          <div className="grid grid-cols-3 gap-3">
-            {days.map((day) => (
-              <Button
-                key={day}
-                variant={selectedDay === day ? "default" : "outline"}
-                className={`h-14 text-sm font-medium rounded-xl transition-all duration-200 ${
-                  selectedDay === day 
-                    ? 'bg-green-500 text-white shadow-lg ring-2 ring-green-200' 
-                    : 'border-gray-300 hover:border-green-400 hover:bg-green-50'
-                }`}
-                onClick={() => setSelectedDay(day)}
-              >
-                {day}
-              </Button>
-            ))}
-          </div>
-        </div>
-
-        {/* Time Selection */}
-        <div className="mb-8">
-          <h4 className="text-lg font-bold text-gray-900 mb-4">Chọn giờ học</h4>
-          <div className="space-y-3">
-            {times.map((time) => (
-              <Button
-                key={time}
-                variant={selectedTime === time ? "default" : "outline"}
-                className={`w-full h-14 text-lg font-medium rounded-xl transition-all duration-200 ${
-                  selectedTime === time 
-                    ? 'bg-green-500 text-white shadow-lg ring-2 ring-green-200' 
-                    : 'border-gray-300 hover:border-green-400 hover:bg-green-50'
-                }`}
-                onClick={() => setSelectedTime(time)}
-              >
-                {time}
-              </Button>
-            ))}
-          </div>
-        </div>
-
-        <Button 
-          onClick={handleNext}
-          disabled={!selectedDay || !selectedTime}
-          className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 text-lg rounded-xl shadow-lg disabled:bg-gray-300 disabled:cursor-not-allowed"
-        >
-          TIẾP TỤC
-        </Button>
-      </div>
-    </div>
-  );
+    );
+  };
 
   const renderConfirmationStage = () => {
     const selectedPkg = packages.find(pkg => pkg.id === selectedPackage);

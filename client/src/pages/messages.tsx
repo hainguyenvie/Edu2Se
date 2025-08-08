@@ -49,6 +49,11 @@ export default function Messages() {
   const [selectedConversation, setSelectedConversation] = useState(conversations[0]);
   const [newMessage, setNewMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
 
   const handleSendMessage = () => {
     if (newMessage.trim()) {
@@ -63,7 +68,7 @@ export default function Messages() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+      <Header onToggleSidebar={toggleSidebar} />
       
       <div className="pt-16 h-screen flex">
         {/* Sidebar - Conversations List */}
