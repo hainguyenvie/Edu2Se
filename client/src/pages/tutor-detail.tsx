@@ -1277,7 +1277,6 @@ export default function TutorDetail() {
                             </div>
                             <div>
                               <div className="font-semibold text-sm">{slot.time}</div>
-                              <div className="text-xs text-gray-600">{slot.subject}</div>
                             </div>
                           </div>
                         </Card>
