@@ -22,7 +22,8 @@ import {
   Zap,
   Beaker,
   Leaf,
-  Globe
+  Globe,
+  Info
 } from "lucide-react";
 import { Link } from "wouter";
 import Header from "@/components/header";
@@ -279,8 +280,64 @@ export default function RankingPage() {
             </TabsTrigger>
           </TabsList>
 
+          {/* Ranking Criteria Info */}
+          {activeTab === "tutors" && (
+            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <Info className="w-4 h-4 text-blue-600" />
+                <h3 className="font-semibold text-blue-900">Tiêu chí xếp hạng gia sư</h3>
+              </div>
+              <div className="flex flex-wrap gap-4 text-sm text-blue-800">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4" />
+                  <span>Giờ dạy học: {tutorRankings[0]?.teachingHours || 0}+ giờ</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Star className="w-4 h-4 fill-current" />
+                  <span>Đánh giá: {tutorRankings[0]?.rating || 0}/5.0</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Users className="w-4 h-4" />
+                  <span>Số buổi dạy: {tutorRankings[0]?.completedSessions || 0}+ buổi</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "students" && (
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <Info className="w-4 h-4 text-green-600" />
+                <h3 className="font-semibold text-green-900">Tiêu chí xếp hạng học sinh</h3>
+              </div>
+              <div className="flex flex-wrap gap-4 text-sm text-green-800">
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4" />
+                  <span>Tỷ lệ hoàn thành: {studentRankings[0]?.completionRate || 0}%</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4" />
+                  <span>Giờ học: {studentRankings[0]?.studyHours || 0}+ giờ</span>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Student Rankings */}
           <TabsContent value="students" className="space-y-4">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-gray-900">Học Sinh Xuất Sắc</h2>
+              <div className="flex items-center gap-4 text-sm text-gray-600">
+                <span className="flex items-center gap-1">
+                  <TrendingUp className="w-4 h-4 text-green-500" />
+                  Xếp hạng theo tỷ lệ hoàn thành
+                </span>
+                <span className="flex items-center gap-1">
+                  <Clock className="w-4 h-4 text-blue-500" />
+                  và giờ học
+                </span>
+              </div>
+            </div>
             <div className="grid gap-4">
               {studentRankings.map((student) => (
                 <Card key={student.id} className="group hover:shadow-lg transition-all duration-300 hover:scale-[1.02] border-0 bg-white/80 backdrop-blur-sm">
@@ -323,6 +380,22 @@ export default function RankingPage() {
                           </div>
                         </div>
 
+                        {/* Ranking Score */}
+                        <div className="mb-3">
+                          <div className="flex items-center gap-2 text-xs text-gray-500">
+                            <span className="font-medium">Điểm xếp hạng:</span>
+                            <div className="flex items-center gap-1">
+                              <TrendingUp className="w-3 h-3 text-green-500" />
+                              <span className="font-semibold text-green-600">{student.completionRate}</span>
+                              <span>+</span>
+                              <Clock className="w-3 h-3 text-blue-500" />
+                              <span className="font-semibold text-blue-600">{student.studyHours}</span>
+                              <span>=</span>
+                              <span className="font-bold text-purple-600">{Math.round(student.completionRate * 0.8 + student.studyHours * 0.2)}</span>
+                            </div>
+                          </div>
+                        </div>
+
                         <div className="flex flex-wrap gap-2">
                           {student.subjects.map((subject, index) => {
                             const SubjectIcon = getSubjectIcon(subject.name);
@@ -358,6 +431,19 @@ export default function RankingPage() {
 
           {/* Tutor Rankings */}
           <TabsContent value="tutors" className="space-y-4">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-gray-900">Gia Sư Hàng Đầu</h2>
+              <div className="flex items-center gap-4 text-sm text-gray-600">
+                <span className="flex items-center gap-1">
+                  <Clock className="w-4 h-4 text-blue-500" />
+                  Xếp hạng theo giờ dạy học
+                </span>
+                <span className="flex items-center gap-1">
+                  <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                  và đánh giá
+                </span>
+              </div>
+            </div>
             <div className="grid gap-4">
               {tutorRankings.map((tutor) => (
                 <Card key={tutor.id} className="group hover:shadow-lg transition-all duration-300 hover:scale-[1.02] border-0 bg-white/80 backdrop-blur-sm">
@@ -408,6 +494,22 @@ export default function RankingPage() {
                             <Clock className="w-4 h-4 text-green-500" />
                             <span className="font-semibold text-green-600">{tutor.teachingHours}</span>
                             <span>giờ dạy</span>
+                          </div>
+                        </div>
+
+                        {/* Ranking Score */}
+                        <div className="mb-3">
+                          <div className="flex items-center gap-2 text-xs text-gray-500">
+                            <span className="font-medium">Điểm xếp hạng:</span>
+                            <div className="flex items-center gap-1">
+                              <Clock className="w-3 h-3 text-blue-500" />
+                              <span className="font-semibold text-blue-600">{tutor.teachingHours}</span>
+                              <span>+</span>
+                              <Star className="w-3 h-3 text-yellow-500 fill-current" />
+                              <span className="font-semibold text-yellow-600">{tutor.rating}</span>
+                              <span>=</span>
+                              <span className="font-bold text-purple-600">{Math.round(tutor.teachingHours * 0.7 + tutor.rating * 100)}</span>
+                            </div>
                           </div>
                         </div>
 
