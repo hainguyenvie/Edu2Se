@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { 
@@ -14,12 +16,20 @@ import {
   Shield, 
   Clock,
   Play,
+  Edit,
+  Settings,
+  BarChart3,
+  Plus,
+  Minus,
+  ArrowUp,
+  ArrowDown,
   Award,
   Users,
   BookOpen,
   GraduationCap,
   Briefcase,
   Target,
+  ThumbsUp,
   Video,
   Zap,
   Calculator,
@@ -52,7 +62,6 @@ type Tutor = {
   }>;
 };
 
-// Read-only tutor profile view for browsing other tutors
 export default function TutorView() {
   const { id } = useParams();
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
@@ -87,11 +96,10 @@ export default function TutorView() {
     );
   }
 
-  // Static data matching tutor-detail.tsx structure
   const achievements = [
-    { title: "TOP 200 HỌC VIÊN", color: "bg-blue-100 text-blue-800 border-2" },
-    { title: "ĐÃ DẠY 8000 GIỜ", color: "bg-green-100 text-green-800 border-2" },
-    { title: "CHỨNG CHỈ GIẢNG VIÊN", color: "bg-purple-100 text-purple-800 border-2" }
+    { title: "TOP 200 HỌC VIÊN", color: "bg-blue-100 text-blue-800" },
+    { title: "ĐÃ DẠY 8000 GIỜ", color: "bg-green-100 text-green-800" },
+    { title: "CHỨNG CHỈ GIẢNG VIÊN", color: "bg-purple-100 text-purple-800" }
   ];
 
   const subjects = [
@@ -159,8 +167,7 @@ export default function TutorView() {
   // Weekly schedule data
   const weeklySchedule = {
     "Thứ 2": [
-      { time: "19:00 - 21:00", status: "available", subject: "Toán" },
-      { time: "21:00 - 23:00", status: "booked", subject: "Lý" }
+      { time: "19:00 - 21:00", status: "available", subject: "Toán" }
     ],
     "Thứ 3": [
       { time: "18:30 - 20:30", status: "available", subject: "Toán" }
@@ -170,13 +177,10 @@ export default function TutorView() {
       { time: "21:00 - 23:00", status: "available", subject: "Lý" }
     ],
     "Thứ 5": [],
-    "Thứ 6": [
-      { time: "19:30 - 21:30", status: "booked", subject: "Toán" }
-    ],
+    "Thứ 6": [],
     "Thứ 7": [
       { time: "14:00 - 16:00", status: "available", subject: "Toán" },
-      { time: "16:30 - 18:30", status: "available", subject: "Lý" },
-      { time: "19:00 - 21:00", status: "booked", subject: "Toán" }
+      { time: "16:30 - 18:30", status: "available", subject: "Lý" }
     ],
     "Chủ nhật": [
       { time: "09:00 - 11:00", status: "available", subject: "Toán" },
@@ -215,55 +219,119 @@ export default function TutorView() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gray-50">
       <Header />
       
-      <div className="container mx-auto px-4 py-8">
-        {/* Profile Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-8 mb-8 text-white">
-          <div className="flex flex-col lg:flex-row items-center gap-6">
-            <Avatar className="w-32 h-32 border-4 border-white shadow-xl">
-              <AvatarImage src={tutor.avatar} />
-              <AvatarFallback className="bg-white text-blue-600 text-4xl font-bold">
-                {tutor.name.split(' ').map(n => n[0]).join('')}
-              </AvatarFallback>
-            </Avatar>
-            
-            <div className="text-center lg:text-left flex-1">
-              <h1 className="text-4xl font-bold mb-2">{tutor.name}</h1>
-              <div className="text-2xl font-semibold mb-4">
-                {(tutor.pricePerHour || 600000).toLocaleString()}₫/h
-                <span className="text-lg font-normal ml-2">MINH TIẾN</span>
-              </div>
-              
-              <div className="flex items-center justify-center lg:justify-start gap-4 mb-4">
-                <div className="flex items-center">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                  ))}
-                  <span className="ml-2 text-lg">(4.9)</span>
+      <div className="container mx-auto px-4 pt-24 pb-8 max-w-7xl">
+        {/* Main Content Grid - EXACT copy from tutor-detail.tsx */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Left Sidebar */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Simple Profile Card */}
+            <Card className="shadow-lg border-0">
+              <CardContent className="p-6 text-center">
+                <Avatar className="w-20 h-20 mx-auto mb-4">
+                  <AvatarImage src={tutor.avatar} alt={tutor.name} />
+                  <AvatarFallback className="text-2xl font-bold bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+                    {tutor.name.split(' ').map(n => n[0]).join('')}
+                  </AvatarFallback>
+                </Avatar>
+                
+                <h2 className="text-xl font-bold mb-2">{tutor.name}</h2>
+                
+                <div className="flex justify-center gap-2 mb-3">
+                  <Badge className="bg-green-500 text-white border-0 text-xs">
+                    <Shield className="w-3 h-3 mr-1" />
+                    Đã xác thực
+                  </Badge>
+                  <Badge className="bg-yellow-500 text-white border-0 text-xs">
+                    <Star className="w-3 h-3 mr-1" />
+                    Top Rated
+                  </Badge>
                 </div>
-                <Badge className="bg-green-500 hover:bg-green-600">
-                  <Shield className="w-4 h-4 mr-1" />
-                  Đã xác minh
-                </Badge>
-              </div>
-              
-              <div className="flex items-center justify-center lg:justify-start gap-2">
-                <div className={`w-3 h-3 rounded-full ${
-                  tutor.status === "online" ? "bg-green-400" : 
-                  tutor.status === "busy" ? "bg-yellow-400" : "bg-gray-400"
-                } animate-pulse`}></div>
-                <span className="capitalize">{
-                  tutor.status === "online" ? "Trực tuyến" :
-                  tutor.status === "busy" ? "Bận" : "Ngoại tuyến"
-                }</span>
-              </div>
-            </div>
-          </div>
-        </div>
+                
+                <div className="flex justify-center items-center mb-3">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                  <span className="ml-2 text-sm font-medium">4.8 (150)</span>
+                </div>
+                
+                <div className="text-xl font-bold text-blue-600">
+                  {(tutor.price || 150000).toLocaleString()}đ/h
+                </div>
+              </CardContent>
+            </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Action Buttons - REPLACING Quick Actions */}
+            <Card className="shadow-lg border-0 bg-gradient-to-br from-indigo-50 to-purple-50">
+              <CardHeader>
+                <CardTitle className="flex items-center text-indigo-700">
+                  <Settings className="w-6 h-6 mr-3" />
+                  Thao tác
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Button 
+                  variant={isFollowing ? "default" : "outline"}
+                  className="w-full justify-start"
+                  onClick={() => setIsFollowing(!isFollowing)}
+                >
+                  <Heart className={`h-5 w-5 mr-3 ${isFollowing ? 'fill-current' : ''}`} />
+                  {isFollowing ? 'ĐANG THEO DÕI' : 'THEO DÕI'}
+                </Button>
+                <Button 
+                  className="w-full justify-start bg-blue-600 hover:bg-blue-700 text-white"
+                  onClick={() => setIsBookingModalOpen(true)}
+                >
+                  <Calendar className="h-5 w-5 mr-3" />
+                  ĐẶT LỊCH
+                </Button>
+                <Button variant="outline" className="w-full justify-start">
+                  <MessageCircle className="h-5 w-5 mr-3" />
+                  NHẮN TIN
+                </Button>
+                <Button variant="outline" className="w-full justify-start text-red-600 hover:text-red-700 hover:border-red-300">
+                  <Flag className="h-5 w-5 mr-3" />
+                  BÁO CÁO
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Quick Stats */}
+            <Card className="shadow-lg border-0">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <BarChart3 className="w-6 h-6 mr-3" />
+                  Thống kê nhanh
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Users className="w-4 h-4 text-blue-500" />
+                    <span className="text-sm">Học viên hiện tại</span>
+                  </div>
+                  <span className="font-bold text-blue-600">24</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Clock className="w-4 h-4 text-green-500" />
+                    <span className="text-sm">Giờ dạy tháng này</span>
+                  </div>
+                  <span className="font-bold text-green-600">87h</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Star className="w-4 h-4 text-yellow-500" />
+                    <span className="text-sm">Điểm trung bình</span>
+                  </div>
+                  <span className="font-bold text-yellow-600">4.9/5</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
             {/* Achievements */}
@@ -299,7 +367,7 @@ export default function TutorView() {
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {subjects.map((subject, index) => (
-                    <Card key={index} className={`p-4 h-full ${subject.color} hover:shadow-lg transition-all duration-200`}>
+                    <Card key={index} className={`p-4 h-full ${subject.color} hover:shadow-lg transition-all duration-200 cursor-pointer`}>
                       <div className="text-center">
                         <div className="w-12 h-12 mx-auto mb-3 bg-white rounded-full flex items-center justify-center">
                           <Calculator className="w-6 h-6 text-current" />
@@ -329,196 +397,79 @@ export default function TutorView() {
               </CardHeader>
               <CardContent>
                 <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg">
-                  <p className="text-gray-800 leading-relaxed text-lg">
+                  <p className="text-gray-800 leading-relaxed whitespace-pre-line text-lg">
                     {tutorInfo}
                   </p>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Education */}
+            {/* Education & Experience */}
             <Card className="shadow-lg border-0">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <GraduationCap className="w-6 h-6 mr-3" />
-                  Học vấn
+                  Học vấn & Kinh nghiệm
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {education.map((edu) => (
-                    <div key={edu.id} className="border rounded-lg p-4 bg-gray-50">
-                      <div className="flex items-start justify-between">
+              <CardContent className="space-y-6">
+                {/* Education Section */}
+                <div>
+                  <h4 className="font-semibold text-lg mb-4 flex items-center">
+                    <GraduationCap className="w-5 h-5 mr-2 text-blue-600" />
+                    Học vấn
+                  </h4>
+                  <div className="space-y-4">
+                    {education.map((edu) => (
+                      <div key={edu.id} className="flex items-start space-x-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                        <div className="p-2 bg-blue-100 rounded-lg">
+                          <GraduationCap className="w-5 h-5 text-blue-600" />
+                        </div>
                         <div className="flex-1">
-                          <h3 className="font-semibold text-lg">{edu.degree}</h3>
+                          <h5 className="font-semibold text-gray-900">{edu.degree}</h5>
                           <p className="text-gray-600">{edu.school}</p>
-                          <p className="text-sm text-gray-500">{edu.gpa}</p>
-                        </div>
-                        <span className="text-sm text-gray-500 bg-white px-2 py-1 rounded">
-                          {edu.year}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Experience */}
-            <Card className="shadow-lg border-0">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Briefcase className="w-6 h-6 mr-3" />
-                  Kinh nghiệm
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {experience.map((exp) => (
-                    <div key={exp.id} className="border rounded-lg p-4 bg-gray-50">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-lg">{exp.title}</h3>
-                          <p className="text-gray-600">{exp.description}</p>
-                          <p className="text-sm text-gray-500">{exp.details}</p>
-                        </div>
-                        <span className="text-sm text-gray-500 bg-white px-2 py-1 rounded">
-                          {exp.period}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Specialties */}
-            <Card className="shadow-lg border-0">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Target className="w-6 h-6 mr-3" />
-                  Chuyên môn
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {specialties.map((specialty) => (
-                    <div key={specialty.id} className="border rounded-lg p-4 bg-gray-50">
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-lg">{specialty.title}</h3>
-                        <p className="text-gray-600">{specialty.description}</p>
-                        <p className="text-sm text-gray-500">{specialty.details}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Certificates */}
-            <Card className="shadow-lg border-0">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Award className="w-6 h-6 mr-3" />
-                  Chứng chỉ
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {certificates.map((cert) => (
-                    <div key={cert.id} className="border rounded-lg p-4 bg-gray-50">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-lg">{cert.name}</h3>
-                          <p className="text-gray-600">{cert.issuer}</p>
-                        </div>
-                        <span className="text-sm text-gray-500 bg-white px-2 py-1 rounded">
-                          {cert.year}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Media Gallery */}
-            <Card className="shadow-lg border-0">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Video className="w-6 h-6 mr-3" />
-                  Thư viện ảnh & video
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {videos.map((media) => (
-                    <div
-                      key={media.id}
-                      className="relative group cursor-pointer"
-                      onClick={() => openMediaModal(media)}
-                    >
-                      <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden">
-                        <img
-                          src={media.thumbnail}
-                          alt={media.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
-                        />
-                        {media.type === "video" && (
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="bg-black bg-opacity-50 rounded-full p-3">
-                              <Play className="w-6 h-6 text-white" />
-                            </div>
+                          <div className="flex items-center gap-3 text-sm text-gray-500">
+                            <span>{edu.gpa}</span>
+                            <span>•</span>
+                            <span>{edu.year}</span>
                           </div>
-                        )}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                </div>
+
+                {/* Experience Section */}
+                <div>
+                  <h4 className="font-semibold text-lg mb-4 flex items-center">
+                    <Briefcase className="w-5 h-5 mr-2 text-green-600" />
+                    Kinh nghiệm
+                  </h4>
+                  <div className="space-y-4">
+                    {experience.map((exp) => (
+                      <div key={exp.id} className="flex items-start space-x-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                        <div className="p-2 bg-green-100 rounded-lg">
+                          <Briefcase className="w-5 h-5 text-green-600" />
+                        </div>
+                        <div className="flex-1">
+                          <h5 className="font-semibold text-gray-900">{exp.title}</h5>
+                          <p className="text-gray-600">{exp.description}</p>
+                          <div className="flex items-center gap-3 text-sm text-gray-500">
+                            <span>{exp.details}</span>
+                            <span>•</span>
+                            <span>{exp.period}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* Right Sidebar - Action Buttons (replacing Quick Actions) */}
+          {/* Right Sidebar - Special Offers & Schedule */}
           <div className="lg:col-span-1 space-y-6">
-            {/* Action Buttons */}
-            <Card className="shadow-lg border-0">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Users className="w-6 h-6 mr-3" />
-                  Thao tác
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Button 
-                  variant={isFollowing ? "default" : "outline"}
-                  className="w-full"
-                  onClick={() => setIsFollowing(!isFollowing)}
-                >
-                  <Heart className={`h-5 w-5 mr-3 ${isFollowing ? 'fill-current' : ''}`} />
-                  {isFollowing ? 'ĐANG THEO DÕI' : 'THEO DÕI'}
-                </Button>
-
-                <Button 
-                  className="w-full bg-blue-600 hover:bg-blue-700"
-                  onClick={() => setIsBookingModalOpen(true)}
-                >
-                  <Calendar className="h-5 w-5 mr-3" />
-                  ĐẶT LỊCH
-                </Button>
-
-                <Button variant="outline" className="w-full">
-                  <MessageCircle className="h-5 w-5 mr-3" />
-                  NHẮN TIN
-                </Button>
-
-                <Button variant="outline" className="w-full text-red-600 hover:text-red-700 hover:border-red-300">
-                  <Flag className="h-5 w-5 mr-3" />
-                  BÁO CÁO
-                </Button>
-              </CardContent>
-            </Card>
-
             {/* Special Offers */}
             <Card className="shadow-lg border-0 bg-gradient-to-br from-orange-50 to-red-50">
               <CardHeader>
@@ -541,7 +492,7 @@ export default function TutorView() {
               </CardContent>
             </Card>
 
-            {/* Smart Weekly Schedule */}
+            {/* Weekly Schedule */}
             <Card className="shadow-lg border-0">
               <CardHeader>
                 <CardTitle className="flex items-center">
@@ -614,55 +565,6 @@ export default function TutorView() {
             </Card>
           </div>
         </div>
-        
-        {/* Media Modal */}
-        {isMediaModalOpen && selectedMedia && (
-          <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-            <div className="relative bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
-              <button
-                onClick={() => setIsMediaModalOpen(false)}
-                className="absolute top-4 right-4 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-75 transition-all z-10"
-              >
-                <MessageCircle className="w-6 h-6" />
-              </button>
-              
-              <button
-                onClick={() => navigateMedia('prev')}
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-75 transition-all z-10"
-              >
-                <ChevronLeft className="w-6 h-6" />
-              </button>
-              
-              <button
-                onClick={() => navigateMedia('next')}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-75 transition-all z-10"
-              >
-                <ChevronRight className="w-6 h-6" />
-              </button>
-              
-              <div className="p-6">
-                <div className="aspect-video bg-gray-100 rounded-lg mb-4 overflow-hidden">
-                  <img
-                    src={selectedMedia.thumbnail}
-                    alt={selectedMedia.title}
-                    className="w-full h-full object-cover"
-                  />
-                  {selectedMedia.type === "video" && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="bg-blue-600 rounded-full p-6">
-                        <Play className="w-12 h-12 text-white" />
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <h3 className="text-xl font-semibold mb-2">{selectedMedia.title}</h3>
-                {selectedMedia.duration && (
-                  <p className="text-gray-600">Thời lượng: {selectedMedia.duration}</p>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Booking Modal */}
@@ -670,10 +572,10 @@ export default function TutorView() {
         tutor={{
           ...tutor,
           grades: ["10", "11", "12"],
-          pricePerHour: tutor.price || 600000,
-          reviewCount: 0,
+          pricePerHour: tutor.price || 150000,
+          reviewCount: 150,
           isVerified: true,
-          isTopRated: false,
+          isTopRated: true,
           profileImage: null,
           timeSlots: [],
           createdAt: null
