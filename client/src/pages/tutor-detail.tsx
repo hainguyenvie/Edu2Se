@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Progress } from "@/components/ui/progress";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { 
   Star, 
   Heart, 
@@ -23,7 +25,22 @@ import {
   X,
   GripVertical,
   ArrowUp,
-  ArrowDown
+  ArrowDown,
+  Award,
+  Users,
+  BookOpen,
+  TrendingUp,
+  MapPin,
+  Phone,
+  Mail,
+  GraduationCap,
+  Briefcase,
+  Target,
+  CheckCircle,
+  ThumbsUp,
+  Globe,
+  Video,
+  Zap
 } from "lucide-react";
 import { Link } from "wouter";
 import Header from "@/components/header";
@@ -224,443 +241,724 @@ export default function TutorDetail() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <Header />
 
-      <div className="container mx-auto px-4 py-6 pt-20">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Left Sidebar - Profile */}
-          <div className="lg:col-span-1">
-            <Card className="p-6">
-              {/* Profile Image */}
-              <div className="text-center mb-6">
-                <div className="w-24 h-24 mx-auto mb-4 rounded-lg border-2 border-orange-200 bg-orange-50 flex items-center justify-center">
-                  <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
-                    <span className="text-2xl">👨‍🏫</span>
-                  </div>
-                </div>
-                
-                {/* Rating */}
-                <div className="flex justify-center mb-2">
+      {/* Hero Section with Cover */}
+      <div className="relative h-80 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700">
+        <div className="absolute inset-0 bg-black/30"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+        
+        {/* Profile Hero Content */}
+        <div className="relative container mx-auto px-4 pt-24 pb-8 flex items-end h-full">
+          <div className="flex items-end space-x-6 text-white w-full">
+            <Avatar className="w-32 h-32 border-4 border-white shadow-2xl">
+              <AvatarImage src="/api/placeholder/128/128" alt="MINH TIẾN" />
+              <AvatarFallback className="text-4xl bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+                MT
+              </AvatarFallback>
+            </Avatar>
+            
+            <div className="flex-1 pb-2">
+              <div className="flex items-center space-x-3 mb-2">
+                <h1 className="text-4xl font-bold">MINH TIẾN</h1>
+                <Badge className="bg-green-500 text-white border-0">
+                  <CheckCircle className="w-4 h-4 mr-1" />
+                  Verified
+                </Badge>
+                <Badge className="bg-yellow-500 text-white border-0">
+                  <Award className="w-4 h-4 mr-1" />
+                  Top Tutor
+                </Badge>
+              </div>
+              
+              <div className="flex items-center space-x-4 mb-3">
+                <div className="flex items-center space-x-1">
                   {Array.from({ length: 5 }).map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`w-4 h-4 ${
-                        i < Math.floor(4.8)
-                          ? 'fill-yellow-400 text-yellow-400'
-                          : 'text-gray-300'
-                      }`}
-                    />
+                    <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                   ))}
+                  <span className="ml-2 text-lg font-semibold">4.9 (387 đánh giá)</span>
                 </div>
-                
-                <div className="text-2xl font-bold text-gray-900 mb-1">
-                  {isEditMode && isOwnerView ? (
-                    <div className="flex items-center justify-center space-x-2">
-                      <Input
-                        type="number"
-                        value={editablePrice}
-                        onChange={(e) => setEditablePrice(Number(e.target.value))}
-                        className="w-20 text-center text-lg font-bold"
-                      />
-                      <span>₫/1h</span>
-                    </div>
-                  ) : (
-                    `${formatPrice(editablePrice)}₫/1h`
-                  )}
+                <div className="h-4 w-px bg-white/40"></div>
+                <div className="flex items-center space-x-1">
+                  <Users className="w-4 h-4" />
+                  <span>200+ học viên</span>
                 </div>
-                <div className="text-sm text-gray-600">MINH TIẾN</div>
+                <div className="h-4 w-px bg-white/40"></div>
+                <div className="flex items-center space-x-1">
+                  <Clock className="w-4 h-4" />
+                  <span>8000+ giờ dạy</span>
+                </div>
               </div>
-
               
-
-              
-            </Card>
-          </div>
-
-          {/* Main Content */}
-          <div className="lg:col-span-2">
-            {/* Achievements */}
-            <div className="mb-6">
-              <div className="flex items-center justify-center mb-4">
-                <h2 className="text-lg font-semibold">BẢNG THÀNH TÍCH</h2>
-                {isEditMode && isOwnerView && (
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={addAchievement}
-                    className="ml-3"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {editableAchievements.map((achievement, index) => (
-                  <Card key={index} className={`p-4 text-center ${achievement.color} relative`}>
-                    {isEditMode && isOwnerView && (
-                      <>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          className="absolute -top-2 -right-2 h-6 w-6 p-0"
-                          onClick={() => removeAchievement(index)}
-                        >
-                          <Minus className="h-3 w-3" />
-                        </Button>
-                        <div className="absolute -top-2 -left-2 flex flex-col space-y-1">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="h-5 w-5 p-0"
-                            onClick={() => moveAchievementUp(index)}
-                            disabled={index === 0}
-                          >
-                            <ArrowUp className="h-3 w-3" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="h-5 w-5 p-0"
-                            onClick={() => moveAchievementDown(index)}
-                            disabled={index === editableAchievements.length - 1}
-                          >
-                            <ArrowDown className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </>
-                    )}
-                    {isEditMode && isOwnerView ? (
-                      <Input
-                        value={achievement.title}
-                        onChange={(e) => {
-                          const newAchievements = [...editableAchievements];
-                          newAchievements[index].title = e.target.value;
-                          setEditableAchievements(newAchievements);
-                        }}
-                        className="text-sm font-medium bg-transparent border-none text-center p-0"
-                      />
-                    ) : (
-                      <div className="text-sm font-medium">{achievement.title}</div>
-                    )}
-                  </Card>
-                ))}
-              </div>
+              <p className="text-lg opacity-90 max-w-2xl">
+                Gia sư Toán - Lý hàng đầu với 5 năm kinh nghiệm. Chuyên luyện thi Đại học, THPT Quốc gia. 
+                Phương pháp dạy hiệu quả, tận tâm với học sinh.
+              </p>
             </div>
-
-            {/* Subjects */}
-            <div className="mb-6">
-              <div className="flex items-center justify-center mb-4">
-                <h3 className="text-lg font-semibold">NHẬN DẠY CÁC MÔN SAU</h3>
-                {isEditMode && isOwnerView && (
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={addSubject}
-                    className="ml-3"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {editableSubjects.map((subject, index) => (
-                  <div key={index} className="relative">
-                    {isEditMode && isOwnerView && (
-                      <>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          className="absolute -top-2 -right-2 h-6 w-6 p-0 z-10"
-                          onClick={() => removeSubject(index)}
-                        >
-                          <Minus className="h-3 w-3" />
-                        </Button>
-                        <div className="absolute -top-2 -left-2 flex flex-col space-y-1 z-10">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="h-5 w-5 p-0"
-                            onClick={() => moveSubjectUp(index)}
-                            disabled={index === 0}
-                          >
-                            <ArrowUp className="h-3 w-3" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="h-5 w-5 p-0"
-                            onClick={() => moveSubjectDown(index)}
-                            disabled={index === editableSubjects.length - 1}
-                          >
-                            <ArrowDown className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </>
-                    )}
-                    {isEditMode && isOwnerView ? (
-                      <Input
-                        value={subject.name}
-                        onChange={(e) => {
-                          const newSubjects = [...editableSubjects];
-                          newSubjects[index].name = e.target.value;
-                          setEditableSubjects(newSubjects);
-                        }}
-                        className="text-sm text-center bg-primary text-white border-primary"
-                      />
-                    ) : (
-                      <Button
-                        variant={subject.available ? "default" : "outline"}
-                        className={`text-sm w-full ${
-                          subject.available 
-                            ? "bg-primary text-white" 
-                            : "bg-gray-100 text-gray-400 cursor-not-allowed"
-                        }`}
-                        disabled={!subject.available}
-                      >
-                        {subject.name}
-                      </Button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* About */}
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-4">THÔNG TIN</h3>
-              <Card className="p-6">
+            
+            <div className="text-right">
+              <div className="text-3xl font-bold mb-1">
                 {isEditMode && isOwnerView ? (
-                  <Textarea
-                    value={editableInfo}
-                    onChange={(e) => setEditableInfo(e.target.value)}
-                    className="text-gray-700 leading-relaxed min-h-[100px] resize-none"
-                    placeholder="Nhập thông tin về bản thân..."
-                  />
+                  <div className="flex items-center space-x-2">
+                    <Input
+                      type="number"
+                      value={editablePrice}
+                      onChange={(e) => setEditablePrice(Number(e.target.value))}
+                      className="w-32 text-right text-2xl font-bold bg-white/20 border-white/30 text-white"
+                    />
+                    <span>₫/h</span>
+                  </div>
                 ) : (
-                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                    {editableInfo}
-                  </p>
-                )}
-              </Card>
-            </div>
-
-            {/* Videos */}
-            <div className="mb-6">
-              <div className="flex items-center justify-center mb-4">
-                <h3 className="text-lg font-semibold">ẢNH VÀ VIDEO GT</h3>
-                {isEditMode && isOwnerView && (
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={addVideo}
-                    className="ml-3"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
+                  `${formatPrice(editablePrice)}₫/h`
                 )}
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {editableVideos.map((video, index) => (
-                  <Card key={video.id} className="p-4 relative">
-                    {isEditMode && isOwnerView && (
-                      <>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          className="absolute -top-2 -right-2 h-6 w-6 p-0 z-10"
-                          onClick={() => removeVideo(index)}
-                        >
-                          <Minus className="h-3 w-3" />
-                        </Button>
-                        <div className="absolute -top-2 -left-2 flex flex-col space-y-1 z-10">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="h-5 w-5 p-0"
-                            onClick={() => moveVideoUp(index)}
-                            disabled={index === 0}
-                          >
-                            <ArrowUp className="h-3 w-3" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="h-5 w-5 p-0"
-                            onClick={() => moveVideoDown(index)}
-                            disabled={index === editableVideos.length - 1}
-                          >
-                            <ArrowDown className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </>
-                    )}
-                    <div className="bg-blue-200 rounded-lg h-32 flex items-center justify-center mb-3">
-                      <Play className="h-8 w-8 text-blue-600" />
-                    </div>
-                    <p className="text-sm text-center font-medium">{video.title}</p>
-                  </Card>
-                ))}
-              </div>
-            </div>
-
-            {/* Reviews */}
-            <div>
-              <h3 className="text-lg font-semibold mb-4">ĐÁNH GIÁ</h3>
-              <Card className="p-6">
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
-                  <div className="flex-1">
-                    <div className="flex items-center mb-2">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-4 h-4 ${
-                            i < 4 ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <p className="text-gray-700 text-sm">
-                      Tôi đã học bằng thầy day hay và đề hỏu
-                    </p>
-                  </div>
-                </div>
-              </Card>
-            </div>
-          </div>
-
-          {/* Right Sidebar */}
-          <div className="lg:col-span-1 space-y-4">
-            {/* Action Buttons */}
-            {sidebarItems.map((item, index) => (
-              <Button 
-                key={index} 
-                variant="outline" 
-                className="w-full justify-start"
-                onClick={() => {
-                  if (item.title === "ĐẶT LỊCH") {
-                    setIsBookingModalOpen(true);
-                  } else if (item.title === "Chỉnh sửa hồ sơ công khai" || item.title === "Lưu thay đổi") {
-                    if (isEditMode) {
-                      // Save changes logic here
-                      console.log("Saving changes...", {
-                        price: editablePrice,
-                        achievements: editableAchievements,
-                        subjects: editableSubjects,
-                        videos: editableVideos,
-                        info: editableInfo,
-                        offers: editableOffers
-                      });
-                    }
-                    setIsEditMode(!isEditMode);
-                  } else if (item.title === "Thiết lập lịch dạy") {
-                    setIsScheduleSetupOpen(true);
-                  } else if (item.title === "Yêu cầu đặt lịch") {
-                    console.log("Booking requests clicked");
-                    // Handle booking requests
-                  } else if (item.title === "Thống kê chi tiết") {
-                    setIsStatisticsOpen(true);
-                  }
-                }}
-              >
-                <item.icon className={`h-5 w-5 mr-3 ${item.color}`} />
-                {item.title}
-              </Button>
-            ))}
-
-            {/* Free Offers */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-center">
-                <h4 className="font-semibold text-center">ƯU ĐÃI CỦA MINH TIẾN</h4>
-                {isEditMode && isOwnerView && (
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={addOffer}
-                    className="ml-3"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
-              {editableOffers.map((offer, index) => (
-                <Card key={index} className="p-4 border-purple-200 bg-purple-50 relative">
-                  {isEditMode && isOwnerView && (
-                    <>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        className="absolute -top-2 -right-2 h-6 w-6 p-0 z-10"
-                        onClick={() => removeOffer(index)}
-                      >
-                        <Minus className="h-3 w-3" />
-                      </Button>
-                      <div className="absolute -top-2 -left-2 flex flex-col space-y-1 z-10">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="h-5 w-5 p-0"
-                          onClick={() => moveOfferUp(index)}
-                          disabled={index === 0}
-                        >
-                          <ArrowUp className="h-3 w-3" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="h-5 w-5 p-0"
-                          onClick={() => moveOfferDown(index)}
-                          disabled={index === editableOffers.length - 1}
-                        >
-                          <ArrowDown className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    </>
-                  )}
-                  <div className="flex items-center space-x-3">
-                    <span className="text-2xl">{offer.icon}</span>
-                    {isEditMode && isOwnerView ? (
-                      <Input
-                        value={offer.title}
-                        onChange={(e) => {
-                          const newOffers = [...editableOffers];
-                          newOffers[index].title = e.target.value;
-                          setEditableOffers(newOffers);
-                        }}
-                        className="text-sm font-medium text-purple-800 bg-transparent border-none p-0"
-                      />
-                    ) : (
-                      <div className="text-sm font-medium text-purple-800">
-                        {offer.title}
-                      </div>
-                    )}
-                  </div>
-                </Card>
-              ))}
+              <div className="text-sm opacity-75">Giá ưu đãi cho buổi đầu</div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Booking Modal */}
-      <BookingModal 
-        tutor={tutor}
-        isOpen={isBookingModalOpen}
-        onClose={() => setIsBookingModalOpen(false)}
-      />
+      <div className="container mx-auto px-4 py-8 -mt-16 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Left Sidebar - Quick Actions & Stats */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Quick Actions */}
+            <Card className="shadow-lg border-0">
+              <CardContent className="p-6">
+                <h3 className="font-bold text-lg mb-4 text-center">Thao tác nhanh</h3>
+                <div className="space-y-3">
+                  {sidebarItems.map((item, index) => (
+                    <Button
+                      key={index}
+                      className={`w-full justify-start ${item.color === 'text-green-500' ? 'bg-green-50 hover:bg-green-100 text-green-700' : 
+                        item.color === 'text-blue-500' ? 'bg-blue-50 hover:bg-blue-100 text-blue-700' :
+                        item.color === 'text-purple-500' ? 'bg-purple-50 hover:bg-purple-100 text-purple-700' :
+                        'bg-orange-50 hover:bg-orange-100 text-orange-700'
+                      }`}
+                      variant="ghost"
+                      onClick={() => {
+                        if (index === 0 && isOwnerView) {
+                          if (isEditMode) {
+                            setIsEditMode(false);
+                          } else {
+                            setIsEditMode(true);
+                          }
+                        } else if (index === 1 && isOwnerView) {
+                          setIsScheduleSetupOpen(true);
+                        } else if (index === 2 && isOwnerView) {
+                          // View booking requests
+                        } else if (index === 3 && isOwnerView) {
+                          setIsStatisticsOpen(true);
+                        } else if (!isOwnerView && index === 1) {
+                          setIsBookingModalOpen(true);
+                        }
+                      }}
+                    >
+                      <item.icon className="w-5 h-5 mr-3" />
+                      {item.title}
+                    </Button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
 
-      {/* Schedule Setup Modal */}
-      <ScheduleSetupModal 
-        isOpen={isScheduleSetupOpen}
-        onClose={() => setIsScheduleSetupOpen(false)}
-      />
+            {/* Performance Stats */}
+            <Card className="shadow-lg border-0">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <TrendingUp className="w-5 h-5 mr-2" />
+                  Thống kê hiệu suất
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm font-medium">Tỷ lệ hoàn thành</span>
+                    <span className="text-sm font-bold text-green-600">98%</span>
+                  </div>
+                  <Progress value={98} className="h-2" />
+                </div>
+                
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm font-medium">Độ hài lòng</span>
+                    <span className="text-sm font-bold text-blue-600">96%</span>
+                  </div>
+                  <Progress value={96} className="h-2" />
+                </div>
+                
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm font-medium">Tỷ lệ tái đăng ký</span>
+                    <span className="text-sm font-bold text-purple-600">89%</span>
+                  </div>
+                  <Progress value={89} className="h-2" />
+                </div>
+              </CardContent>
+            </Card>
 
-      {/* Statistics Modal */}
-      <StatisticsModal 
-        isOpen={isStatisticsOpen}
-        onClose={() => setIsStatisticsOpen(false)}
-      />
+            {/* Contact & Social */}
+            <Card className="shadow-lg border-0">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Globe className="w-5 h-5 mr-2" />
+                  Liên hệ & Mạng xã hội
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                  <MapPin className="w-4 h-4 text-gray-500" />
+                  <span className="text-sm">Hà Nội, Việt Nam</span>
+                </div>
+                <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                  <Phone className="w-4 h-4 text-gray-500" />
+                  <span className="text-sm">+84 xxx xxx xxx</span>
+                </div>
+                <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                  <Mail className="w-4 h-4 text-gray-500" />
+                  <span className="text-sm">minhtien@edu.vn</span>
+                </div>
+                <div className="border-t pt-3 mt-4">
+                  <div className="flex space-x-2">
+                    <Button size="sm" variant="outline" className="flex-1">
+                      <Facebook className="w-4 h-4" />
+                    </Button>
+                    <Button size="sm" variant="outline" className="flex-1">
+                      <Youtube className="w-4 h-4" />
+                    </Button>
+                    <Button size="sm" variant="outline" className="flex-1">
+                      <Video className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Education & Experience */}
+            <Card className="shadow-lg border-0">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <GraduationCap className="w-6 h-6 mr-3" />
+                  Học vấn & Kinh nghiệm
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <div className="flex items-start space-x-3">
+                      <div className="p-2 bg-blue-100 rounded-lg">
+                        <GraduationCap className="w-5 h-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900">Học vấn</h4>
+                        <p className="text-gray-600">Đại học Bách Khoa Hà Nội</p>
+                        <p className="text-sm text-gray-500">Kỹ sư Toán ứng dụng - GPA: 3.8/4.0</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-3">
+                      <div className="p-2 bg-green-100 rounded-lg">
+                        <Briefcase className="w-5 h-5 text-green-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900">Kinh nghiệm</h4>
+                        <p className="text-gray-600">5+ năm dạy kèm</p>
+                        <p className="text-sm text-gray-500">Chuyên Toán, Lý cấp 2-3</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-start space-x-3">
+                      <div className="p-2 bg-purple-100 rounded-lg">
+                        <Target className="w-5 h-5 text-purple-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900">Chuyên môn</h4>
+                        <p className="text-gray-600">Luyện thi Đại học</p>
+                        <p className="text-sm text-gray-500">THPT Quốc gia, A00, A01</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-3">
+                      <div className="p-2 bg-orange-100 rounded-lg">
+                        <Award className="w-5 h-5 text-orange-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900">Chứng chỉ</h4>
+                        <p className="text-gray-600">Chứng chỉ giảng dạy</p>
+                        <p className="text-sm text-gray-500">TESOL, Pedagogy Certificate</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Achievements */}
+            <Card className="shadow-lg border-0">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center">
+                    <Award className="w-6 h-6 mr-3" />
+                    Bảng thành tích
+                  </CardTitle>
+                  {isEditMode && isOwnerView && (
+                    <Button size="sm" variant="outline" onClick={addAchievement}>
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {editableAchievements.map((achievement, index) => (
+                    <Card key={index} className={`p-4 text-center border-2 relative transition-all hover:shadow-md ${achievement.color}`}>
+                      {isEditMode && isOwnerView && (
+                        <>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            className="absolute -top-2 -right-2 h-6 w-6 p-0"
+                            onClick={() => removeAchievement(index)}
+                          >
+                            <Minus className="h-3 w-3" />
+                          </Button>
+                          <div className="absolute -top-2 -left-2 flex flex-col space-y-1">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-5 w-5 p-0"
+                              onClick={() => moveAchievementUp(index)}
+                              disabled={index === 0}
+                            >
+                              <ArrowUp className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-5 w-5 p-0"
+                              onClick={() => moveAchievementDown(index)}
+                              disabled={index === editableAchievements.length - 1}
+                            >
+                              <ArrowDown className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </>
+                      )}
+                      {isEditMode && isOwnerView ? (
+                        <Input
+                          value={achievement.title}
+                          onChange={(e) => {
+                            const newAchievements = [...editableAchievements];
+                            newAchievements[index].title = e.target.value;
+                            setEditableAchievements(newAchievements);
+                          }}
+                          className="text-sm font-medium bg-transparent border-none text-center p-0"
+                        />
+                      ) : (
+                        <>
+                          <div className="mb-2">
+                            <Zap className="w-8 h-8 mx-auto text-current" />
+                          </div>
+                          <div className="text-sm font-semibold">{achievement.title}</div>
+                        </>
+                      )}
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Subjects */}
+            <Card className="shadow-lg border-0">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center">
+                    <BookOpen className="w-6 h-6 mr-3" />
+                    Môn học giảng dạy
+                  </CardTitle>
+                  {isEditMode && isOwnerView && (
+                    <Button size="sm" variant="outline" onClick={addSubject}>
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {editableSubjects.map((subject, index) => (
+                    <div key={index} className="relative">
+                      {isEditMode && isOwnerView && (
+                        <>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            className="absolute -top-2 -right-2 h-6 w-6 p-0 z-10"
+                            onClick={() => removeSubject(index)}
+                          >
+                            <Minus className="h-3 w-3" />
+                          </Button>
+                          <div className="absolute -top-2 -left-2 flex flex-col space-y-1 z-10">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-5 w-5 p-0"
+                              onClick={() => moveSubjectUp(index)}
+                              disabled={index === 0}
+                            >
+                              <ArrowUp className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-5 w-5 p-0"
+                              onClick={() => moveSubjectDown(index)}
+                              disabled={index === editableSubjects.length - 1}
+                            >
+                              <ArrowDown className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </>
+                      )}
+                      {isEditMode && isOwnerView ? (
+                        <Input
+                          value={subject.name}
+                          onChange={(e) => {
+                            const newSubjects = [...editableSubjects];
+                            newSubjects[index].name = e.target.value;
+                            setEditableSubjects(newSubjects);
+                          }}
+                          className="text-sm text-center bg-primary text-white border-primary"
+                        />
+                      ) : (
+                        <Card className={`p-4 text-center transition-all hover:shadow-md ${
+                          subject.available 
+                            ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg" 
+                            : "bg-gray-100 text-gray-400"
+                        }`}>
+                          <div className="flex items-center justify-center space-x-2">
+                            <BookOpen className="w-4 h-4" />
+                            <span className="font-semibold text-sm">{subject.name}</span>
+                          </div>
+                          {subject.available && (
+                            <div className="text-xs mt-1 opacity-90">Đang nhận lớp</div>
+                          )}
+                        </Card>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* About */}
+            <Card className="shadow-lg border-0">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <MessageCircle className="w-6 h-6 mr-3" />
+                  Giới thiệu bản thân
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {isEditMode && isOwnerView ? (
+                  <Textarea
+                    value={editableInfo}
+                    onChange={(e) => setEditableInfo(e.target.value)}
+                    className="text-gray-700 leading-relaxed min-h-[120px] resize-none"
+                    placeholder="Nhập thông tin giới thiệu bản thân, phương pháp dạy, kinh nghiệm..."
+                  />
+                ) : (
+                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg">
+                    <p className="text-gray-800 leading-relaxed whitespace-pre-line text-lg">
+                      {editableInfo}
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Videos & Media */}
+            <Card className="shadow-lg border-0">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center">
+                    <Video className="w-6 h-6 mr-3" />
+                    Video giới thiệu & Hình ảnh
+                  </CardTitle>
+                  {isEditMode && isOwnerView && (
+                    <Button size="sm" variant="outline" onClick={addVideo}>
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {editableVideos.map((video, index) => (
+                    <Card key={video.id} className="relative overflow-hidden group hover:shadow-xl transition-all duration-300">
+                      {isEditMode && isOwnerView && (
+                        <>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            className="absolute top-2 right-2 h-6 w-6 p-0 z-20"
+                            onClick={() => removeVideo(index)}
+                          >
+                            <Minus className="h-3 w-3" />
+                          </Button>
+                          <div className="absolute top-2 left-2 flex flex-col space-y-1 z-20">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-6 w-6 p-0 bg-white/80 hover:bg-white"
+                              onClick={() => moveVideoUp(index)}
+                              disabled={index === 0}
+                            >
+                              <ArrowUp className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-6 w-6 p-0 bg-white/80 hover:bg-white"
+                              onClick={() => moveVideoDown(index)}
+                              disabled={index === editableVideos.length - 1}
+                            >
+                              <ArrowDown className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </>
+                      )}
+                      <div className="aspect-video bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center mb-4 relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20" />
+                        <Play className="h-12 w-12 text-blue-600 relative z-10" />
+                        <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                          02:30
+                        </div>
+                      </div>
+                      <CardContent className="p-4">
+                        {isEditMode && isOwnerView ? (
+                          <Input
+                            value={video.title}
+                            onChange={(e) => {
+                              const newVideos = [...editableVideos];
+                              newVideos[index].title = e.target.value;
+                              setEditableVideos(newVideos);
+                            }}
+                            className="text-sm font-medium text-center"
+                          />
+                        ) : (
+                          <p className="text-sm text-center font-medium">{video.title}</p>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Reviews */}
+            <Card className="shadow-lg border-0">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <ThumbsUp className="w-6 h-6 mr-3" />
+                  Đánh giá từ học viên
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {[
+                  {
+                    name: "Nguyễn Minh An",
+                    rating: 5,
+                    comment: "Thầy dạy rất nhiệt tình và dễ hiểu. Con em tiến bộ rõ rệt sau 2 tháng học.",
+                    date: "2 tuần trước",
+                    subject: "Toán"
+                  },
+                  {
+                    name: "Phạm Thu Hà",
+                    rating: 5,
+                    comment: "Phương pháp giảng dạy của thầy rất hay, con em từ điểm 5 lên điểm 8.",
+                    date: "1 tháng trước", 
+                    subject: "Lý"
+                  }
+                ].map((review, index) => (
+                  <div key={index} className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg">
+                    <Avatar className="w-12 h-12">
+                      <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+                        {review.name.split(' ').map(n => n[0]).join('')}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="font-semibold text-gray-900">{review.name}</h4>
+                        <Badge variant="outline">{review.subject}</Badge>
+                      </div>
+                      <div className="flex items-center mb-2">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-4 h-4 ${
+                              i < review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
+                            }`}
+                          />
+                        ))}
+                        <span className="ml-2 text-sm text-gray-500">{review.date}</span>
+                      </div>
+                      <p className="text-gray-700 text-sm leading-relaxed">
+                        {review.comment}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Right Sidebar - Special Offers & Schedule */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Special Offers */}
+            <Card className="shadow-lg border-0 bg-gradient-to-br from-orange-50 to-red-50">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center text-orange-700">
+                    <Zap className="w-6 h-6 mr-3" />
+                    Ưu đãi đặc biệt
+                  </CardTitle>
+                  {isEditMode && isOwnerView && (
+                    <Button size="sm" variant="outline" onClick={addOffer}>
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {editableOffers.map((offer, index) => (
+                  <Card key={index} className="p-4 bg-white border border-orange-200 relative">
+                    {isEditMode && isOwnerView && (
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        className="absolute -top-2 -right-2 h-6 w-6 p-0"
+                        onClick={() => removeOffer(index)}
+                      >
+                        <Minus className="h-3 w-3" />
+                      </Button>
+                    )}
+                    <div className="flex items-center space-x-3">
+                      <div className="text-2xl">{offer.icon}</div>
+                      <div className="flex-1">
+                        {isEditMode && isOwnerView ? (
+                          <Input
+                            value={offer.title}
+                            onChange={(e) => {
+                              const newOffers = [...editableOffers];
+                              newOffers[index].title = e.target.value;
+                              setEditableOffers(newOffers);
+                            }}
+                            className="text-sm font-medium"
+                          />
+                        ) : (
+                          <p className="text-sm font-semibold text-orange-700">{offer.title}</p>
+                        )}
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Schedule Preview */}
+            <Card className="shadow-lg border-0">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Calendar className="w-6 h-6 mr-3" />
+                  Lịch dạy tuần này
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {[
+                  { day: "Thứ 2", time: "19:00 - 21:00", status: "available" },
+                  { day: "Thứ 4", time: "18:00 - 20:00", status: "booked" },
+                  { day: "Thứ 6", time: "19:30 - 21:30", status: "available" },
+                  { day: "Thứ 7", time: "14:00 - 16:00", status: "available" }
+                ].map((slot, index) => (
+                  <div key={index} className={`p-3 rounded-lg border ${
+                    slot.status === 'available' 
+                      ? 'bg-green-50 border-green-200' 
+                      : 'bg-gray-50 border-gray-200'
+                  }`}>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="font-semibold text-sm">{slot.day}</div>
+                        <div className="text-xs text-gray-600">{slot.time}</div>
+                      </div>
+                      <Badge variant={slot.status === 'available' ? 'default' : 'secondary'}>
+                        {slot.status === 'available' ? 'Còn trống' : 'Đã đặt'}
+                      </Badge>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Quick Stats */}
+            <Card className="shadow-lg border-0">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <BarChart3 className="w-6 h-6 mr-3" />
+                  Thống kê nhanh
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Users className="w-4 h-4 text-blue-500" />
+                    <span className="text-sm">Học viên hiện tại</span>
+                  </div>
+                  <span className="font-bold text-blue-600">24</span>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Clock className="w-4 h-4 text-green-500" />
+                    <span className="text-sm">Giờ dạy tháng này</span>
+                  </div>
+                  <span className="font-bold text-green-600">87h</span>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Star className="w-4 h-4 text-yellow-500" />
+                    <span className="text-sm">Điểm trung bình</span>
+                  </div>
+                  <span className="font-bold text-yellow-600">4.9/5</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+        
+        {/* Modals */}
+        <BookingModal
+          isOpen={isBookingModalOpen}
+          onClose={() => setIsBookingModalOpen(false)}
+          tutor={tutor}
+        />
+        
+        <ScheduleSetupModal
+          isOpen={isScheduleSetupOpen}
+          onClose={() => setIsScheduleSetupOpen(false)}
+        />
+        
+        <StatisticsModal
+          isOpen={isStatisticsOpen}
+          onClose={() => setIsStatisticsOpen(false)}
+        />
+      </div>
     </div>
   );
 }
