@@ -431,6 +431,194 @@ export default function TutorView() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Videos & Media Library */}
+            <Card className="shadow-lg border-0">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Video className="w-6 h-6 mr-3" />
+                  Thư viện Video & Hình ảnh
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {videos.map((media, index) => (
+                    <Card 
+                      key={media.id} 
+                      className="relative overflow-hidden group hover:shadow-xl transition-all duration-300 cursor-pointer"
+                      onClick={() => openMediaModal(media)}
+                    >
+                      {/* Media Thumbnail */}
+                      <div className="aspect-square rounded-lg flex items-center justify-center relative overflow-hidden">
+                        {/* Background Image */}
+                        <img 
+                          src={media.thumbnail || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400"} 
+                          alt={media.title}
+                          className="absolute inset-0 w-full h-full object-cover"
+                        />
+                        
+                        {/* Play icon for videos only */}
+                        {media.type === "video" && (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-12 h-12 bg-black/60 rounded-full flex items-center justify-center">
+                              <Play className="h-6 w-6 text-white ml-1" fill="white" />
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* Hover overlay */}
+                        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <div className="text-white text-center">
+                            <div className="text-sm font-medium">
+                              {media.type === "video" ? "Phát video" : "Xem ảnh"}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Media Popup Modal */}
+            {isMediaModalOpen && selectedMedia && (
+              <div 
+                className="fixed inset-0 z-50 flex items-center justify-center"
+                style={{ backdropFilter: 'blur(8px)', backgroundColor: 'rgba(0, 0, 0, 0.95)' }}
+                onClick={() => setIsMediaModalOpen(false)}
+              >
+                {/* Navigation arrows */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/40 hover:bg-black/60 text-white rounded-full h-12 w-12 p-0"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigateMedia('prev');
+                  }}
+                >
+                  <ChevronLeft className="h-6 w-6" />
+                </Button>
+
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/40 hover:bg-black/60 text-white rounded-full h-12 w-12 p-0"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigateMedia('next');
+                  }}
+                >
+                  <ChevronRight className="h-6 w-6" />
+                </Button>
+
+                {/* Close button */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute top-4 right-4 z-20 bg-black/40 hover:bg-black/60 text-white rounded-full h-12 w-12 p-0"
+                  onClick={() => setIsMediaModalOpen(false)}
+                >
+                  ✕
+                </Button>
+                
+                {/* Media content - Full screen */}
+                <div 
+                  className="w-full h-full flex items-center justify-center p-4"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {selectedMedia.type === "video" ? (
+                    <div className="relative max-w-full max-h-full">
+                      <img 
+                        src={selectedMedia.thumbnail} 
+                        alt={selectedMedia.title}
+                        className="max-w-full max-h-full object-contain"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-20 h-20 bg-black/60 rounded-full flex items-center justify-center">
+                          <Play className="h-10 w-10 text-white ml-2" fill="white" />
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <img 
+                      src={selectedMedia.thumbnail} 
+                      alt={selectedMedia.title}
+                      className="max-w-full max-h-full object-contain"
+                    />
+                  )}
+                </div>
+
+                {/* Media counter */}
+                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/60 text-white px-3 py-1 rounded-full text-sm">
+                  {videos.findIndex(m => m.id === selectedMedia.id) + 1} / {videos.length}
+                </div>
+              </div>
+            )}
+
+            {/* Reviews */}
+            <Card className="shadow-lg border-0">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <ThumbsUp className="w-6 h-6 mr-3" />
+                  Đánh giá từ học viên
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {[
+                  {
+                    name: "Nguyễn Minh An",
+                    rating: 5,
+                    comment: "Thầy dạy rất nhiệt tình và dễ hiểu. Con em tiến bộ rõ rệt sau 2 tháng học.",
+                    date: "2 tuần trước",
+                    subject: "Toán"
+                  },
+                  {
+                    name: "Phạm Thu Hà",
+                    rating: 5,
+                    comment: "Phương pháp giảng dạy của thầy rất hay, con em từ điểm 5 lên điểm 8.",
+                    date: "1 tháng trước", 
+                    subject: "Lý"
+                  },
+                  {
+                    name: "Trần Văn Nam",
+                    rating: 4,
+                    comment: "Thầy giảng kỹ và chi tiết. Các bài tập được thầy phân loại rõ ràng.",
+                    date: "3 tuần trước",
+                    subject: "Hóa"
+                  }
+                ].map((review, index) => (
+                  <div key={index} className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg">
+                    <Avatar className="w-12 h-12">
+                      <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+                        {review.name.split(' ').map(n => n[0]).join('')}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="font-semibold text-gray-900">{review.name}</h4>
+                        <Badge variant="outline">{review.subject}</Badge>
+                      </div>
+                      <div className="flex items-center mb-2">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-4 h-4 ${
+                              i < review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
+                            }`}
+                          />
+                        ))}
+                        <span className="ml-2 text-sm text-gray-500">{review.date}</span>
+                      </div>
+                      <p className="text-gray-700 text-sm leading-relaxed">
+                        {review.comment}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
           </div>
 
           {/* Right Sidebar - Special Offers & Schedule */}
