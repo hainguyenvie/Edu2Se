@@ -6,7 +6,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/auth-context";
 import Home from "@/pages/home";
 import TutorDetail from "@/pages/tutor-detail";
-import MyProfile from "@/pages/my-profile";
 import TutorView from "@/pages/tutor-view";
 import Favorites from "@/pages/favorites";
 import Dashboard from "@/pages/dashboard";
@@ -28,7 +27,7 @@ function Router() {
       <Route path="/login" component={LoginPage} />
       <Route path="/register" component={RegisterPage} />
       <Route path="/tutor/:id" component={TutorView} />
-      <Route path="/my-profile" component={MyProfile} />
+      <Route path="/my-profile" component={TutorDetail} />
       <Route path="/favorites" component={Favorites} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/messages" component={Messages} />
