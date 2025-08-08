@@ -14,86 +14,144 @@ import {
   Shield, 
   Clock,
   Play,
+  Facebook,
+  Youtube,
   Edit,
   Settings,
   BarChart3,
   Plus,
   Minus,
+  Save,
+  X,
+  GripVertical,
   ArrowUp,
   ArrowDown,
   Award,
   Users,
   BookOpen,
+  TrendingUp,
+  MapPin,
+  Phone,
+  Mail,
   GraduationCap,
   Briefcase,
   Target,
+  CheckCircle,
   ThumbsUp,
+  Globe,
   Video,
   Zap,
   Calculator
 } from "lucide-react";
+import { Link } from "wouter";
 import Header from "@/components/header";
 import BookingModal from "@/components/booking-modal";
 import ScheduleSetupModal from "@/components/schedule-setup-modal";
 import StatisticsModal from "@/components/statistics-modal";
 
 export default function TutorDetail() {
+  // This component is for editing your own profile (/my-profile route)
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isScheduleSetupOpen, setIsScheduleSetupOpen] = useState(false);
   const [isStatisticsOpen, setIsStatisticsOpen] = useState(false);
-  const isOwnerView = true;
+  const isOwnerView = true; // Always true for own profile
   const [isEditMode, setIsEditMode] = useState(false);
   
+  // Initialize editable state with default values
   const [editableAchievements, setEditableAchievements] = useState([
-    { title: "TOP 200 HỌC VIÊN", color: "bg-blue-100 text-blue-800" },
+    { title: "TIẾU ĐỎI 200 HỌC VIÊN", color: "bg-blue-100 text-blue-800" },
     { title: "ĐÃ DẠY 8000 GIỜ", color: "bg-green-100 text-green-800" },
-    { title: "CHỨNG CHỈ GIẢNG VIÊN", color: "bg-purple-100 text-purple-800" },
+    { title: "CHỨNG CHỈ SEAL HỘI TIẾU", color: "bg-green-100 text-green-800" },
   ]);
-
   const [editableSubjects, setEditableSubjects] = useState([
     { name: "TOÁN", price: "150k/h", available: true, color: "bg-blue-100 text-blue-800" },
     { name: "LÝ", price: "150k/h", available: true, color: "bg-green-100 text-green-800" },
     { name: "HÓA", price: "140k/h", available: false, color: "bg-yellow-100 text-yellow-800" },
-    { name: "ÔN THI", price: "180k/h", available: true, color: "bg-purple-100 text-purple-800" }
+    { name: "ÔN THI", price: "180k/h", available: true, color: "bg-purple-100 text-purple-800" },
+    { name: "LUYỆN ĐỀ", price: "160k/h", available: true, color: "bg-red-100 text-red-800" },
+    { name: "HỌC ĐẬP", price: "150k/h", available: true, color: "bg-indigo-100 text-indigo-800" },
+    { name: "TƯ VẤN TÂM SỚ", price: "200k/h", available: false, color: "bg-pink-100 text-pink-800" },
+    { name: "LỚP HỌC LIVE", price: "120k/h", available: false, color: "bg-gray-100 text-gray-800" },
   ]);
-
-  const [editableOffers, setEditableOffers] = useState([
-    { title: "FREE 1H học thử", icon: "🎯" },
-    { title: "Giảm 20% khóa dài hạn", icon: "💰" },
-    { title: "Tặng tài liệu PDF", icon: "📚" }
-  ]);
-
+  const [editableOffers, setEditableOffers] = useState(Array(4).fill({
+    title: "FREE 1H học thử 1 tuần",
+    icon: "🎯"
+  }));
   const [editableVideos, setEditableVideos] = useState([
-    { id: 1, title: "Video giới thiệu" },
-    { id: 2, title: "Phương pháp dạy" },
-    { id: 3, title: "Thành tích học viên" }
+    { id: 1, title: "ẢNH VÀ VIDEO GT" },
+    { id: 2, title: "ẢNH VÀ VIDEO GT" },
+    { id: 3, title: "ẢNH VÀ VIDEO GT" }
   ]);
+  const [editableInfo, setEditableInfo] = useState("HỌC SINH LỚP 12 NĂM LỚP, THỊ KHOA TOÁN TỈN!\nAN TRẠNG THI ĐẠO KHOA TRƯỜNG NHỮNG HỌC THỊ KHÔNG TÂM THƯỜNG.");
+  const [editablePrice, setEditablePrice] = useState(350000);
 
-  const [editableInfo, setEditableInfo] = useState("Tôi là giáo viên có 5+ năm kinh nghiệm dạy Toán, Lý cấp 2-3. Chuyên luyện thi đại học với phương pháp dạy dễ hiểu, tận tâm với từng học viên.");
-
+  // Static tutor data for BookingModal
   const tutor = {
     id: "current-user",
     name: "MINH TIẾN",
     subjects: ["TOÁN", "LÝ"],
-    grades: ["10", "11", "12"],
-    education: "Đại học Bách Khoa Hà Nội",
-    experience: "5 năm kinh nghiệm",
-    pricePerHour: 150000,
+    pricePerHour: editablePrice,
     rating: "4.8",
-    reviewCount: 150,
-    status: "online",
-    isVerified: true,
-    isTopRated: true,
+    experience: "5 năm",
+    status: "online" as const,
     avatar: "",
     about: editableInfo,
+    education: "Đại học Bách Khoa",
     achievements: editableAchievements.map(a => a.title),
-    schedule: ["Thứ 2-6: 18:00-22:00"],
-    reviews: [],
-    createdAt: new Date()
+    schedule: ["Thứ 2-6: 18:00-22:00", "Thứ 7: 14:00-18:00"],
+    reviews: []
   };
 
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('vi-VN').format(price);
+  };
+
+  const subjects = [
+    { name: "TOÁN", available: true },
+    { name: "LÝ", available: true },
+    { name: "HÓA", available: false },
+    { name: "ÔN THI", available: true },
+    { name: "LUYỆN ĐỀ", available: true },
+    { name: "HỌ ĐẢP", available: true },
+    { name: "TƯ VẤN TÂM SỰ", available: false },
+    { name: "LỚP HỌC LIVE", available: false },
+  ];
+
+  const achievements = [
+    { title: "TIẾU ĐỎI 200 HỌC VIÊN", color: "bg-blue-100 text-blue-800" },
+    { title: "ĐÃ DẠY 8000 GIỜ", color: "bg-green-100 text-green-800" },
+    { title: "CHỨNG CHỈ SEAL HỘI TIẾU", color: "bg-green-100 text-green-800" },
+  ];
+
+  const sidebarItems = isOwnerView 
+    ? [
+        { 
+          icon: isEditMode ? Save : Edit, 
+          title: isEditMode ? "Lưu thay đổi" : "Chỉnh sửa hồ sơ công khai", 
+          color: isEditMode ? "text-green-500" : "text-blue-500" 
+        },
+        { icon: Settings, title: "Thiết lập lịch dạy", color: "text-green-500" },
+        { icon: Calendar, title: "Yêu cầu đặt lịch", color: "text-purple-500" },
+        { icon: BarChart3, title: "Thống kê chi tiết", color: "text-orange-500" },
+      ]
+    : [
+        { icon: Heart, title: "THEO DÕI", color: "text-red-500" },
+        { icon: Calendar, title: "ĐẶT LỊCH", color: "text-blue-500" },
+        { icon: MessageCircle, title: "CHAT VỚI THẦY", color: "text-green-500" },
+        { icon: Shield, title: "Báo cáo", color: "text-orange-500" },
+      ];
+
+  const freeOffers = Array(4).fill({
+    title: "FREE 1H học thử 1 tuần",
+    icon: "🎯"
+  });
+
+
+
+  // Helper functions for editing
   const addAchievement = () => {
-    setEditableAchievements([...editableAchievements, { title: "Thành tích mới", color: "bg-gray-100 text-gray-800" }]);
+    const newAchievement = { title: "Thành tích mới", color: "bg-blue-100 text-blue-800" };
+    setEditableAchievements([...editableAchievements, newAchievement]);
   };
 
   const removeAchievement = (index: number) => {
@@ -101,7 +159,8 @@ export default function TutorDetail() {
   };
 
   const addSubject = () => {
-    setEditableSubjects([...editableSubjects, { name: "MÔN MỚI", price: "150k/h", available: true, color: "bg-gray-100 text-gray-800" }]);
+    const newSubject = { name: "MÔN MỚI", available: true };
+    setEditableSubjects([...editableSubjects, newSubject]);
   };
 
   const removeSubject = (index: number) => {
@@ -109,7 +168,8 @@ export default function TutorDetail() {
   };
 
   const addOffer = () => {
-    setEditableOffers([...editableOffers, { title: "Ưu đãi mới", icon: "🎉" }]);
+    const newOffer = { title: "Ưu đãi mới", icon: "🎯" };
+    setEditableOffers([...editableOffers, newOffer]);
   };
 
   const removeOffer = (index: number) => {
@@ -117,165 +177,198 @@ export default function TutorDetail() {
   };
 
   const addVideo = () => {
-    const newId = Math.max(...editableVideos.map(v => v.id)) + 1;
-    setEditableVideos([...editableVideos, { id: newId, title: "Video mới" }]);
+    const newVideo = { id: Date.now(), title: "ẢNH VÀ VIDEO GT" };
+    setEditableVideos([...editableVideos, newVideo]);
   };
 
   const removeVideo = (index: number) => {
     setEditableVideos(editableVideos.filter((_, i) => i !== index));
   };
 
+  // Reordering functions
+  const moveItem = (array: any[], fromIndex: number, toIndex: number) => {
+    const newArray = [...array];
+    const [removed] = newArray.splice(fromIndex, 1);
+    newArray.splice(toIndex, 0, removed);
+    return newArray;
+  };
+
+  const moveAchievementUp = (index: number) => {
+    if (index > 0) {
+      setEditableAchievements(moveItem(editableAchievements, index, index - 1));
+    }
+  };
+
+  const moveAchievementDown = (index: number) => {
+    if (index < editableAchievements.length - 1) {
+      setEditableAchievements(moveItem(editableAchievements, index, index + 1));
+    }
+  };
+
+  const moveSubjectUp = (index: number) => {
+    if (index > 0) {
+      setEditableSubjects(moveItem(editableSubjects, index, index - 1));
+    }
+  };
+
+  const moveSubjectDown = (index: number) => {
+    if (index < editableSubjects.length - 1) {
+      setEditableSubjects(moveItem(editableSubjects, index, index + 1));
+    }
+  };
+
+  const moveVideoUp = (index: number) => {
+    if (index > 0) {
+      setEditableVideos(moveItem(editableVideos, index, index - 1));
+    }
+  };
+
+  const moveVideoDown = (index: number) => {
+    if (index < editableVideos.length - 1) {
+      setEditableVideos(moveItem(editableVideos, index, index + 1));
+    }
+  };
+
+  const moveOfferUp = (index: number) => {
+    if (index > 0) {
+      setEditableOffers(moveItem(editableOffers, index, index - 1));
+    }
+  };
+
+  const moveOfferDown = (index: number) => {
+    if (index < editableOffers.length - 1) {
+      setEditableOffers(moveItem(editableOffers, index, index + 1));
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <Header />
-      
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* Hero Section */}
-        <div className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-3xl p-8 mb-8 text-white overflow-hidden">
-          <div className="absolute inset-0 bg-black/20" />
-          <div className="relative z-10 flex flex-col lg:flex-row items-center space-y-6 lg:space-y-0 lg:space-x-8">
-            <Avatar className="w-32 h-32 border-4 border-white/50">
-              <AvatarImage src="" alt="MINH TIẾN" />
-              <AvatarFallback className="text-4xl font-bold bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+
+      {/* Hero Section with Cover */}
+      <div className="relative h-80 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700">
+        <div className="absolute inset-0 bg-black/30"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+        
+        {/* Profile Hero Content */}
+        <div className="relative container mx-auto px-4 pt-24 pb-8 flex items-end h-full">
+          <div className="flex items-end space-x-6 text-white w-full">
+            <Avatar className="w-32 h-32 border-4 border-white shadow-2xl">
+              <AvatarImage src="/api/placeholder/128/128" alt="MINH TIẾN" />
+              <AvatarFallback className="text-4xl bg-gradient-to-br from-blue-500 to-purple-600 text-white">
                 MT
               </AvatarFallback>
             </Avatar>
             
-            <div className="flex-1 text-center lg:text-left">
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 mb-4">
+            <div className="flex-1 pb-2">
+              <div className="flex items-center space-x-3 mb-2">
                 <h1 className="text-4xl font-bold">MINH TIẾN</h1>
                 <Badge className="bg-green-500 text-white border-0">
-                  <Shield className="w-4 h-4 mr-1" />
-                  Đã xác thực
+                  <CheckCircle className="w-4 h-4 mr-1" />
+                  Verified
                 </Badge>
                 <Badge className="bg-yellow-500 text-white border-0">
-                  <Star className="w-4 h-4 mr-1" />
-                  Top Rated
+                  <Award className="w-4 h-4 mr-1" />
+                  Top Tutor
                 </Badge>
               </div>
               
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mb-6">
+              <div className="flex items-center space-x-4 mb-3">
                 <div className="flex items-center space-x-1">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                   ))}
-                  <span className="ml-2 font-semibold">4.8 (150 đánh giá)</span>
+                  <span className="ml-2 text-lg font-semibold">4.9 (387 đánh giá)</span>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Users className="w-5 h-5" />
+                <div className="h-4 w-px bg-white/40"></div>
+                <div className="flex items-center space-x-1">
+                  <Users className="w-4 h-4" />
                   <span>200+ học viên</span>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Clock className="w-5 h-5" />
+                <div className="h-4 w-px bg-white/40"></div>
+                <div className="flex items-center space-x-1">
+                  <Clock className="w-4 h-4" />
                   <span>8000+ giờ dạy</span>
                 </div>
               </div>
               
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
-                <div className="bg-white/20 px-4 py-2 rounded-full">
-                  <span className="font-semibold">📚 TOÁN - LÝ</span>
-                </div>
-                <div className="bg-white/20 px-4 py-2 rounded-full">
-                  <span className="font-semibold">🎓 CẤP 2-3</span>
-                </div>
-                <div className="bg-white/20 px-4 py-2 rounded-full">
-                  <span className="font-semibold">💰 150k/h</span>
-                </div>
-              </div>
+              <p className="text-lg opacity-90 max-w-2xl">
+                Gia sư Toán - Lý hàng đầu với 5 năm kinh nghiệm. Chuyên luyện thi Đại học, THPT Quốc gia. 
+                Phương pháp dạy hiệu quả, tận tâm với học sinh.
+              </p>
             </div>
             
-            <div className="text-center">
-              <Button 
-                size="lg" 
-                className="bg-white text-blue-600 hover:bg-gray-100 font-bold px-8 py-3 text-lg"
-                onClick={() => setIsBookingModalOpen(true)}
-              >
-                ĐẶT LỊCH NGAY
-              </Button>
+            <div className="text-right">
+              <div className="text-3xl font-bold mb-1">
+                {isEditMode && isOwnerView ? (
+                  <div className="flex items-center space-x-2">
+                    <Input
+                      type="number"
+                      value={editablePrice}
+                      onChange={(e) => setEditablePrice(Number(e.target.value))}
+                      className="w-32 text-right text-2xl font-bold bg-white/20 border-white/30 text-white"
+                    />
+                    <span>₫/h</span>
+                  </div>
+                ) : (
+                  `${formatPrice(editablePrice)}₫/h`
+                )}
+              </div>
+              <div className="text-sm opacity-75">Giá ưu đãi cho buổi đầu</div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Main Content Grid */}
+      <div className="container mx-auto px-4 py-8 -mt-16 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Left Sidebar */}
+          {/* Left Sidebar - Quick Actions & Stats */}
           <div className="lg:col-span-1 space-y-6">
             {/* Quick Actions */}
-            {isOwnerView && (
-              <Card className="shadow-lg border-0 bg-gradient-to-br from-indigo-50 to-purple-50">
-                <CardHeader>
-                  <CardTitle className="flex items-center text-indigo-700">
-                    <Settings className="w-6 h-6 mr-3" />
-                    Thao tác nhanh
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start"
-                    onClick={() => setIsEditMode(!isEditMode)}
-                  >
-                    <Edit className="h-5 w-5 mr-3" />
-                    {isEditMode ? "Lưu thay đổi" : "Chỉnh sửa hồ sơ"}
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start"
-                    onClick={() => setIsScheduleSetupOpen(true)}
-                  >
-                    <Calendar className="h-5 w-5 mr-3" />
-                    Thiết lập lịch dạy
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start"
-                    onClick={() => setIsStatisticsOpen(true)}
-                  >
-                    <BarChart3 className="h-5 w-5 mr-3" />
-                    Thống kê chi tiết
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Quick Stats - Moved under Quick Actions */}
             <Card className="shadow-lg border-0">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <BarChart3 className="w-6 h-6 mr-3" />
-                  Thống kê nhanh
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Users className="w-4 h-4 text-blue-500" />
-                    <span className="text-sm">Học viên hiện tại</span>
-                  </div>
-                  <span className="font-bold text-blue-600">24</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Clock className="w-4 h-4 text-green-500" />
-                    <span className="text-sm">Giờ dạy tháng này</span>
-                  </div>
-                  <span className="font-bold text-green-600">87h</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Star className="w-4 h-4 text-yellow-500" />
-                    <span className="text-sm">Điểm trung bình</span>
-                  </div>
-                  <span className="font-bold text-yellow-600">4.9/5</span>
+              <CardContent className="p-6">
+                <h3 className="font-bold text-lg mb-4 text-center">Thao tác nhanh</h3>
+                <div className="space-y-3">
+                  {sidebarItems.map((item, index) => (
+                    <Button
+                      key={index}
+                      className={`w-full justify-start ${item.color === 'text-green-500' ? 'bg-green-50 hover:bg-green-100 text-green-700' : 
+                        item.color === 'text-blue-500' ? 'bg-blue-50 hover:bg-blue-100 text-blue-700' :
+                        item.color === 'text-purple-500' ? 'bg-purple-50 hover:bg-purple-100 text-purple-700' :
+                        'bg-orange-50 hover:bg-orange-100 text-orange-700'
+                      }`}
+                      variant="ghost"
+                      onClick={() => {
+                        if (index === 0 && isOwnerView) {
+                          if (isEditMode) {
+                            setIsEditMode(false);
+                          } else {
+                            setIsEditMode(true);
+                          }
+                        } else if (index === 1 && isOwnerView) {
+                          setIsScheduleSetupOpen(true);
+                        } else if (index === 2 && isOwnerView) {
+                          // View booking requests
+                        } else if (index === 3 && isOwnerView) {
+                          setIsStatisticsOpen(true);
+                        } else if (!isOwnerView && index === 1) {
+                          setIsBookingModalOpen(true);
+                        }
+                      }}
+                    >
+                      <item.icon className="w-5 h-5 mr-3" />
+                      {item.title}
+                    </Button>
+                  ))}
                 </div>
               </CardContent>
             </Card>
 
-            {/* Performance Stats - Moved after Quick Stats */}
+            {/* Performance Stats */}
             <Card className="shadow-lg border-0">
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <BarChart3 className="w-6 h-6 mr-3" />
+                  <TrendingUp className="w-5 h-5 mr-2" />
                   Thống kê hiệu suất
                 </CardTitle>
               </CardHeader>
@@ -287,6 +380,7 @@ export default function TutorDetail() {
                   </div>
                   <Progress value={98} className="h-2" />
                 </div>
+                
                 <div>
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm font-medium">Độ hài lòng</span>
@@ -294,6 +388,7 @@ export default function TutorDetail() {
                   </div>
                   <Progress value={96} className="h-2" />
                 </div>
+                
                 <div>
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm font-medium">Tỷ lệ tái đăng ký</span>
@@ -303,6 +398,8 @@ export default function TutorDetail() {
                 </div>
               </CardContent>
             </Card>
+
+
           </div>
 
           {/* Main Content */}
@@ -327,14 +424,36 @@ export default function TutorDetail() {
                   {editableAchievements.map((achievement, index) => (
                     <Card key={index} className={`p-4 text-center border-2 relative transition-all hover:shadow-md ${achievement.color}`}>
                       {isEditMode && isOwnerView && (
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          className="absolute -top-2 -right-2 h-6 w-6 p-0"
-                          onClick={() => removeAchievement(index)}
-                        >
-                          <Minus className="h-3 w-3" />
-                        </Button>
+                        <>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            className="absolute -top-2 -right-2 h-6 w-6 p-0"
+                            onClick={() => removeAchievement(index)}
+                          >
+                            <Minus className="h-3 w-3" />
+                          </Button>
+                          <div className="absolute -top-2 -left-2 flex flex-col space-y-1">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-5 w-5 p-0"
+                              onClick={() => moveAchievementUp(index)}
+                              disabled={index === 0}
+                            >
+                              <ArrowUp className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-5 w-5 p-0"
+                              onClick={() => moveAchievementDown(index)}
+                              disabled={index === editableAchievements.length - 1}
+                            >
+                              <ArrowDown className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </>
                       )}
                       {isEditMode && isOwnerView ? (
                         <Input
@@ -380,14 +499,36 @@ export default function TutorDetail() {
                   {editableSubjects.map((subject, index) => (
                     <div key={index} className="relative">
                       {isEditMode && isOwnerView && (
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          className="absolute -top-2 -right-2 h-6 w-6 p-0 z-10"
-                          onClick={() => removeSubject(index)}
-                        >
-                          <Minus className="h-3 w-3" />
-                        </Button>
+                        <>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            className="absolute -top-2 -right-2 h-6 w-6 p-0 z-10"
+                            onClick={() => removeSubject(index)}
+                          >
+                            <Minus className="h-3 w-3" />
+                          </Button>
+                          <div className="absolute -top-2 -left-2 flex flex-col space-y-1 z-10">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-5 w-5 p-0"
+                              onClick={() => moveSubjectUp(index)}
+                              disabled={index === 0}
+                            >
+                              <ArrowUp className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-5 w-5 p-0"
+                              onClick={() => moveSubjectDown(index)}
+                              disabled={index === editableSubjects.length - 1}
+                            >
+                              <ArrowDown className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </>
                       )}
                       <Card className={`p-4 h-full ${subject.color} hover:shadow-lg transition-all duration-200 cursor-pointer`}>
                         <div className="text-center">
@@ -496,7 +637,42 @@ export default function TutorDetail() {
               </CardContent>
             </Card>
 
-            {/* About Section */}
+            {/* Remove duplicate Achievements section that was here */}
+
+                        </>
+                      )}
+                      {isEditMode && isOwnerView ? (
+                        <Input
+                          value={subject.name}
+                          onChange={(e) => {
+                            const newSubjects = [...editableSubjects];
+                            newSubjects[index].name = e.target.value;
+                            setEditableSubjects(newSubjects);
+                          }}
+                          className="text-sm text-center bg-primary text-white border-primary"
+                        />
+                      ) : (
+                        <Card className={`p-4 text-center transition-all hover:shadow-md ${
+                          subject.available 
+                            ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg" 
+                            : "bg-gray-100 text-gray-400"
+                        }`}>
+                          <div className="flex items-center justify-center space-x-2">
+                            <BookOpen className="w-4 h-4" />
+                            <span className="font-semibold text-sm">{subject.name}</span>
+                          </div>
+                          {subject.available && (
+                            <div className="text-xs mt-1 opacity-90">Đang nhận lớp</div>
+                          )}
+                        </Card>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* About */}
             <Card className="shadow-lg border-0">
               <CardHeader>
                 <CardTitle className="flex items-center">
@@ -542,14 +718,36 @@ export default function TutorDetail() {
                   {editableVideos.map((video, index) => (
                     <Card key={video.id} className="relative overflow-hidden group hover:shadow-xl transition-all duration-300">
                       {isEditMode && isOwnerView && (
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          className="absolute top-2 right-2 h-6 w-6 p-0 z-20"
-                          onClick={() => removeVideo(index)}
-                        >
-                          <Minus className="h-3 w-3" />
-                        </Button>
+                        <>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            className="absolute top-2 right-2 h-6 w-6 p-0 z-20"
+                            onClick={() => removeVideo(index)}
+                          >
+                            <Minus className="h-3 w-3" />
+                          </Button>
+                          <div className="absolute top-2 left-2 flex flex-col space-y-1 z-20">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-6 w-6 p-0 bg-white/80 hover:bg-white"
+                              onClick={() => moveVideoUp(index)}
+                              disabled={index === 0}
+                            >
+                              <ArrowUp className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-6 w-6 p-0 bg-white/80 hover:bg-white"
+                              onClick={() => moveVideoDown(index)}
+                              disabled={index === editableVideos.length - 1}
+                            >
+                              <ArrowDown className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </>
                       )}
                       <div className="aspect-video bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center mb-4 relative overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20" />
@@ -689,7 +887,7 @@ export default function TutorDetail() {
               </CardContent>
             </Card>
 
-            {/* Enhanced Schedule with Multiple Time Slots */}
+            {/* Schedule Preview - Enhanced with multiple time slots */}
             <Card className="shadow-lg border-0">
               <CardHeader>
                 <CardTitle className="flex items-center">
@@ -763,6 +961,41 @@ export default function TutorDetail() {
                     </div>
                   </div>
                 ))}
+              </CardContent>
+            </Card>
+
+            {/* Quick Stats */}
+            <Card className="shadow-lg border-0">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <BarChart3 className="w-6 h-6 mr-3" />
+                  Thống kê nhanh
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Users className="w-4 h-4 text-blue-500" />
+                    <span className="text-sm">Học viên hiện tại</span>
+                  </div>
+                  <span className="font-bold text-blue-600">24</span>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Clock className="w-4 h-4 text-green-500" />
+                    <span className="text-sm">Giờ dạy tháng này</span>
+                  </div>
+                  <span className="font-bold text-green-600">87h</span>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Star className="w-4 h-4 text-yellow-500" />
+                    <span className="text-sm">Điểm trung bình</span>
+                  </div>
+                  <span className="font-bold text-yellow-600">4.9/5</span>
+                </div>
               </CardContent>
             </Card>
           </div>
