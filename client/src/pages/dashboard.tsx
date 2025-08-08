@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, Clock, FileText, Users, ChevronLeft, ChevronRight, X, BookOpen, DollarSign, TrendingUp } from "lucide-react";
 import Header from "@/components/header";
 import MeetingRoomModal from "@/features/meeting-room/components/meeting-room-modal";
@@ -13,7 +14,7 @@ export default function Dashboard() {
   const [selectedClass, setSelectedClass] = useState<any>(null);
   const [activeStatIndex, setActiveStatIndex] = useState(0);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  const [selectedStatIndex, setSelectedStatIndex] = useState<number | null>(null);
+  const [activeTab, setActiveTab] = useState("0");
   
   // Mock data for dashboard
   const stats = [
@@ -84,7 +85,7 @@ export default function Dashboard() {
   };
 
   const handleDetailClick = (index: number) => {
-    setSelectedStatIndex(index);
+    setActiveTab(index.toString());
     setIsDetailModalOpen(true);
   };
 
@@ -400,20 +401,40 @@ export default function Dashboard() {
 
       {/* Detailed Statistics Modal */}
       <Dialog open={isDetailModalOpen} onOpenChange={setIsDetailModalOpen}>
-        <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
-          {selectedStatIndex !== null && (
-            <>
-              <DialogHeader>
-                <DialogTitle className="flex items-center space-x-3 text-xl">
-                  <span className="text-2xl">{stats[selectedStatIndex].icon}</span>
-                  <span>{stats[selectedStatIndex].title}</span>
-                </DialogTitle>
-              </DialogHeader>
-              
-              <div className="space-y-6">
-                {selectedStatIndex === 0 && (
-                  // Lớp Học Đã Tham Gia Details
-                  <div className="space-y-4">
+        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold text-center">
+              📊 Chi Tiết Thống Kê Học Tập
+            </DialogTitle>
+          </DialogHeader>
+          
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-4 mb-6">
+              <TabsTrigger value="0" className="flex items-center space-x-2">
+                <span>📚</span>
+                <span className="hidden sm:inline">Lớp Học</span>
+              </TabsTrigger>
+              <TabsTrigger value="1" className="flex items-center space-x-2">
+                <span>🕐</span>
+                <span className="hidden sm:inline">Giờ Học</span>
+              </TabsTrigger>
+              <TabsTrigger value="2" className="flex items-center space-x-2">
+                <span>💰</span>
+                <span className="hidden sm:inline">Chi Phí</span>
+              </TabsTrigger>
+              <TabsTrigger value="3" className="flex items-center space-x-2">
+                <span>📊</span>
+                <span className="hidden sm:inline">Hoàn Thành</span>
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="0" className="space-y-4">
+              <div className="flex items-center space-x-3 mb-4">
+                <span className="text-2xl">📚</span>
+                <h2 className="text-lg font-semibold">Lớp Học Đã Tham Gia</h2>
+              </div>
+              {/* Lớp Học Đã Tham Gia Details */}
+              <div className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <Card>
                         <CardContent className="p-4">
@@ -484,11 +505,15 @@ export default function Dashboard() {
                       </CardContent>
                     </Card>
                   </div>
-                )}
+            </TabsContent>
 
-                {selectedStatIndex === 1 && (
-                  // Giờ Đã Học Details
-                  <div className="space-y-4">
+            <TabsContent value="1" className="space-y-4">
+              <div className="flex items-center space-x-3 mb-4">
+                <span className="text-2xl">🕐</span>
+                <h2 className="text-lg font-semibold">Giờ Đã Học</h2>
+              </div>
+              {/* Giờ Đã Học Details */}
+              <div className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <Card>
                         <CardContent className="p-4 text-center">
@@ -535,11 +560,15 @@ export default function Dashboard() {
                       </CardContent>
                     </Card>
                   </div>
-                )}
+            </TabsContent>
 
-                {selectedStatIndex === 2 && (
-                  // Tiền đã học Details
-                  <div className="space-y-4">
+            <TabsContent value="2" className="space-y-4">
+              <div className="flex items-center space-x-3 mb-4">
+                <span className="text-2xl">💰</span>
+                <h2 className="text-lg font-semibold">Tiền Đã Học</h2>
+              </div>
+              {/* Tiền đã học Details */}
+              <div className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <Card>
                         <CardContent className="p-4">
@@ -608,11 +637,15 @@ export default function Dashboard() {
                       </CardContent>
                     </Card>
                   </div>
-                )}
+            </TabsContent>
 
-                {selectedStatIndex === 3 && (
-                  // Tỉ lệ hoàn thành Details
-                  <div className="space-y-4">
+            <TabsContent value="3" className="space-y-4">
+              <div className="flex items-center space-x-3 mb-4">
+                <span className="text-2xl">📊</span>
+                <h2 className="text-lg font-semibold">Tỉ Lệ Hoàn Thành</h2>
+              </div>
+              {/* Tỉ lệ hoàn thành Details */}
+              <div className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <Card>
                         <CardContent className="p-4 text-center">
@@ -672,10 +705,8 @@ export default function Dashboard() {
                       </CardContent>
                     </Card>
                   </div>
-                )}
-              </div>
-            </>
-          )}
+            </TabsContent>
+          </Tabs>
         </DialogContent>
       </Dialog>
     </div>
