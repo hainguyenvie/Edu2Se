@@ -216,7 +216,15 @@ export default function TutorDetail() {
     ]
   };
 
-  const weekDays = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"];
+  const weekDays = [
+    { short: "T2", full: "Thứ 2" },
+    { short: "T3", full: "Thứ 3" },
+    { short: "T4", full: "Thứ 4" },
+    { short: "T5", full: "Thứ 5" },
+    { short: "T6", full: "Thứ 6" },
+    { short: "T7", full: "Thứ 7" },
+    { short: "CN", full: "Chủ nhật" }
+  ];
 
   const removeVideo = (index: number) => {
     setEditableVideos(editableVideos.filter((_, i) => i !== index));
@@ -1223,24 +1231,24 @@ export default function TutorDetail() {
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Day Selection Buttons */}
-                <div className="flex flex-wrap gap-2 justify-center">
+                <div className="flex gap-1 justify-center">
                   {weekDays.map((day) => (
                     <Button
-                      key={day}
-                      variant={selectedDay === day ? "default" : "outline"}
+                      key={day.full}
+                      variant={selectedDay === day.full ? "default" : "outline"}
                       size="sm"
-                      onClick={() => setSelectedDay(day)}
-                      className={`relative transition-all duration-200 ${
-                        selectedDay === day 
+                      onClick={() => setSelectedDay(day.full)}
+                      className={`relative transition-all duration-200 w-10 h-8 text-xs ${
+                        selectedDay === day.full 
                           ? "bg-blue-600 hover:bg-blue-700 text-white shadow-lg" 
                           : "hover:bg-blue-50 hover:border-blue-300"
                       }`}
                     >
-                      {day}
+                      {day.short}
                       {/* Available slots indicator */}
-                      {weeklySchedule[day] && weeklySchedule[day].filter(slot => slot.status === 'available').length > 0 && (
+                      {weeklySchedule[day.full] && weeklySchedule[day.full].filter(slot => slot.status === 'available').length > 0 && (
                         <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full text-xs text-white flex items-center justify-center">
-                          {weeklySchedule[day].filter(slot => slot.status === 'available').length}
+                          {weeklySchedule[day.full].filter(slot => slot.status === 'available').length}
                         </div>
                       )}
                     </Button>
@@ -1285,7 +1293,7 @@ export default function TutorDetail() {
                               variant={slot.status === 'available' ? 'default' : 'secondary'}
                               className="text-xs"
                             >
-                              {slot.status === 'available' ? 'Đặt lịch' : 'Đã đặt'}
+                              {slot.status === 'available' ? 'Còn trống' : 'Đã đặt'}
                             </Badge>
                           </div>
                         </Card>
@@ -1300,21 +1308,7 @@ export default function TutorDetail() {
                   )}
                 </div>
 
-                {/* Weekly Summary */}
-                <div className="grid grid-cols-2 gap-4 pt-4 border-t">
-                  <div className="text-center p-3 bg-green-50 rounded-lg">
-                    <div className="text-lg font-bold text-green-600">
-                      {Object.values(weeklySchedule).flat().filter(slot => slot.status === 'available').length}
-                    </div>
-                    <div className="text-xs text-gray-600">Slot trống</div>
-                  </div>
-                  <div className="text-center p-3 bg-blue-50 rounded-lg">
-                    <div className="text-lg font-bold text-blue-600">
-                      {Object.values(weeklySchedule).flat().filter(slot => slot.status === 'booked').length}
-                    </div>
-                    <div className="text-xs text-gray-600">Đã đặt</div>
-                  </div>
-                </div>
+
               </CardContent>
             </Card>
           </div>
