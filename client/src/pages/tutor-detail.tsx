@@ -129,7 +129,7 @@ export default function TutorDetail() {
     <div className="min-h-screen bg-gray-50">
       <Header />
       
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="container mx-auto px-4 pt-24 pb-8 max-w-7xl">
 
 
         {/* Main Content Grid */}
@@ -166,10 +166,8 @@ export default function TutorDetail() {
                   <span className="ml-2 text-sm font-medium">4.8 (150)</span>
                 </div>
                 
-                <div className="text-sm text-gray-600 space-y-1">
-                  <div>📚 TOÁN - LÝ</div>
-                  <div>🎓 CẤP 2-3</div>
-                  <div className="font-semibold text-blue-600">💰 150k/h</div>
+                <div className="text-xl font-bold text-blue-600">
+                  150k/h
                 </div>
               </CardContent>
             </Card>
@@ -245,38 +243,7 @@ export default function TutorDetail() {
               </CardContent>
             </Card>
 
-            {/* Performance Stats - Moved after Quick Stats */}
-            <Card className="shadow-lg border-0">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <BarChart3 className="w-6 h-6 mr-3" />
-                  Thống kê hiệu suất
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium">Tỷ lệ hoàn thành</span>
-                    <span className="text-sm font-bold text-green-600">98%</span>
-                  </div>
-                  <Progress value={98} className="h-2" />
-                </div>
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium">Độ hài lòng</span>
-                    <span className="text-sm font-bold text-blue-600">96%</span>
-                  </div>
-                  <Progress value={96} className="h-2" />
-                </div>
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium">Tỷ lệ tái đăng ký</span>
-                    <span className="text-sm font-bold text-purple-600">89%</span>
-                  </div>
-                  <Progress value={89} className="h-2" />
-                </div>
-              </CardContent>
-            </Card>
+
           </div>
 
           {/* Main Content */}
