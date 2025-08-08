@@ -30,7 +30,9 @@ import {
   ThumbsUp,
   Video,
   Zap,
-  Calculator
+  Calculator,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import Header from "@/components/header";
 import BookingModal from "@/components/booking-modal";
@@ -168,6 +170,21 @@ export default function TutorDetail() {
   const openMediaModal = (media: any) => {
     setSelectedMedia(media);
     setIsMediaModalOpen(true);
+  };
+
+  const navigateMedia = (direction: 'prev' | 'next') => {
+    if (!selectedMedia) return;
+    
+    const currentIndex = editableVideos.findIndex(m => m.id === selectedMedia.id);
+    let newIndex;
+    
+    if (direction === 'prev') {
+      newIndex = currentIndex > 0 ? currentIndex - 1 : editableVideos.length - 1;
+    } else {
+      newIndex = currentIndex < editableVideos.length - 1 ? currentIndex + 1 : 0;
+    }
+    
+    setSelectedMedia(editableVideos[newIndex]);
   };
 
   const removeVideo = (index: number) => {
@@ -982,49 +999,75 @@ export default function TutorDetail() {
             {/* Media Popup Modal */}
             {isMediaModalOpen && selectedMedia && (
               <div 
-                className="fixed inset-0 z-50 flex items-center justify-center p-4"
-                style={{ backdropFilter: 'blur(8px)', backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
+                className="fixed inset-0 z-50 flex items-center justify-center"
+                style={{ backdropFilter: 'blur(8px)', backgroundColor: 'rgba(0, 0, 0, 0.95)' }}
                 onClick={() => setIsMediaModalOpen(false)}
               >
+                {/* Navigation arrows */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/40 hover:bg-black/60 text-white rounded-full h-12 w-12 p-0"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigateMedia('prev');
+                  }}
+                >
+                  <ChevronLeft className="h-6 w-6" />
+                </Button>
+
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/40 hover:bg-black/60 text-white rounded-full h-12 w-12 p-0"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigateMedia('next');
+                  }}
+                >
+                  <ChevronRight className="h-6 w-6" />
+                </Button>
+
+                {/* Close button */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute top-4 right-4 z-20 bg-black/40 hover:bg-black/60 text-white rounded-full h-12 w-12 p-0"
+                  onClick={() => setIsMediaModalOpen(false)}
+                >
+                  ✕
+                </Button>
+                
+                {/* Media content - Full screen */}
                 <div 
-                  className="relative max-w-5xl w-full max-h-[90vh] bg-white rounded-xl overflow-hidden shadow-2xl"
+                  className="w-full h-full flex items-center justify-center p-4"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  {/* Close button */}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="absolute top-4 right-4 z-10 bg-black/30 hover:bg-black/50 text-white rounded-full h-10 w-10 p-0"
-                    onClick={() => setIsMediaModalOpen(false)}
-                  >
-                    ✕
-                  </Button>
-                  
-                  {/* Media content */}
-                  <div className="w-full h-full">
-                    {selectedMedia.type === "video" ? (
-                      <div className="aspect-video bg-black flex items-center justify-center relative">
-                        <img 
-                          src={selectedMedia.thumbnail} 
-                          alt={selectedMedia.title}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="w-20 h-20 bg-black/60 rounded-full flex items-center justify-center">
-                            <Play className="h-10 w-10 text-white ml-2" fill="white" />
-                          </div>
+                  {selectedMedia.type === "video" ? (
+                    <div className="relative max-w-full max-h-full">
+                      <img 
+                        src={selectedMedia.thumbnail} 
+                        alt={selectedMedia.title}
+                        className="max-w-full max-h-full object-contain"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-20 h-20 bg-black/60 rounded-full flex items-center justify-center">
+                          <Play className="h-10 w-10 text-white ml-2" fill="white" />
                         </div>
                       </div>
-                    ) : (
-                      <div className="flex items-center justify-center min-h-[60vh]">
-                        <img 
-                          src={selectedMedia.thumbnail} 
-                          alt={selectedMedia.title}
-                          className="max-w-full max-h-full object-contain rounded-lg"
-                        />
-                      </div>
-                    )}
-                  </div>
+                    </div>
+                  ) : (
+                    <img 
+                      src={selectedMedia.thumbnail} 
+                      alt={selectedMedia.title}
+                      className="max-w-full max-h-full object-contain"
+                    />
+                  )}
+                </div>
+
+                {/* Media counter */}
+                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/60 text-white px-3 py-1 rounded-full text-sm">
+                  {editableVideos.findIndex(m => m.id === selectedMedia.id) + 1} / {editableVideos.length}
                 </div>
               </div>
             )}
