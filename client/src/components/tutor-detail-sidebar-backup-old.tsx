@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { type Tutor } from "@shared/schema";
-import { Star, X, Clock, BookOpen, Award, MessageCircle, Calendar, MapPin, GraduationCap } from "lucide-react";
+import { Star, X, Clock, BookOpen, Award, MessageCircle, Calendar, MapPin, GraduationCap, CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
 import BookingModal from "@/components/booking-modal";
@@ -110,9 +110,14 @@ export default function TutorDetailSidebar({ tutor, isOpen, onClose, onStartChat
                 <div className="flex items-center space-x-2 mb-2">
                   <h2 className="text-xl font-bold text-white truncate">{tutor.name}</h2>
                   {getStatusBadge(tutor.status)}
-                  <Badge className="bg-blue-500/30 text-white border-white/20">
-                    VERIFIED
-                  </Badge>
+                  {tutor.isVerified && (
+                    <Badge className="bg-blue-600 text-white flex items-center gap-2 px-3 py-1 rounded-full">
+                      <div className="w-4 h-4 rounded-full border-2 border-white flex items-center justify-center">
+                        <CheckCircle className="w-2.5 h-2.5 fill-current text-white" />
+                      </div>
+                      VERIFIED
+                    </Badge>
+                  )}
                 </div>
                 
                 <div className="flex items-center space-x-4 text-sm text-blue-100">
@@ -150,7 +155,12 @@ export default function TutorDetailSidebar({ tutor, isOpen, onClose, onStartChat
                   <Badge className="bg-yellow-500 text-white">TOP RATED</Badge>
                 )}
                 {tutor.isVerified && (
-                  <Badge className="bg-blue-400 text-white">VERIFIED</Badge>
+                  <Badge className="bg-blue-600 text-white flex items-center gap-2 px-3 py-1 rounded-full">
+                    <div className="w-4 h-4 rounded-full border-2 border-white flex items-center justify-center">
+                      <CheckCircle className="w-2.5 h-2.5 fill-current text-white" />
+                    </div>
+                    VERIFIED
+                  </Badge>
                 )}
               </div>
               <p className="text-blue-100 text-sm">

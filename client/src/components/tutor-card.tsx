@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { type Tutor } from "@shared/schema";
-import { Star, Heart } from "lucide-react";
+import { Star, Heart, CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { Link } from "wouter";
 
@@ -96,7 +96,12 @@ export default function TutorCard({ tutor, onClick }: TutorCardProps) {
         )}
         {tutor.isVerified && !tutor.isTopRated && (
           <div className="absolute bottom-3 left-3">
-            <Badge className="bg-blue-500 text-white">VERIFIED</Badge>
+            <Badge className="bg-blue-600 text-white flex items-center gap-2 px-3 py-1 rounded-full">
+              <div className="w-4 h-4 rounded-full border-2 border-white flex items-center justify-center">
+                <CheckCircle className="w-2.5 h-2.5 fill-current text-white" />
+              </div>
+              VERIFIED
+            </Badge>
           </div>
         )}
       </div>
