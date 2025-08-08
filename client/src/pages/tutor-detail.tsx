@@ -64,10 +64,16 @@ export default function TutorDetail() {
   ]);
 
   const [editableVideos, setEditableVideos] = useState([
-    { id: 1, title: "Video giới thiệu" },
-    { id: 2, title: "Phương pháp dạy" },
-    { id: 3, title: "Thành tích học viên" }
+    { id: 1, title: "Video giới thiệu", type: "video", duration: "02:30", thumbnail: "" },
+    { id: 2, title: "Phương pháp dạy", type: "video", duration: "03:45", thumbnail: "" },
+    { id: 3, title: "Thành tích học viên", type: "image", duration: "", thumbnail: "" },
+    { id: 4, title: "Bảng điểm học viên", type: "image", duration: "", thumbnail: "" },
+    { id: 5, title: "Tài liệu giảng dạy", type: "image", duration: "", thumbnail: "" },
+    { id: 6, title: "Lớp học trực tiếp", type: "video", duration: "01:20", thumbnail: "" }
   ]);
+
+  const [selectedMedia, setSelectedMedia] = useState<any>(null);
+  const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
 
   const [editableInfo, setEditableInfo] = useState("Tôi là giáo viên có 5+ năm kinh nghiệm dạy Toán, Lý cấp 2-3. Chuyên luyện thi đại học với phương pháp dạy dễ hiểu, tận tâm với từng học viên.");
 
@@ -156,7 +162,12 @@ export default function TutorDetail() {
 
   const addVideo = () => {
     const newId = Math.max(...editableVideos.map(v => v.id)) + 1;
-    setEditableVideos([...editableVideos, { id: newId, title: "Video mới" }]);
+    setEditableVideos([...editableVideos, { id: newId, title: "Media mới", type: "video", duration: "00:00", thumbnail: "" }]);
+  };
+
+  const openMediaModal = (media: any) => {
+    setSelectedMedia(media);
+    setIsMediaModalOpen(true);
   };
 
   const removeVideo = (index: number) => {
@@ -469,6 +480,32 @@ export default function TutorDetail() {
                     </div>
                   ))}
                 </div>
+              </CardContent>
+            </Card>
+
+            {/* About Section - Moved under Subjects */}
+            <Card className="shadow-lg border-0">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <MessageCircle className="w-6 h-6 mr-3" />
+                  Giới thiệu bản thân
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {isEditMode && isOwnerView ? (
+                  <Textarea
+                    value={editableInfo}
+                    onChange={(e) => setEditableInfo(e.target.value)}
+                    className="text-gray-700 leading-relaxed min-h-[120px] resize-none"
+                    placeholder="Nhập thông tin giới thiệu bản thân, phương pháp dạy, kinh nghiệm..."
+                  />
+                ) : (
+                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg">
+                    <p className="text-gray-800 leading-relaxed whitespace-pre-line text-lg">
+                      {editableInfo}
+                    </p>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -815,39 +852,13 @@ export default function TutorDetail() {
               </CardContent>
             </Card>
 
-            {/* About Section */}
-            <Card className="shadow-lg border-0">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <MessageCircle className="w-6 h-6 mr-3" />
-                  Giới thiệu bản thân
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {isEditMode && isOwnerView ? (
-                  <Textarea
-                    value={editableInfo}
-                    onChange={(e) => setEditableInfo(e.target.value)}
-                    className="text-gray-700 leading-relaxed min-h-[120px] resize-none"
-                    placeholder="Nhập thông tin giới thiệu bản thân, phương pháp dạy, kinh nghiệm..."
-                  />
-                ) : (
-                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg">
-                    <p className="text-gray-800 leading-relaxed whitespace-pre-line text-lg">
-                      {editableInfo}
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Videos & Media */}
+            {/* Videos & Media Library */}
             <Card className="shadow-lg border-0">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="flex items-center">
                     <Video className="w-6 h-6 mr-3" />
-                    Video giới thiệu & Hình ảnh
+                    Thư viện Video & Hình ảnh
                   </CardTitle>
                   {isEditMode && isOwnerView && (
                     <Button size="sm" variant="outline" onClick={addVideo}>
@@ -857,46 +868,173 @@ export default function TutorDetail() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {editableVideos.map((video, index) => (
-                    <Card key={video.id} className="relative overflow-hidden group hover:shadow-xl transition-all duration-300">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {editableVideos.map((media, index) => (
+                    <Card 
+                      key={media.id} 
+                      className="relative overflow-hidden group hover:shadow-xl transition-all duration-300 cursor-pointer"
+                      onClick={() => !isEditMode && openMediaModal(media)}
+                    >
                       {isEditMode && isOwnerView && (
                         <Button
                           size="sm"
                           variant="destructive"
                           className="absolute top-2 right-2 h-6 w-6 p-0 z-20"
-                          onClick={() => removeVideo(index)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeVideo(index);
+                          }}
                         >
                           <Minus className="h-3 w-3" />
                         </Button>
                       )}
-                      <div className="aspect-video bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center mb-4 relative overflow-hidden">
+                      
+                      {/* Media Thumbnail */}
+                      <div className="aspect-square bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center relative overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20" />
-                        <Play className="h-12 w-12 text-blue-600 relative z-10" />
-                        <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                          02:30
+                        
+                        {media.type === "video" ? (
+                          <>
+                            <Play className="h-8 w-8 text-blue-600 relative z-10" />
+                            {media.duration && (
+                              <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                                {media.duration}
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <div className="relative z-10 text-center">
+                            <div className="w-8 h-8 mx-auto mb-1 bg-white/80 rounded flex items-center justify-center">
+                              📷
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* Hover overlay */}
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <div className="text-white text-center">
+                            <div className="text-lg mb-1">
+                              {media.type === "video" ? "▶️" : "🔍"}
+                            </div>
+                            <div className="text-xs">
+                              {media.type === "video" ? "Xem video" : "Xem ảnh"}
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <CardContent className="p-4">
+                      
+                      {/* Media Info */}
+                      <div className="p-3">
                         {isEditMode && isOwnerView ? (
-                          <Input
-                            value={video.title}
-                            onChange={(e) => {
-                              const newVideos = [...editableVideos];
-                              newVideos[index].title = e.target.value;
-                              setEditableVideos(newVideos);
-                            }}
-                            className="text-sm font-medium text-center"
-                          />
+                          <div className="space-y-2">
+                            <Input
+                              value={media.title}
+                              onChange={(e) => {
+                                const newVideos = [...editableVideos];
+                                newVideos[index].title = e.target.value;
+                                setEditableVideos(newVideos);
+                              }}
+                              className="text-xs font-medium text-center"
+                              onClick={(e) => e.stopPropagation()}
+                            />
+                            <select
+                              value={media.type}
+                              onChange={(e) => {
+                                const newVideos = [...editableVideos];
+                                newVideos[index].type = e.target.value;
+                                setEditableVideos(newVideos);
+                              }}
+                              className="w-full text-xs border border-gray-300 rounded px-2 py-1"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <option value="video">Video</option>
+                              <option value="image">Hình ảnh</option>
+                            </select>
+                            {media.type === "video" && (
+                              <Input
+                                value={media.duration}
+                                onChange={(e) => {
+                                  const newVideos = [...editableVideos];
+                                  newVideos[index].duration = e.target.value;
+                                  setEditableVideos(newVideos);
+                                }}
+                                placeholder="00:00"
+                                className="text-xs text-center"
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            )}
+                          </div>
                         ) : (
-                          <p className="text-sm text-center font-medium">{video.title}</p>
+                          <>
+                            <p className="text-xs text-center font-medium mb-1 line-clamp-2">
+                              {media.title}
+                            </p>
+                            <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
+                              <Badge variant="outline" className="text-xs">
+                                {media.type === "video" ? "Video" : "Hình ảnh"}
+                              </Badge>
+                            </div>
+                          </>
                         )}
-                      </CardContent>
+                      </div>
                     </Card>
                   ))}
                 </div>
+                
+                {/* Media count info */}
+                <div className="mt-4 text-center text-sm text-gray-500">
+                  {editableVideos.filter(m => m.type === "video").length} video • {editableVideos.filter(m => m.type === "image").length} hình ảnh
+                </div>
               </CardContent>
             </Card>
+
+            {/* Media Popup Modal */}
+            {isMediaModalOpen && selectedMedia && (
+              <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+                <div className="relative max-w-4xl w-full max-h-[90vh] bg-white rounded-lg overflow-hidden">
+                  {/* Close button */}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="absolute top-4 right-4 z-10 bg-black/20 hover:bg-black/40 text-white"
+                    onClick={() => setIsMediaModalOpen(false)}
+                  >
+                    ✕
+                  </Button>
+                  
+                  {/* Media content */}
+                  <div className="aspect-video bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center relative">
+                    {selectedMedia.type === "video" ? (
+                      <div className="text-center">
+                        <Play className="h-16 w-16 text-blue-600 mb-4" />
+                        <p className="text-gray-700">Video Player Placeholder</p>
+                        <p className="text-sm text-gray-500 mt-2">Duration: {selectedMedia.duration}</p>
+                      </div>
+                    ) : (
+                      <div className="text-center">
+                        <div className="w-16 h-16 mx-auto mb-4 bg-blue-600 rounded-full flex items-center justify-center">
+                          <span className="text-2xl">📷</span>
+                        </div>
+                        <p className="text-gray-700">High Resolution Image Placeholder</p>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Media info */}
+                  <div className="p-6">
+                    <h3 className="text-lg font-semibold mb-2">{selectedMedia.title}</h3>
+                    <div className="flex items-center gap-4 text-sm text-gray-500">
+                      <Badge variant="outline">
+                        {selectedMedia.type === "video" ? "Video" : "Hình ảnh"}
+                      </Badge>
+                      {selectedMedia.type === "video" && selectedMedia.duration && (
+                        <span>Thời lượng: {selectedMedia.duration}</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Reviews */}
             <Card className="shadow-lg border-0">
