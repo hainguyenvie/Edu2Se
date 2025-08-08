@@ -335,7 +335,43 @@ export default function TutorDetail() {
               </CardContent>
             </Card>
 
-
+            {/* Quick Actions */}
+            {isOwnerView && (
+              <Card className="shadow-lg border-0 bg-gradient-to-br from-indigo-50 to-purple-50">
+                <CardHeader>
+                  <CardTitle className="flex items-center text-indigo-700">
+                    <Settings className="w-6 h-6 mr-3" />
+                    Thao tác nhanh
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start"
+                    onClick={() => setIsEditMode(!isEditMode)}
+                  >
+                    <Edit className="h-5 w-5 mr-3" />
+                    {isEditMode ? "Lưu thay đổi" : "Chỉnh sửa hồ sơ"}
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start"
+                    onClick={() => setIsScheduleSetupOpen(true)}
+                  >
+                    <Calendar className="h-5 w-5 mr-3" />
+                    Thiết lập lịch dạy
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start"
+                    onClick={() => setIsStatisticsOpen(true)}
+                  >
+                    <BarChart3 className="h-5 w-5 mr-3" />
+                    Thống kê chi tiết
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Quick Stats - Moved under Quick Actions */}
             <Card className="shadow-lg border-0">
