@@ -37,12 +37,14 @@ import {
 import Header from "@/components/header";
 import BookingModal from "@/components/booking-modal";
 import ScheduleSetupModal from "@/components/schedule-setup-modal";
+import WithdrawModal from "@/components/withdraw-modal";
 import StatisticsModal from "@/components/statistics-modal";
 
 export default function TutorDetail() {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isScheduleSetupOpen, setIsScheduleSetupOpen] = useState(false);
   const [isStatisticsOpen, setIsStatisticsOpen] = useState(false);
+  const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const isOwnerView = true;
   const [isEditMode, setIsEditMode] = useState(false);
   
@@ -335,43 +337,123 @@ export default function TutorDetail() {
               </CardContent>
             </Card>
 
-            {/* Quick Actions */}
-            {isOwnerView && (
-              <Card className="shadow-lg border-0 bg-gradient-to-br from-indigo-50 to-purple-50">
-                <CardHeader>
-                  <CardTitle className="flex items-center text-indigo-700">
-                    <Settings className="w-6 h-6 mr-3" />
-                    Thao tác nhanh
+            {/* Quick Actions moved to right sidebar */}
+
+            {/* Videos & Media Library */}
+            <Card className="shadow-lg border-0">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center">
+                    <Video className="w-6 h-6 mr-3" />
+                    Video & Hình ảnh
                   </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start"
-                    onClick={() => setIsEditMode(!isEditMode)}
-                  >
-                    <Edit className="h-5 w-5 mr-3" />
-                    {isEditMode ? "Lưu thay đổi" : "Chỉnh sửa hồ sơ"}
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start"
-                    onClick={() => setIsScheduleSetupOpen(true)}
-                  >
-                    <Calendar className="h-5 w-5 mr-3" />
-                    Thiết lập lịch dạy
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start"
-                    onClick={() => setIsStatisticsOpen(true)}
-                  >
-                    <BarChart3 className="h-5 w-5 mr-3" />
-                    Thống kê chi tiết
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
+                  {isEditMode && isOwnerView && (
+                    <Button size="sm" variant="outline" onClick={addVideo}>
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-4">
+                  {editableVideos.map((media, index) => (
+                    <Card 
+                      key={media.id} 
+                      className="relative overflow-hidden group hover:shadow-xl transition-all duration-300 cursor-pointer"
+                      onClick={() => !isEditMode && openMediaModal(media)}
+                    >
+                      {isEditMode && isOwnerView && (
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          className="absolute top-2 right-2 h-6 w-6 p-0 z-20"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeVideo(index);
+                          }}
+                        >
+                          <Minus className="h-3 w-3" />
+                        </Button>
+                      )}
+                      <div className="aspect-square rounded-lg flex items-center justify-center relative overflow-hidden">
+                        <img 
+                          src={media.thumbnail || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400"} 
+                          alt={media.title}
+                          className="absolute inset-0 w-full h-full object-cover"
+                        />
+                        {media.type === "video" && (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-12 h-12 bg-black/60 rounded-full flex items-center justify-center">
+                              <Play className="h-6 w-6 text-white ml-1" fill="white" />
+                            </div>
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <div className="text-white text-center">
+                            <div className="text-sm font-medium">
+                              {media.type === "video" ? "Phát video" : "Xem ảnh"}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {isEditMode && isOwnerView && (
+                        <div className="p-3">
+                          <div className="space-y-2">
+                            <Input
+                              value={media.title}
+                              onChange={(e) => {
+                                const newVideos = [...editableVideos];
+                                newVideos[index].title = e.target.value;
+                                setEditableVideos(newVideos);
+                              }}
+                              className="text-xs font-medium text-center"
+                              onClick={(e) => e.stopPropagation()}
+                            />
+                            <select
+                              value={media.type}
+                              onChange={(e) => {
+                                const newVideos = [...editableVideos];
+                                newVideos[index].type = e.target.value;
+                                setEditableVideos(newVideos);
+                              }}
+                              className="w-full text-xs border border-gray-300 rounded px-2 py-1"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <option value="video">Video</option>
+                              <option value="image">Hình ảnh</option>
+                            </select>
+                            <Input
+                              value={media.thumbnail}
+                              onChange={(e) => {
+                                const newVideos = [...editableVideos];
+                                newVideos[index].thumbnail = e.target.value;
+                                setEditableVideos(newVideos);
+                              }}
+                              placeholder="URL hình ảnh"
+                              className="text-xs"
+                              onClick={(e) => e.stopPropagation()}
+                            />
+                            {media.type === "video" && (
+                              <Input
+                                value={media.duration}
+                                onChange={(e) => {
+                                  const newVideos = [...editableVideos];
+                                  newVideos[index].duration = e.target.value;
+                                  setEditableVideos(newVideos);
+                                }}
+                                placeholder="00:00"
+                                className="text-xs text-center"
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
 
             {/* Quick Stats - Moved under Quick Actions */}
             <Card className="shadow-lg border-0">
@@ -908,209 +990,6 @@ export default function TutorDetail() {
               </CardContent>
             </Card>
 
-            {/* Videos & Media Library */}
-            <Card className="shadow-lg border-0">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="flex items-center">
-                    <Video className="w-6 h-6 mr-3" />
-                    Thư viện Video & Hình ảnh
-                  </CardTitle>
-                  {isEditMode && isOwnerView && (
-                    <Button size="sm" variant="outline" onClick={addVideo}>
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  )}
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {editableVideos.map((media, index) => (
-                    <Card 
-                      key={media.id} 
-                      className="relative overflow-hidden group hover:shadow-xl transition-all duration-300 cursor-pointer"
-                      onClick={() => !isEditMode && openMediaModal(media)}
-                    >
-                      {isEditMode && isOwnerView && (
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          className="absolute top-2 right-2 h-6 w-6 p-0 z-20"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            removeVideo(index);
-                          }}
-                        >
-                          <Minus className="h-3 w-3" />
-                        </Button>
-                      )}
-                      
-                      {/* Media Thumbnail */}
-                      <div className="aspect-square rounded-lg flex items-center justify-center relative overflow-hidden">
-                        {/* Background Image */}
-                        <img 
-                          src={media.thumbnail || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400"} 
-                          alt={media.title}
-                          className="absolute inset-0 w-full h-full object-cover"
-                        />
-                        
-                        {/* Play icon for videos only */}
-                        {media.type === "video" && (
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="w-12 h-12 bg-black/60 rounded-full flex items-center justify-center">
-                              <Play className="h-6 w-6 text-white ml-1" fill="white" />
-                            </div>
-                          </div>
-                        )}
-                        
-                        {/* Hover overlay */}
-                        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                          <div className="text-white text-center">
-                            <div className="text-sm font-medium">
-                              {media.type === "video" ? "Phát video" : "Xem ảnh"}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {/* Media Info - Only show in edit mode */}
-                      {isEditMode && isOwnerView && (
-                        <div className="p-3">
-                          <div className="space-y-2">
-                            <Input
-                              value={media.title}
-                              onChange={(e) => {
-                                const newVideos = [...editableVideos];
-                                newVideos[index].title = e.target.value;
-                                setEditableVideos(newVideos);
-                              }}
-                              className="text-xs font-medium text-center"
-                              onClick={(e) => e.stopPropagation()}
-                            />
-                            <select
-                              value={media.type}
-                              onChange={(e) => {
-                                const newVideos = [...editableVideos];
-                                newVideos[index].type = e.target.value;
-                                setEditableVideos(newVideos);
-                              }}
-                              className="w-full text-xs border border-gray-300 rounded px-2 py-1"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <option value="video">Video</option>
-                              <option value="image">Hình ảnh</option>
-                            </select>
-                            <Input
-                              value={media.thumbnail}
-                              onChange={(e) => {
-                                const newVideos = [...editableVideos];
-                                newVideos[index].thumbnail = e.target.value;
-                                setEditableVideos(newVideos);
-                              }}
-                              placeholder="URL hình ảnh"
-                              className="text-xs"
-                              onClick={(e) => e.stopPropagation()}
-                            />
-                            {media.type === "video" && (
-                              <Input
-                                value={media.duration}
-                                onChange={(e) => {
-                                  const newVideos = [...editableVideos];
-                                  newVideos[index].duration = e.target.value;
-                                  setEditableVideos(newVideos);
-                                }}
-                                placeholder="00:00"
-                                className="text-xs text-center"
-                                onClick={(e) => e.stopPropagation()}
-                              />
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </Card>
-                  ))}
-                </div>
-                
-
-              </CardContent>
-            </Card>
-
-            {/* Media Popup Modal */}
-            {isMediaModalOpen && selectedMedia && (
-              <div 
-                className="fixed inset-0 z-50 flex items-center justify-center"
-                style={{ backdropFilter: 'blur(8px)', backgroundColor: 'rgba(0, 0, 0, 0.95)' }}
-                onClick={() => setIsMediaModalOpen(false)}
-              >
-                {/* Navigation arrows */}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/40 hover:bg-black/60 text-white rounded-full h-12 w-12 p-0"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigateMedia('prev');
-                  }}
-                >
-                  <ChevronLeft className="h-6 w-6" />
-                </Button>
-
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/40 hover:bg-black/60 text-white rounded-full h-12 w-12 p-0"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigateMedia('next');
-                  }}
-                >
-                  <ChevronRight className="h-6 w-6" />
-                </Button>
-
-                {/* Close button */}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="absolute top-4 right-4 z-20 bg-black/40 hover:bg-black/60 text-white rounded-full h-12 w-12 p-0"
-                  onClick={() => setIsMediaModalOpen(false)}
-                >
-                  ✕
-                </Button>
-                
-                {/* Media content - Full screen */}
-                <div 
-                  className="w-full h-full flex items-center justify-center p-4"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {selectedMedia.type === "video" ? (
-                    <div className="relative max-w-full max-h-full">
-                      <img 
-                        src={selectedMedia.thumbnail} 
-                        alt={selectedMedia.title}
-                        className="max-w-full max-h-full object-contain"
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-20 h-20 bg-black/60 rounded-full flex items-center justify-center">
-                          <Play className="h-10 w-10 text-white ml-2" fill="white" />
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <img 
-                      src={selectedMedia.thumbnail} 
-                      alt={selectedMedia.title}
-                      className="max-w-full max-h-full object-contain"
-                    />
-                  )}
-                </div>
-
-                {/* Media counter */}
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/60 text-white px-3 py-1 rounded-full text-sm">
-                  {editableVideos.findIndex(m => m.id === selectedMedia.id) + 1} / {editableVideos.length}
-                </div>
-              </div>
-            )}
-
             {/* Reviews */}
             <Card className="shadow-lg border-0">
               <CardHeader>
@@ -1170,6 +1049,51 @@ export default function TutorDetail() {
 
           {/* Right Sidebar - Special Offers & Schedule */}
           <div className="lg:col-span-1 space-y-6">
+            {/* Quick Actions (moved here) */}
+            {isOwnerView && (
+              <Card className="shadow-lg border-0 bg-gradient-to-br from-indigo-50 to-purple-50">
+                <CardHeader>
+                  <CardTitle className="flex items-center text-indigo-700">
+                    <Settings className="w-6 h-6 mr-3" />
+                    Thao tác nhanh
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start"
+                    onClick={() => setIsEditMode(!isEditMode)}
+                  >
+                    <Edit className="h-5 w-5 mr-3" />
+                    {isEditMode ? "Lưu thay đổi" : "Chỉnh sửa hồ sơ"}
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start"
+                    onClick={() => setIsScheduleSetupOpen(true)}
+                  >
+                    <Calendar className="h-5 w-5 mr-3" />
+                    Thiết lập lịch dạy
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start"
+                    onClick={() => setIsStatisticsOpen(true)}
+                  >
+                    <BarChart3 className="h-5 w-5 mr-3" />
+                    Thống kê chi tiết
+                  </Button>
+                  <Button 
+                    variant="default" 
+                    className="w-full justify-start bg-green-600 hover:bg-green-700"
+                    onClick={() => setIsWithdrawOpen(true)}
+                  >
+                    <ArrowDown className="h-5 w-5 mr-3" />
+                    Rút tiền
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
             {/* Special Offers */}
             <Card className="shadow-lg border-0 bg-gradient-to-br from-orange-50 to-red-50">
               <CardHeader>
@@ -1312,6 +1236,20 @@ export default function TutorDetail() {
         <StatisticsModal
           isOpen={isStatisticsOpen}
           onClose={() => setIsStatisticsOpen(false)}
+        />
+
+        <WithdrawModal
+          isOpen={isWithdrawOpen}
+          onClose={() => setIsWithdrawOpen(false)}
+          availableBalance={1250000}
+          bankInfo={{
+            accountName: "MINH TIẾN",
+            accountNumber: "0123456789",
+            bankName: "Vietcombank",
+            bankBranch: "CN Cầu Giấy",
+            nationalIdNumber: "012345678901"
+          }}
+          onSuccess={() => setIsWithdrawOpen(false)}
         />
       </div>
     </div>

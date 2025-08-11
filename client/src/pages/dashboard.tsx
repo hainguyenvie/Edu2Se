@@ -10,6 +10,7 @@ import MeetingRoomModal from "@/features/meeting-room/components/meeting-room-mo
 
 export default function Dashboard() {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [selectedCalendarDay, setSelectedCalendarDay] = useState<Date>(new Date());
   const [isMeetingRoomOpen, setIsMeetingRoomOpen] = useState(false);
   const [selectedClass, setSelectedClass] = useState<any>(null);
   const [activeStatIndex, setActiveStatIndex] = useState(0);
@@ -65,6 +66,67 @@ export default function Dashboard() {
   const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const dayNames = ["Mon", "Tue", "Wed", "Thurs", "Fri", "Sat", "Sun"];
 
+  // Helpers for per-day schedules
+  const formatKey = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const buildMonthSchedule = (base: Date) => {
+    const y = base.getFullYear();
+    const m = base.getMonth();
+    const key = (d: number) => `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    return {
+      [key(2)]: [
+        { subject: "Toán 12 - Cô Huyền", time: "19:00 - 21:00", tutor: "Cô Huyền" },
+      ],
+      [key(7)]: [
+        { subject: "Vật lý 12 - Thầy Nam", time: "20:00 - 21:30", tutor: "Thầy Nam" },
+      ],
+      [key(12)]: [
+        { subject: "Hóa học 12 - Cô Linh", time: "15:00 - 17:00", tutor: "Cô Linh" },
+      ],
+      [key(18)]: [
+        { subject: "Toán 12 - Cô Huyền", time: "19:00 - 21:00", tutor: "Cô Huyền" },
+        { subject: "Vật lý 12 - Thầy Nam", time: "21:15 - 22:00", tutor: "Thầy Nam" },
+      ],
+      [key(25)]: [
+        { subject: "Ôn thi - Cô Mai", time: "09:00 - 11:00", tutor: "Cô Mai" },
+      ],
+    } as Record<string, { subject: string; time: string; tutor: string }[]>;
+  };
+  const scheduleByDate = buildMonthSchedule(currentDate);
+  const selectedKey = formatKey(selectedCalendarDay);
+  const selectedDayClasses = scheduleByDate[selectedKey] || [];
+
+  // Status helpers
+  const isSameDay = (a: Date, b: Date) => a.toDateString() === b.toDateString();
+  const parseRange = (date: Date, range: string) => {
+    // expects "HH:MM - HH:MM"
+    const [startStr, endStr] = range.split("-").map(s => s.trim());
+    const [sh, sm] = startStr.split(":").map(Number);
+    const [eh, em] = endStr.split(":").map(Number);
+    const start = new Date(date.getFullYear(), date.getMonth(), date.getDate(), sh, sm || 0, 0, 0);
+    const end = new Date(date.getFullYear(), date.getMonth(), date.getDate(), eh, em || 0, 0, 0);
+    return { start, end };
+  };
+  const getStatus = (date: Date, timeRange: string): "ongoing" | "upcoming" | "finished" => {
+    const now = new Date();
+    if (isSameDay(date, now)) {
+      const { start, end } = parseRange(date, timeRange);
+      if (now < start) return "upcoming";
+      if (now > end) return "finished";
+      return "ongoing";
+    }
+    return date > now ? "upcoming" : "finished";
+  };
+  const getStatusBadge = (status: "ongoing" | "upcoming" | "finished") => {
+    switch (status) {
+      case "ongoing":
+        return "bg-red-100 text-red-700";
+      case "upcoming":
+        return "bg-amber-100 text-amber-700";
+      default:
+        return "bg-gray-100 text-gray-600";
+    }
+  };
+
   const isToday = (date: Date) => {
     const today = new Date();
     return date.toDateString() === today.toDateString();
@@ -78,6 +140,9 @@ export default function Dashboard() {
     const newDate = new Date(currentDate);
     newDate.setMonth(newDate.getMonth() + direction);
     setCurrentDate(newDate);
+    // Keep selected day inside the newly navigated month if needed
+    const adjustedSelected = new Date(newDate.getFullYear(), newDate.getMonth(), Math.min(selectedCalendarDay.getDate(), new Date(newDate.getFullYear(), newDate.getMonth() + 1, 0).getDate()));
+    setSelectedCalendarDay(adjustedSelected);
   };
 
   const handleJoinMeeting = (classInfo: any) => {
@@ -215,38 +280,58 @@ export default function Dashboard() {
                         h-8 text-xs
                         ${!isCurrentMonth(day) ? 'text-gray-300' : 'text-gray-700'}
                         ${isToday(day) ? 'bg-blue-600 text-white hover:bg-blue-700' : ''}
-                        ${[0, 6, 13, 20, 27].includes(day.getDate()) && isCurrentMonth(day) ? 'bg-red-100 text-red-600' : ''}
+                        ${scheduleByDate[formatKey(day)] && isCurrentMonth(day) ? 'border border-green-300 bg-green-50 text-green-700' : ''}
+                        ${selectedCalendarDay.toDateString() === day.toDateString() ? 'ring-2 ring-blue-500' : ''}
                       `}
+                      onClick={() => setSelectedCalendarDay(day)}
                     >
                       {day.getDate()}
                     </Button>
                   ))}
                 </div>
 
-                {/* Enhanced Schedule Info */}
+                {/* Day Schedule Info */}
                 <div className="mt-6 bg-blue-50 rounded-xl p-4">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-sm font-medium text-blue-800">Hôm nay</span>
-                    <span className="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded-full">Sắp diễn ra</span>
+                    <span className="text-sm font-medium text-blue-800">{selectedCalendarDay.toLocaleDateString('vi-VN')}</span>
+                    {selectedDayClasses.length > 0 && (
+                      <span className="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded-full">{selectedDayClasses.length} buổi học</span>
+                    )}
                   </div>
-                  <div className="space-y-2">
-                    <div className="text-sm font-semibold text-gray-900">Math 12 - Mrs. Huyen</div>
-                    <div className="text-sm text-gray-600">8:00 PM - 10:30 PM</div>
-                    <div className="text-xs text-gray-500">👩‍🏫 Mentor: Mrs. Huyen</div>
-                  </div>
-                  <Button 
-                    size="sm" 
-                    className="w-full mt-4 bg-blue-600 hover:bg-blue-700 shadow-sm"
-                    onClick={() => handleJoinMeeting({
-                      name: "Math 12 - Mrs. Huyen",
-                      subject: "Toán học lớp 12",
-                      tutor: "Mrs. Huyen",
-                      time: "8:00 PM - 10:30 PM",
-                      duration: "2h 30m"
-                    })}
-                  >
-                    🎯 Tham gia Meet
-                  </Button>
+                  {selectedDayClasses.length > 0 ? (
+                    <div className="space-y-3">
+                      {selectedDayClasses.map((cls, idx) => {
+                        const status = getStatus(selectedCalendarDay, cls.time);
+                        return (
+                          <div key={idx} className={`bg-white rounded-lg p-3 border ${status === 'ongoing' ? 'border-red-200 ring-1 ring-red-200' : 'border-blue-100'}`}>
+                            <div className="flex items-center justify-between mb-1">
+                              <div className="text-sm font-semibold text-gray-900">{cls.subject}</div>
+                              <span className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${getStatusBadge(status)}`}>
+                                {status === 'ongoing' ? 'Đang diễn ra' : status === 'upcoming' ? 'Sắp diễn ra' : 'Đã kết thúc'}
+                              </span>
+                            </div>
+                            <div className="text-sm text-gray-600">{cls.time}</div>
+                            <div className="text-xs text-gray-500">👩‍🏫 {cls.tutor}</div>
+                            <Button 
+                              size="sm"
+                              className={`w-full mt-2 shadow-sm ${status === 'ongoing' ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'}`}
+                              onClick={() => handleJoinMeeting({
+                                name: cls.subject,
+                                subject: cls.subject,
+                                tutor: cls.tutor,
+                                time: cls.time,
+                                duration: '2h'
+                              })}
+                            >
+                              {status === 'ongoing' ? 'Vào lớp ngay' : 'Tham gia Meet'}
+                            </Button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="text-sm text-gray-600">Không có buổi học nào trong ngày này.</div>
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -292,35 +377,7 @@ export default function Dashboard() {
                 ))}
               </div>
 
-              {/* Live Session */}
-              <div className="p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl border border-purple-100">
-                <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
-                  🎯 Đang Diễn Ra
-                </h4>
-                <div className="bg-white rounded-lg p-4 mb-3">
-                  <div className="text-sm text-gray-600 mb-1">Name</div>
-                  <div className="text-lg font-bold text-gray-900 mb-1">Sắp Diễn Ra</div>
-                  <div className="text-sm text-gray-700 mb-3">Math 12 - Mrs. Huyen</div>
-                  <div className="flex items-center justify-between">
-                    <div className="text-xs text-green-600 font-medium bg-green-100 px-2 py-1 rounded-full">
-                      Connecting in 5m
-                    </div>
-                  </div>
-                </div>
-                <Button 
-                  size="sm" 
-                  className="w-full bg-purple-600 hover:bg-purple-700 shadow-sm"
-                  onClick={() => handleJoinMeeting({
-                    name: "Sắp Diễn Ra",
-                    subject: "Math 12 - Mrs. Huyen",
-                    tutor: "Mrs. Huyen",
-                    time: "Hiện tại",
-                    duration: "2h"
-                  })}
-                >
-                  🎯 Meet Now
-                </Button>
-              </div>
+              {/* Live Session removed as requested */}
             </CardContent>
           </Card>
 

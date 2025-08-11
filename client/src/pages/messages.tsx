@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Send, Search, Plus, ArrowLeft } from "lucide-react";
+import { Send, Search, Plus, ArrowLeft, Paperclip, Smile, Image as ImageIcon, Phone, Video, MoreVertical, Check } from "lucide-react";
 import Header from "@/components/header";
 import { Link } from "wouter";
 
@@ -38,7 +39,7 @@ const conversations = [
   }
 ];
 
-const messages = [
+const initialMessages = [
   { id: 1, text: "Chào thầy!", sender: "me", time: "14:30" },
   { id: 2, text: "Chào em! Hôm nay có gì cần hỗ trợ không?", sender: "tutor", time: "14:31" },
   { id: 3, text: "Em có thắc mắc về bài tập toán thầy giao hôm qua", sender: "me", time: "14:32" },
@@ -50,6 +51,9 @@ export default function Messages() {
   const [newMessage, setNewMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [messageList, setMessageList] = useState(initialMessages);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -57,14 +61,29 @@ export default function Messages() {
 
   const handleSendMessage = () => {
     if (newMessage.trim()) {
-      console.log("Sending message:", newMessage);
+      const now = new Date();
+      const time = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+      setMessageList(prev => [...prev, { id: Date.now(), text: newMessage.trim(), sender: 'me', time }]);
       setNewMessage("");
+      if (textareaRef.current) {
+        textareaRef.current.style.height = '44px';
+      }
     }
   };
 
   const filteredConversations = conversations.filter(conv =>
     conv.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messageList, selectedConversation]);
+
+  const onComposerInput = () => {
+    if (!textareaRef.current) return;
+    textareaRef.current.style.height = '44px';
+    textareaRef.current.style.height = `${Math.min(140, textareaRef.current.scrollHeight)}px`;
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -137,16 +156,29 @@ export default function Messages() {
         {/* Chat Area */}
         <div className="flex-1 flex flex-col">
           {/* Chat Header */}
-          <div className="p-4 border-b border-gray-200 bg-white">
-            <div className="flex items-center space-x-3">
-              <Avatar className="h-10 w-10">
-                <AvatarFallback>{selectedConversation.avatar}</AvatarFallback>
-              </Avatar>
-              <div>
-                <h3 className="font-medium text-gray-900">{selectedConversation.name}</h3>
-                <p className="text-sm text-gray-500">
-                  {selectedConversation.online ? 'Đang hoạt động' : 'Offline'}
-                </p>
+          <div className="p-4 border-b border-gray-200 bg-white sticky top-16 z-10">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <Avatar className="h-10 w-10">
+                  <AvatarFallback>{selectedConversation.avatar}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <h3 className="font-medium text-gray-900">{selectedConversation.name}</h3>
+                  <p className="text-sm text-gray-500">
+                    {selectedConversation.online ? 'Đang hoạt động' : 'Offline'}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="icon" className="rounded-full">
+                  <Phone className="h-4 w-4" />
+                </Button>
+                <Button variant="outline" size="icon" className="rounded-full">
+                  <Video className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="icon" className="rounded-full">
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
               </div>
             </div>
           </div>
@@ -154,7 +186,7 @@ export default function Messages() {
           {/* Messages */}
           <ScrollArea className="flex-1 p-6">
             <div className="space-y-4">
-              {messages.map((message) => (
+              {messageList.map((message) => (
                 <div
                   key={message.id}
                   className={`flex ${message.sender === 'me' ? 'justify-end' : 'justify-start'} mb-4`}
@@ -175,28 +207,49 @@ export default function Messages() {
                       >
                         <p className="text-sm leading-relaxed">{message.text}</p>
                       </div>
-                      <span className={`text-xs mt-1 px-2 ${
+                      <span className={`text-[11px] mt-1 px-2 flex items-center gap-1 ${
                         message.sender === 'me' ? 'text-blue-600' : 'text-gray-500'
                       }`}>
                         {message.time}
+                        {message.sender === 'me' && <Check className="h-3 w-3" />}
                       </span>
                     </div>
                   </div>
                 </div>
               ))}
+              <div ref={bottomRef} />
             </div>
           </ScrollArea>
 
           {/* Message Input */}
-          <div className="p-4 border-t border-gray-200 bg-gray-50">
-            <div className="flex items-end space-x-3">
+          <div className="p-4 border-t border-gray-200 bg-white">
+            <div className="flex items-end gap-3">
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" size="icon" className="rounded-full">
+                  <Smile className="h-5 w-5 text-gray-500" />
+                </Button>
+                <Button variant="ghost" size="icon" className="rounded-full">
+                  <Paperclip className="h-5 w-5 text-gray-500" />
+                </Button>
+                <Button variant="ghost" size="icon" className="rounded-full">
+                  <ImageIcon className="h-5 w-5 text-gray-500" />
+                </Button>
+              </div>
               <div className="flex-1 relative">
-                <Input
+                <Textarea
+                  ref={textareaRef}
                   placeholder="Nhập tin nhắn..."
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
-                  className="pr-12 py-3 rounded-xl border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none min-h-[44px]"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSendMessage();
+                    }
+                  }}
+                  onInput={onComposerInput}
+                  className="pr-12 py-3 rounded-xl border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 min-h-[44px] max-h-[140px]"
+                  rows={1}
                 />
               </div>
               <Button
@@ -208,7 +261,12 @@ export default function Messages() {
                 <Send className="h-4 w-4" />
               </Button>
             </div>
-            <p className="text-xs text-gray-500 mt-2">Nhấn Enter để gửi, Shift + Enter để xuống dòng</p>
+            <div className="flex items-center justify-between mt-2">
+              <p className="text-xs text-gray-500">Nhấn Enter để gửi, Shift + Enter để xuống dòng</p>
+              {newMessage.trim() && (
+                <span className="text-xs text-gray-400">Đang nhập...</span>
+              )}
+            </div>
           </div>
         </div>
       </div>

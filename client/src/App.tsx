@@ -21,6 +21,7 @@ import CreateStudyRoom from "@/pages/create-study-room";
 import LoginPage from "@/pages/login";
 import RegisterPage from "@/pages/register";
 import NotFound from "@/pages/not-found";
+import SettingsPage from "@/pages/settings";
 
 function Router() {
   return (
@@ -47,6 +48,7 @@ function Router() {
       <Route path="/coupons" component={CouponsPage} />
       <Route path="/qa-forum" component={QAForum} />
       <Route path="/create-study-room" component={CreateStudyRoom} />
+      <Route path="/settings" component={SettingsPage} />
       <Route component={NotFound} />
     </Switch>
   );

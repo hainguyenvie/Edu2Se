@@ -39,6 +39,7 @@ import {
 } from "lucide-react";
 import Header from "@/components/header";
 import BookingModal from "@/components/booking-modal";
+import { type Tutor as SharedTutor } from "@shared/schema";
 
 type Tutor = {
   id: string;
@@ -62,13 +63,16 @@ type Tutor = {
   }>;
 };
 
+type DayName = "Thứ 2" | "Thứ 3" | "Thứ 4" | "Thứ 5" | "Thứ 6" | "Thứ 7" | "Chủ nhật";
+type Slot = { time: string; status: "available" | "booked"; subject: string };
+
 export default function TutorView() {
   const { id } = useParams();
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState<any>(null);
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
-  const [selectedDay, setSelectedDay] = useState<string>("Thứ 2");
+  const [selectedDay, setSelectedDay] = useState<DayName>("Thứ 2");
 
   const { data: tutor, isLoading } = useQuery<Tutor>({
     queryKey: [`/api/tutors/${id}`],
@@ -165,7 +169,7 @@ export default function TutorView() {
   ];
 
   // Weekly schedule data
-  const weeklySchedule = {
+  const weeklySchedule: Record<DayName, Slot[]> = {
     "Thứ 2": [
       { time: "19:00 - 21:00", status: "available", subject: "Toán" }
     ],
@@ -188,7 +192,7 @@ export default function TutorView() {
     ]
   };
 
-  const weekDays = [
+  const weekDays: Array<{ short: string; full: DayName }> = [
     { short: "T2", full: "Thứ 2" },
     { short: "T3", full: "Thứ 3" },
     { short: "T4", full: "Thứ 4" },
@@ -259,6 +263,49 @@ export default function TutorView() {
                 
                 <div className="text-xl font-bold text-blue-600">
                   {(tutor.price || 150000).toLocaleString()}đ/h
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Videos & Media Library - moved here */}
+            <Card className="shadow-lg border-0">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Video className="w-6 h-6 mr-3" />
+                  Video & Hình ảnh
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-4">
+                  {videos.map((media) => (
+                    <Card 
+                      key={media.id} 
+                      className="relative overflow-hidden group hover:shadow-xl transition-all duration-300 cursor-pointer"
+                      onClick={() => openMediaModal(media)}
+                    >
+                      <div className="aspect-square rounded-lg flex items-center justify-center relative overflow-hidden">
+                        <img 
+                          src={media.thumbnail || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400"} 
+                          alt={media.title}
+                          className="absolute inset-0 w-full h-full object-cover"
+                        />
+                        {media.type === "video" && (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-12 h-12 bg-black/60 rounded-full flex items-center justify-center">
+                              <Play className="h-6 w-6 text-white ml-1" fill="white" />
+                            </div>
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <div className="text-white text-center">
+                            <div className="text-sm font-medium">
+                              {media.type === "video" ? "Phát video" : "Xem ảnh"}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
                 </div>
               </CardContent>
             </Card>
@@ -432,131 +479,6 @@ export default function TutorView() {
               </CardContent>
             </Card>
 
-            {/* Videos & Media Library */}
-            <Card className="shadow-lg border-0">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Video className="w-6 h-6 mr-3" />
-                  Thư viện Video & Hình ảnh
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {videos.map((media, index) => (
-                    <Card 
-                      key={media.id} 
-                      className="relative overflow-hidden group hover:shadow-xl transition-all duration-300 cursor-pointer"
-                      onClick={() => openMediaModal(media)}
-                    >
-                      {/* Media Thumbnail */}
-                      <div className="aspect-square rounded-lg flex items-center justify-center relative overflow-hidden">
-                        {/* Background Image */}
-                        <img 
-                          src={media.thumbnail || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400"} 
-                          alt={media.title}
-                          className="absolute inset-0 w-full h-full object-cover"
-                        />
-                        
-                        {/* Play icon for videos only */}
-                        {media.type === "video" && (
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="w-12 h-12 bg-black/60 rounded-full flex items-center justify-center">
-                              <Play className="h-6 w-6 text-white ml-1" fill="white" />
-                            </div>
-                          </div>
-                        )}
-                        
-                        {/* Hover overlay */}
-                        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                          <div className="text-white text-center">
-                            <div className="text-sm font-medium">
-                              {media.type === "video" ? "Phát video" : "Xem ảnh"}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Media Popup Modal */}
-            {isMediaModalOpen && selectedMedia && (
-              <div 
-                className="fixed inset-0 z-50 flex items-center justify-center"
-                style={{ backdropFilter: 'blur(8px)', backgroundColor: 'rgba(0, 0, 0, 0.95)' }}
-                onClick={() => setIsMediaModalOpen(false)}
-              >
-                {/* Navigation arrows */}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/40 hover:bg-black/60 text-white rounded-full h-12 w-12 p-0"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigateMedia('prev');
-                  }}
-                >
-                  <ChevronLeft className="h-6 w-6" />
-                </Button>
-
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/40 hover:bg-black/60 text-white rounded-full h-12 w-12 p-0"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigateMedia('next');
-                  }}
-                >
-                  <ChevronRight className="h-6 w-6" />
-                </Button>
-
-                {/* Close button */}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="absolute top-4 right-4 z-20 bg-black/40 hover:bg-black/60 text-white rounded-full h-12 w-12 p-0"
-                  onClick={() => setIsMediaModalOpen(false)}
-                >
-                  ✕
-                </Button>
-                
-                {/* Media content - Full screen */}
-                <div 
-                  className="w-full h-full flex items-center justify-center p-4"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {selectedMedia.type === "video" ? (
-                    <div className="relative max-w-full max-h-full">
-                      <img 
-                        src={selectedMedia.thumbnail} 
-                        alt={selectedMedia.title}
-                        className="max-w-full max-h-full object-contain"
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-20 h-20 bg-black/60 rounded-full flex items-center justify-center">
-                          <Play className="h-10 w-10 text-white ml-2" fill="white" />
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <img 
-                      src={selectedMedia.thumbnail} 
-                      alt={selectedMedia.title}
-                      className="max-w-full max-h-full object-contain"
-                    />
-                  )}
-                </div>
-
-                {/* Media counter */}
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/60 text-white px-3 py-1 rounded-full text-sm">
-                  {videos.findIndex(m => m.id === selectedMedia.id) + 1} / {videos.length}
-                </div>
-              </div>
-            )}
-
             {/* Reviews */}
             <Card className="shadow-lg border-0">
               <CardHeader>
@@ -690,7 +612,7 @@ export default function TutorView() {
                       key={day.full}
                       variant={selectedDay === day.full ? "default" : "outline"}
                       size="sm"
-                      onClick={() => setSelectedDay(day.full)}
+                      onClick={() => setSelectedDay(day.full as DayName)}
                       className={`relative transition-all duration-200 w-8 h-7 text-xs px-1 ${
                         selectedDay === day.full 
                           ? "bg-blue-600 hover:bg-blue-700 text-white shadow-lg" 
@@ -699,7 +621,7 @@ export default function TutorView() {
                     >
                       {day.short}
                       {/* Available slots indicator */}
-                      {weeklySchedule[day.full] && weeklySchedule[day.full].filter(slot => slot.status === 'available').length > 0 && (
+                      {weeklySchedule[day.full as DayName] && weeklySchedule[day.full as DayName].filter((slot: Slot) => slot.status === 'available').length > 0 && (
                         <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-green-500 rounded-full"></div>
                       )}
                     </Button>
@@ -711,15 +633,15 @@ export default function TutorView() {
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="font-semibold text-lg text-gray-900">{selectedDay}</h3>
                     <Badge variant="outline" className="text-sm">
-                      {weeklySchedule[selectedDay]?.filter(slot => slot.status === 'available').length || 0} slot trống
+                      {weeklySchedule[selectedDay]?.filter((slot: Slot) => slot.status === 'available').length || 0} slot trống
                     </Badge>
                   </div>
                   
-                  {weeklySchedule[selectedDay] && weeklySchedule[selectedDay].filter(slot => slot.status === 'available').length > 0 ? (
+                  {weeklySchedule[selectedDay] && weeklySchedule[selectedDay].filter((slot: Slot) => slot.status === 'available').length > 0 ? (
                     <div className="grid grid-cols-1 gap-4">
                       {weeklySchedule[selectedDay]
-                        .filter(slot => slot.status === 'available')
-                        .map((slot, index) => (
+                        .filter((slot: Slot) => slot.status === 'available')
+                        .map((slot: Slot, index: number) => (
                         <Card 
                           key={index} 
                           className="p-4 transition-all duration-200 cursor-pointer bg-green-50 border-green-200 hover:bg-green-100 hover:shadow-md"
@@ -750,21 +672,34 @@ export default function TutorView() {
       </div>
 
       {/* Booking Modal */}
-      <BookingModal 
-        tutor={{
-          ...tutor,
+      {(() => {
+        const bookingTutor: SharedTutor = {
+          id: tutor.id,
+          name: tutor.name,
+          subjects: tutor.subjects,
           grades: ["10", "11", "12"],
+          education: tutor.education,
+          experience: tutor.experience || "",
           pricePerHour: tutor.price || 150000,
+          rating: String(tutor.rating ?? "0.0"),
           reviewCount: 150,
+          status: "online",
           isVerified: true,
           isTopRated: true,
-          profileImage: null,
+          badges: [],
+          profileImage: tutor.avatar || null,
           timeSlots: [],
-          createdAt: null
-        }}
-        isOpen={isBookingModalOpen}
-        onClose={() => setIsBookingModalOpen(false)}
-      />
+          description: tutor.about || "",
+          createdAt: new Date(),
+        };
+        return (
+          <BookingModal 
+            tutor={bookingTutor}
+            isOpen={isBookingModalOpen}
+            onClose={() => setIsBookingModalOpen(false)}
+          />
+        );
+      })()}
     </div>
   );
 }

@@ -78,10 +78,22 @@
   overflow-x: hidden;
 }
 
-/* Ensure no horizontal overflow */
+/* Ensure no horizontal overflow and prevent layout shift on dialog open */
 html, body {
   overflow-x: hidden;
   box-sizing: border-box;
+}
+
+/* Reserve vertical scrollbar gutter to avoid content shifting when modals open */
+html {
+  overflow-y: auto;              /* always allow vertical scroll */
+  scrollbar-gutter: stable both-edges; /* keep space even when scrollbar hidden */
+  overscroll-behavior: none;     /* prevent scroll chaining jiggle on overlays */
+}
+
+/* On platforms where scrollbars overlay, still keep layout stable */
+body {
+  overflow-y: scroll;            /* forces consistent layout width across states */
 }
 
 *, *::before, *::after {

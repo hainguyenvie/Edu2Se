@@ -281,6 +281,8 @@ export default function BookingModal({ tutor, isOpen, onClose }: BookingModalPro
 
   const renderConfirmationStage = () => {
     const selectedPkg = packages.find(pkg => pkg.id === selectedPackage);
+    const selectedSlot = timeSlots.find(slot => slot.id === selectedTimeSlot);
+    const selectedWeekDay = weekDays.find(day => day.id === selectedDay);
     
     return (
       <div className="relative">
@@ -317,11 +319,11 @@ export default function BookingModal({ tutor, isOpen, onClose }: BookingModalPro
               <div className="space-y-3 text-base">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Ngày:</span>
-                  <span className="font-bold text-gray-900">{selectedDay}, 15/07/2025 - 23/08/2025</span>
+                  <span className="font-bold text-gray-900">{selectedWeekDay?.name || selectedDay}, 15/07/2025 - 23/08/2025</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Thời gian:</span>
-                  <span className="font-bold text-gray-900">{selectedTime} - 22:00</span>
+                  <span className="font-bold text-gray-900">{selectedSlot?.label || "--:--"}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Môn học:</span>
@@ -388,8 +390,12 @@ export default function BookingModal({ tutor, isOpen, onClose }: BookingModalPro
   };
 
   const renderSuccessStage = () => (
-    <div className="relative">
-      <div className="p-8 text-center">
+    (() => {
+      const selectedSlot = timeSlots.find(slot => slot.id === selectedTimeSlot);
+      const selectedWeekDay = weekDays.find(day => day.id === selectedDay);
+      return (
+      <div className="relative">
+        <div className="p-8 text-center">
         {/* Success Icon */}
         <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center shadow-lg ring-4 ring-green-100">
           <Check className="w-12 h-12 text-white" />
@@ -403,7 +409,7 @@ export default function BookingModal({ tutor, isOpen, onClose }: BookingModalPro
           <p className="text-gray-700 mb-3 text-lg">
             Buổi học của bạn với gia sư <span className="font-bold text-green-700">{tutor.name}</span> đã được đặt thành công.
           </p>
-          <p className="text-green-600 font-semibold text-lg">Vào lúc {selectedTime} ngày {selectedDay}</p>
+          <p className="text-green-600 font-semibold text-lg">Vào lúc {selectedSlot?.label || "--:--"} ngày {selectedWeekDay?.name || selectedDay}</p>
         </div>
 
         {/* Instructions */}
@@ -440,8 +446,9 @@ export default function BookingModal({ tutor, isOpen, onClose }: BookingModalPro
             Lịch học của tôi
           </Button>
         </div>
+        </div>
       </div>
-    </div>
+    ); })()
   );
 
   const renderStage = () => {

@@ -85,6 +85,12 @@ export function AuthNav() {
             <span>Hồ sơ của tôi</span>
           </DropdownMenuItem>
         </Link>
+        <Link href="/settings">
+          <DropdownMenuItem>
+            <User className="mr-2 h-4 w-4" />
+            <span>Cài đặt</span>
+          </DropdownMenuItem>
+        </Link>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={logout}>
           <LogOut className="mr-2 h-4 w-4" />
