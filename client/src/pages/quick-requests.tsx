@@ -25,6 +25,8 @@ import {
   Zap
 } from "lucide-react";
 import Header from "@/components/header";
+import QuickRequestsFeed from "@/components/quick-requests-feed";
+import QuickRequestFAB from "@/components/quick-request-fab";
 import { useAuth } from "@/contexts/auth-context";
 
 type RequestType = "cần học" | "cần dạy";

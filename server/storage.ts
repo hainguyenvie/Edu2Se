@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type Tutor, type InsertTutor, type Video, type InsertVideo, type Subject, type InsertSubject, type SearchFilters } from "@shared/types";
+import { type User, type InsertUser, type Tutor, type InsertTutor, type Video, type InsertVideo, type Subject, type InsertSubject, type SearchFilters, type Curriculum, type InsertCurriculum, type CurriculumTopic, type InsertCurriculumTopic } from "@shared/types";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -17,6 +17,17 @@ export interface IStorage {
   
   getSubjects(): Promise<Subject[]>;
   createSubject(subject: InsertSubject): Promise<Subject>;
+  
+  getCurriculums(tutorId: string): Promise<Curriculum[]>;
+  getCurriculum(id: string): Promise<Curriculum | undefined>;
+  createCurriculum(curriculum: InsertCurriculum): Promise<Curriculum>;
+  updateCurriculum(id: string, curriculum: Partial<InsertCurriculum>): Promise<Curriculum | undefined>;
+  deleteCurriculum(id: string): Promise<boolean>;
+  
+  getCurriculumTopics(curriculumId: string): Promise<CurriculumTopic[]>;
+  createCurriculumTopic(topic: InsertCurriculumTopic): Promise<CurriculumTopic>;
+  updateCurriculumTopic(id: string, topic: Partial<InsertCurriculumTopic>): Promise<CurriculumTopic | undefined>;
+  deleteCurriculumTopic(id: string): Promise<boolean>;
 }
 
 // import { DbStorage } from "./db-storage";
@@ -29,12 +40,16 @@ export class MemStorage implements IStorage {
   private tutors: Map<string, Tutor>;
   private videos: Map<string, Video>;
   private subjects: Map<string, Subject>;
+  private curriculums: Map<string, Curriculum>;
+  private curriculumTopics: Map<string, CurriculumTopic>;
 
   constructor() {
     this.users = new Map();
     this.tutors = new Map();
     this.videos = new Map();
     this.subjects = new Map();
+    this.curriculums = new Map();
+    this.curriculumTopics = new Map();
     
     // Initialize with sample data
     this.initializeData();
@@ -567,6 +582,84 @@ export class MemStorage implements IStorage {
     const subject: Subject = { ...insertSubject, id };
     this.subjects.set(id, subject);
     return subject;
+  }
+
+  // Curriculum Management Methods
+  async getCurriculums(tutorId: string): Promise<Curriculum[]> {
+    return Array.from(this.curriculums.values())
+      .filter(curriculum => curriculum.tutorId === tutorId)
+      .sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime());
+  }
+
+  async getCurriculum(id: string): Promise<Curriculum | undefined> {
+    return this.curriculums.get(id);
+  }
+
+  async createCurriculum(insertCurriculum: InsertCurriculum): Promise<Curriculum> {
+    const id = randomUUID();
+    const curriculum: Curriculum = {
+      ...insertCurriculum,
+      id,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.curriculums.set(id, curriculum);
+    return curriculum;
+  }
+
+  async updateCurriculum(id: string, updateData: Partial<InsertCurriculum>): Promise<Curriculum | undefined> {
+    const curriculum = this.curriculums.get(id);
+    if (!curriculum) return undefined;
+
+    const updatedCurriculum: Curriculum = {
+      ...curriculum,
+      ...updateData,
+      updatedAt: new Date()
+    };
+    this.curriculums.set(id, updatedCurriculum);
+    return updatedCurriculum;
+  }
+
+  async deleteCurriculum(id: string): Promise<boolean> {
+    // Also delete all related topics
+    const topics = Array.from(this.curriculumTopics.values())
+      .filter(topic => topic.curriculumId === id);
+    topics.forEach(topic => this.curriculumTopics.delete(topic.id));
+    
+    return this.curriculums.delete(id);
+  }
+
+  async getCurriculumTopics(curriculumId: string): Promise<CurriculumTopic[]> {
+    return Array.from(this.curriculumTopics.values())
+      .filter(topic => topic.curriculumId === curriculumId)
+      .sort((a, b) => a.order - b.order);
+  }
+
+  async createCurriculumTopic(insertTopic: InsertCurriculumTopic): Promise<CurriculumTopic> {
+    const id = randomUUID();
+    const topic: CurriculumTopic = {
+      ...insertTopic,
+      id,
+      createdAt: new Date()
+    };
+    this.curriculumTopics.set(id, topic);
+    return topic;
+  }
+
+  async updateCurriculumTopic(id: string, updateData: Partial<InsertCurriculumTopic>): Promise<CurriculumTopic | undefined> {
+    const topic = this.curriculumTopics.get(id);
+    if (!topic) return undefined;
+
+    const updatedTopic: CurriculumTopic = {
+      ...topic,
+      ...updateData
+    };
+    this.curriculumTopics.set(id, updatedTopic);
+    return updatedTopic;
+  }
+
+  async deleteCurriculumTopic(id: string): Promise<boolean> {
+    return this.curriculumTopics.delete(id);
   }
 }
 

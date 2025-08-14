@@ -50,6 +50,7 @@ export default function StudentDashboard() {
     { icon: BookOpen, label: "Tìm gia sư", href: "/", color: "bg-blue-500" },
     { icon: Users, label: "Study Room", href: "/study-with-me", color: "bg-green-500" },
     { icon: HelpCircle, label: "Đặt câu hỏi", href: "/qa-forum", color: "bg-purple-500" },
+    { icon: FileText, label: "My Biography", href: "/my-biography", color: "bg-indigo-500" },
     { icon: Video, label: "Ghi nhận học tập", href: "#", color: "bg-red-500" },
     { icon: CreditCard, label: "Nạp tiền", href: "#", color: "bg-yellow-500" },
     { icon: Settings, label: "Cài đặt", href: "/settings", color: "bg-gray-500" },

@@ -1,5 +1,8 @@
 import { ClassInfo, ChatMessage, VirtualClassroomTool, VirtualClassroomTab } from "@shared/types";
 
+// Re-export types
+export type { ChatMessage, VirtualClassroomTool, VirtualClassroomTab };
+
 export interface VirtualClassroomState {
   activeTab: string;
   cameraEnabled: boolean;

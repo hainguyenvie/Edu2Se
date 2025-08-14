@@ -310,9 +310,12 @@ export default function TutorProfilePage() {
 
         {/* Content Tabs */}
         <Tabs defaultValue="blog" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 bg-white border border-gray-200 rounded-lg p-1">
+          <TabsList className="grid w-full grid-cols-4 bg-white border border-gray-200 rounded-lg p-1">
             <TabsTrigger value="blog" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
               ✍️ Blog & Chia sẻ
+            </TabsTrigger>
+            <TabsTrigger value="curriculum" className="data-[state=active]:bg-orange-600 data-[state=active]:text-white">
+              📚 Chương trình học
             </TabsTrigger>
             <TabsTrigger value="certifications" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
               🎓 Bằng cấp
@@ -355,6 +358,130 @@ export default function TutorProfilePage() {
                 </CardContent>
               </Card>
             ))}
+          </TabsContent>
+
+          {/* Curriculum */}
+          <TabsContent value="curriculum" className="space-y-6">
+            <div className="grid gap-6">
+              {/* Mock curriculum data */}
+              {[
+                {
+                  id: "1",
+                  title: "Toán Cấp Tốc - Ôn Thi Đại Học",
+                  subject: "Toán",
+                  grade: "Lớp 12",
+                  difficulty: "advanced",
+                  estimatedHours: 40,
+                  price: 800000,
+                  description: "Khóa học tổng hợp toàn bộ kiến thức Toán 12 cho kỳ thi Đại học",
+                  topics: [
+                    "Hàm số và đồ thị",
+                    "Đạo hàm và ứng dụng",
+                    "Tích phân và ứng dụng",
+                    "Số phức",
+                    "Hình học không gian",
+                    "Phương trình và bất phương trình"
+                  ]
+                },
+                {
+                  id: "2",
+                  title: "Toán Nâng Cao - Lớp 11",
+                  subject: "Toán",
+                  grade: "Lớp 11",
+                  difficulty: "intermediate",
+                  estimatedHours: 35,
+                  price: 700000,
+                  description: "Chương trình Toán 11 nâng cao với các dạng bài khó",
+                  topics: [
+                    "Lượng giác cơ bản",
+                    "Phương trình lượng giác",
+                    "Dãy số và cấp số",
+                    "Giới hạn hàm số",
+                    "Đường thẳng và mặt phẳng",
+                    "Khối đa diện"
+                  ]
+                }
+              ].map((curriculum) => (
+                <Card key={curriculum.id} className="hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <CardTitle className="text-xl mb-2">{curriculum.title}</CardTitle>
+                        <div className="flex items-center gap-3 mb-2">
+                          <Badge className="bg-blue-100 text-blue-800">
+                            {curriculum.subject} - {curriculum.grade}
+                          </Badge>
+                          <Badge className={
+                            curriculum.difficulty === 'advanced' ? 'bg-red-100 text-red-800' :
+                            curriculum.difficulty === 'intermediate' ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-green-100 text-green-800'
+                          }>
+                            {curriculum.difficulty === 'advanced' ? 'Nâng cao' :
+                             curriculum.difficulty === 'intermediate' ? 'Trung bình' : 'Cơ bản'}
+                          </Badge>
+                        </div>
+                        <p className="text-gray-600 text-sm">{curriculum.description}</p>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-lg font-bold text-green-600">
+                          {new Intl.NumberFormat('vi-VN', {
+                            style: 'currency',
+                            currency: 'VND'
+                          }).format(curriculum.price)}
+                        </div>
+                        <div className="text-sm text-gray-500">{curriculum.estimatedHours}h</div>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="text-center p-3 bg-blue-50 rounded-lg">
+                          <Clock className="w-5 h-5 mx-auto text-blue-600 mb-1" />
+                          <div className="text-sm font-medium">{curriculum.estimatedHours}h</div>
+                          <div className="text-xs text-gray-600">Tổng thời gian</div>
+                        </div>
+                        <div className="text-center p-3 bg-green-50 rounded-lg">
+                          <Target className="w-5 h-5 mx-auto text-green-600 mb-1" />
+                          <div className="text-sm font-medium">{curriculum.topics.length}</div>
+                          <div className="text-xs text-gray-600">Chủ đề</div>
+                        </div>
+                        <div className="text-center p-3 bg-purple-50 rounded-lg">
+                          <GraduationCap className="w-5 h-5 mx-auto text-purple-600 mb-1" />
+                          <div className="text-sm font-medium">{curriculum.grade}</div>
+                          <div className="text-xs text-gray-600">Cấp độ</div>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h4 className="font-semibold mb-3">Nội dung chương trình:</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                          {curriculum.topics.map((topic, index) => (
+                            <div key={index} className="flex items-center p-2 bg-gray-50 rounded">
+                              <div className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-medium mr-3">
+                                {index + 1}
+                              </div>
+                              <span className="text-sm">{topic}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3 pt-4 border-t">
+                        <Button className="flex-1 bg-blue-600 hover:bg-blue-700">
+                          <MessageCircle className="w-4 h-4 mr-2" />
+                          Đăng ký khóa học
+                        </Button>
+                        <Button variant="outline" className="flex-1">
+                          <Calendar className="w-4 h-4 mr-2" />
+                          Xem lịch học
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </TabsContent>
 
           {/* Certifications */}
