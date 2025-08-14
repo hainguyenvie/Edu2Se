@@ -5,11 +5,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/auth-context";
 import Home from "@/pages/home";
-import TutorDashboard from "@/pages/tutor-dashboard";
+import TutorDashboard from "@/pages/tutor-dashboard-new";
 import TutorDetail from "@/pages/tutor-detail";
 import TutorView from "@/pages/tutor-view";
 import Favorites from "@/pages/favorites";
-import Dashboard from "@/pages/dashboard";
+import Dashboard from "@/pages/dashboard-new";
 import Messages from "@/pages/messages";
 import VirtualClassroom from "@/pages/virtual-classroom";
 import StudyWithMe from "@/pages/study-with-me";
@@ -19,6 +19,7 @@ import TutorProfilePage from "@/pages/profile-tutor";
 import CouponsPage from "@/pages/coupons";
 import QAForum from "@/pages/qa-forum";
 import CreateStudyRoom from "@/pages/create-study-room";
+import QuickRequests from "@/pages/quick-requests";
 import LoginPage from "@/pages/login";
 import RegisterPage from "@/pages/register";
 import NotFound from "@/pages/not-found";
@@ -50,6 +51,7 @@ function Router() {
       <Route path="/coupons" component={CouponsPage} />
       <Route path="/qa-forum" component={QAForum} />
       <Route path="/create-study-room" component={CreateStudyRoom} />
+      <Route path="/quick-requests" component={QuickRequests} />
       <Route path="/settings" component={SettingsPage} />
       <Route component={NotFound} />
     </Switch>
