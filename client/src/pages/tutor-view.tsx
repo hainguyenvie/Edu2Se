@@ -1,6 +1,6 @@
-import { useParams } from "wouter";
+import { useParams, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -38,6 +38,7 @@ import {
   Flag
 } from "lucide-react";
 import Header from "@/components/header";
+import { useAuth } from "@/contexts/auth-context";
 import BookingModal from "@/components/booking-modal";
 import { type Tutor as SharedTutor } from "@shared/schema";
 
@@ -68,15 +69,50 @@ type Slot = { time: string; status: "available" | "booked"; subject: string };
 
 export default function TutorView() {
   const { id } = useParams();
+  const [location] = useLocation();
+  const { user } = useAuth();
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState<any>(null);
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
   const [selectedDay, setSelectedDay] = useState<DayName>("Thứ 2");
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editData, setEditData] = useState({
+    name: "",
+    about: "",
+    subjects: [] as string[],
+    price: 0,
+    education: "",
+    experience: ""
+  });
 
-  const { data: tutor, isLoading } = useQuery<Tutor>({
+  const { data: tutor, isLoading, isError } = useQuery<Tutor>({
     queryKey: [`/api/tutors/${id}`],
   });
+
+  const isOwnerView = (user?.id === id) || location.includes("owner=1");
+
+  useEffect(() => {
+    if (isError && location.includes("owner=1")) {
+      // If owner preview is requested but tutor does not exist, send to private editor
+      // so the owner can create/fill their profile.
+      const [, setLocation] = (useLocation as any)();
+      setLocation("/my-profile");
+    }
+  }, [isError, location]);
+
+  useEffect(() => {
+    if (tutor && isOwnerView) {
+      setEditData({
+        name: tutor.name || "",
+        about: tutor.about || "",
+        subjects: tutor.subjects || [],
+        price: tutor.price || 0,
+        education: tutor.education || "",
+        experience: tutor.experience || ""
+      });
+    }
+  }, [tutor, isOwnerView]);
 
   if (isLoading) {
     return (
@@ -128,7 +164,25 @@ export default function TutorView() {
     { id: 6, title: "Lớp học trực tiếp", type: "video", duration: "01:20", thumbnail: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400" }
   ];
 
-  const tutorInfo = "Tôi là giáo viên có 5+ năm kinh nghiệm dạy Toán, Lý cấp 2-3. Chuyên luyện thi đại học với phương pháp dạy dễ hiểu, tận tâm với từng học viên.";
+  const tutorInfo = isEditMode && isOwnerView 
+    ? editData.about 
+    : (tutor?.about || "Tôi là giáo viên có 5+ năm kinh nghiệm dạy Toán, Lý cấp 2-3. Chuyên luyện thi đại học với phương pháp dạy dễ hiểu, tận tâm với từng học viên.");
+  
+  const handleSaveChanges = async () => {
+    try {
+      // Here you would typically make an API call to save the changes
+      // For now, we'll just simulate a save and show a success message
+      console.log("Saving changes:", editData);
+      
+      // You could add a toast notification here
+      alert("Thay đổi đã được lưu thành công!");
+      
+      setIsEditMode(false);
+    } catch (error) {
+      console.error("Error saving changes:", error);
+      alert("Có lỗi xảy ra khi lưu thay đổi. Vui lòng thử lại.");
+    }
+  };
 
   const education = [
     {
@@ -226,6 +280,16 @@ export default function TutorView() {
     <div className="min-h-screen bg-gray-50">
       <Header />
       
+      {/* Edit Mode Indicator */}
+      {isEditMode && isOwnerView && (
+        <div className="bg-blue-600 text-white py-2 px-4 text-center">
+          <div className="container mx-auto flex items-center justify-center gap-2">
+            <Edit className="w-4 h-4" />
+            <span className="font-medium">Chế độ chỉnh sửa - Thay đổi sẽ được lưu khi bạn nhấn "Lưu thay đổi"</span>
+          </div>
+        </div>
+      )}
+      
       <div className="container mx-auto px-4 pt-24 pb-8 max-w-7xl">
         {/* Main Content Grid - EXACT copy from tutor-detail.tsx */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -241,7 +305,16 @@ export default function TutorView() {
                   </AvatarFallback>
                 </Avatar>
                 
-                <h2 className="text-xl font-bold mb-2">{tutor.name}</h2>
+                {isEditMode && isOwnerView ? (
+                  <Input
+                    value={editData.name}
+                    onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                    className="text-xl font-bold text-center mb-2"
+                    placeholder="Tên gia sư"
+                  />
+                ) : (
+                  <h2 className="text-xl font-bold mb-2">{isEditMode ? editData.name : tutor.name}</h2>
+                )}
                 
                 <div className="flex justify-center gap-2 mb-3">
                   <Badge className="bg-green-500 text-white border-0 text-xs">
@@ -261,9 +334,44 @@ export default function TutorView() {
                   <span className="ml-2 text-sm font-medium">4.8 (150)</span>
                 </div>
                 
-                <div className="text-xl font-bold text-blue-600">
-                  {(tutor.price || 150000).toLocaleString()}đ/h
-                </div>
+                {isEditMode && isOwnerView ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <Input
+                      type="number"
+                      value={editData.price}
+                      onChange={(e) => setEditData({ ...editData, price: parseInt(e.target.value) || 0 })}
+                      className="text-xl font-bold text-center text-blue-600 w-32"
+                      placeholder="150000"
+                    />
+                    <span className="text-xl font-bold text-blue-600">đ/h</span>
+                  </div>
+                ) : (
+                  <div className="text-xl font-bold text-blue-600">
+                    {(isEditMode ? editData.price : (tutor.price || 150000)).toLocaleString()}đ/h
+                  </div>
+                )}
+
+                {/* Owner edit button */}
+                {isOwnerView && (
+                  <div className="mt-4 space-y-2">
+                    <Button 
+                      variant={isEditMode ? "default" : "outline"}
+                      className="w-full"
+                      onClick={() => setIsEditMode(!isEditMode)}
+                    >
+                      {isEditMode ? "Xem trước" : "Sửa hồ sơ"}
+                    </Button>
+                    {isEditMode && (
+                      <Button 
+                        variant="outline"
+                        className="w-full text-green-600 border-green-300 hover:bg-green-50"
+                        onClick={handleSaveChanges}
+                      >
+                        Lưu thay đổi
+                      </Button>
+                    )}
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -409,9 +517,18 @@ export default function TutorView() {
               </CardHeader>
               <CardContent>
                 <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg">
-                  <p className="text-gray-800 leading-relaxed whitespace-pre-line text-lg">
-                    {tutorInfo}
-                  </p>
+                  {isEditMode && isOwnerView ? (
+                    <Textarea
+                      value={editData.about}
+                      onChange={(e) => setEditData({ ...editData, about: e.target.value })}
+                      className="min-h-32 text-gray-800 leading-relaxed text-lg resize-none"
+                      placeholder="Mô tả về bản thân, kinh nghiệm và phương pháp dạy học..."
+                    />
+                  ) : (
+                    <p className="text-gray-800 leading-relaxed whitespace-pre-line text-lg">
+                      {tutorInfo}
+                    </p>
+                  )}
                 </div>
               </CardContent>
             </Card>

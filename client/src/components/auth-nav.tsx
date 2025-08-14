@@ -1,7 +1,8 @@
 import { Link } from "wouter";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/auth-context";
-import { LogIn, UserPlus, LogOut, User } from "lucide-react";
+import { LogIn, UserPlus, LogOut, User, GraduationCap } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,9 +12,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import TutorRegistrationModal from "@/components/tutor-registration-modal";
 
 export function AuthNav() {
   const { user, isAuthenticated, logout, isLoading } = useAuth();
+  const [isTutorRegistrationOpen, setIsTutorRegistrationOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -53,50 +56,81 @@ export function AuthNav() {
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <Avatar className="h-8 w-8">
-            <AvatarFallback>{getInitials(user?.fullName || user?.username)}</AvatarFallback>
-          </Avatar>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
-        <DropdownMenuLabel className="font-normal">
-          <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">
-              {user?.fullName || user?.username}
-            </p>
-            <p className="text-xs leading-none text-muted-foreground">
-              {user?.email}
-            </p>
-          </div>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <Link href="/dashboard">
-          <DropdownMenuItem>
-            <User className="mr-2 h-4 w-4" />
-            <span>Bảng điều khiển</span>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+            <Avatar className="h-8 w-8">
+              <AvatarFallback>{getInitials(user?.fullName || user?.username)}</AvatarFallback>
+            </Avatar>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56" align="end" forceMount>
+          <DropdownMenuLabel className="font-normal">
+            <div className="flex flex-col space-y-1">
+              <p className="text-sm font-medium leading-none">
+                {user?.fullName || user?.username}
+              </p>
+              <p className="text-xs leading-none text-muted-foreground">
+                {user?.email}
+              </p>
+            </div>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <Link href="/dashboard">
+            <DropdownMenuItem>
+              <User className="mr-2 h-4 w-4" />
+              <span>Bảng điều khiển</span>
+            </DropdownMenuItem>
+          </Link>
+          {user?.role === 'tutor' ? (
+            <Link href="/my-profile">
+              <DropdownMenuItem>
+                <User className="mr-2 h-4 w-4" />
+                <span>Cổng gia sư</span>
+              </DropdownMenuItem>
+            </Link>
+          ) : (
+            <Link href="/my-profile">
+              <DropdownMenuItem>
+                <User className="mr-2 h-4 w-4" />
+                <span>Hồ sơ của tôi</span>
+              </DropdownMenuItem>
+            </Link>
+          )}
+          {user?.role === 'student' && (
+            <Link href="/profile/student/minh-anh">
+              <DropdownMenuItem>
+                <User className="mr-2 h-4 w-4" />
+                <span>Trang công khai (Học sinh)</span>
+              </DropdownMenuItem>
+            </Link>
+          )}
+          {user?.role === 'student' && (
+            <DropdownMenuItem onClick={() => setIsTutorRegistrationOpen(true)}>
+              <GraduationCap className="mr-2 h-4 w-4" />
+              <span>Đăng ký làm gia sư</span>
+            </DropdownMenuItem>
+          )}
+          <Link href="/settings">
+            <DropdownMenuItem>
+              <User className="mr-2 h-4 w-4" />
+              <span>Cài đặt</span>
+            </DropdownMenuItem>
+          </Link>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={logout}>
+            <LogOut className="mr-2 h-4 w-4" />
+            <span>Đăng xuất</span>
           </DropdownMenuItem>
-        </Link>
-        <Link href="/my-profile">
-          <DropdownMenuItem>
-            <User className="mr-2 h-4 w-4" />
-            <span>Hồ sơ của tôi</span>
-          </DropdownMenuItem>
-        </Link>
-        <Link href="/settings">
-          <DropdownMenuItem>
-            <User className="mr-2 h-4 w-4" />
-            <span>Cài đặt</span>
-          </DropdownMenuItem>
-        </Link>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={logout}>
-          <LogOut className="mr-2 h-4 w-4" />
-          <span>Đăng xuất</span>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      
+      {/* Tutor Registration Modal */}
+      <TutorRegistrationModal 
+        isOpen={isTutorRegistrationOpen}
+        onClose={() => setIsTutorRegistrationOpen(false)}
+      />
+    </>
   );
 }

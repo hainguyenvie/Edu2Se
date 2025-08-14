@@ -4,11 +4,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Clock, FileText, Users, ChevronLeft, ChevronRight, X, BookOpen, DollarSign, TrendingUp } from "lucide-react";
+import { Calendar, Clock, FileText, Users, ChevronLeft, ChevronRight, X, BookOpen, DollarSign, TrendingUp, Trophy, Medal, Star, CheckCircle } from "lucide-react";
 import Header from "@/components/header";
 import MeetingRoomModal from "@/features/meeting-room/components/meeting-room-modal";
+import { useAuth } from "@/contexts/auth-context";
 
 export default function Dashboard() {
+  const { user } = useAuth();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedCalendarDay, setSelectedCalendarDay] = useState<Date>(new Date());
   const [isMeetingRoomOpen, setIsMeetingRoomOpen] = useState(false);
@@ -174,8 +176,53 @@ export default function Dashboard() {
       <div className="container mx-auto px-6 py-8 pt-24">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Bảng điều khiển</h1>
-          <p className="text-gray-600">Chào mừng bạn trở lại! Đây là tổng quan hoạt động học tập của bạn.</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Bảng điều khiển của tôi</h1>
+          <p className="text-gray-600">Chào {user?.fullName || user?.username || "bạn"}! Đây là không gian học tập của riêng bạn.</p>
+        </div>
+
+        {/* Thành tích của tôi - Gamification */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <Card className="shadow-lg border-0">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
+                <Medal className="w-4 h-4 text-yellow-600" /> Hạng hiện tại
+              </div>
+              <div className="text-2xl font-bold text-gray-900">Top 35 • Bộ môn Toán</div>
+              <div className="text-xs text-gray-500">Bảng xếp hạng học viên</div>
+              <div className="mt-3">
+                <Button variant="ghost" className="text-blue-600 px-0" asChild>
+                  <a href="/ranking">Xem bảng xếp hạng →</a>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="shadow-lg border-0">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
+                <Trophy className="w-4 h-4 text-amber-600" /> Điểm thành tích
+              </div>
+              <div className="text-2xl font-bold text-gray-900">890 điểm</div>
+              <div className="mt-3">
+                <div className="text-xs text-gray-600 mb-1">Tiến tới huy hiệu Bạc</div>
+                <div className="w-full h-2 bg-gray-200 rounded">
+                  <div className="h-2 bg-amber-500 rounded" style={{ width: "62%" }} />
+                </div>
+                <div className="text-[11px] text-gray-500 mt-1">Còn 38% để nâng hạng</div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="shadow-lg border-0">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
+                <Star className="w-4 h-4 text-blue-600" /> Huy hiệu của tôi
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Badge className="bg-blue-100 text-blue-800">Chăm chỉ</Badge>
+                <Badge className="bg-green-100 text-green-800">Điểm cao</Badge>
+                <Badge className="bg-purple-100 text-purple-800">Tích cực</Badge>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Enhanced Stats Grid */}
@@ -244,7 +291,7 @@ export default function Dashboard() {
             <CardContent className="p-6">
               <div className="mb-6">
                 <h3 className="text-xl font-bold text-gray-900 mb-2 flex items-center">
-                  📅 Lịch Học
+                  📅 Lịch học của tôi
                 </h3>
                 
                 {/* Calendar Header */}
@@ -337,16 +384,21 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* Enhanced Classes */}
+          {/* Lớp học của tôi */}
           <Card className="lg:col-span-1 shadow-lg border-0">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900 flex items-center">
-                  📚 Class
+                  📚 Lớp học của tôi
                 </h3>
-                <Button variant="ghost" size="sm" className="text-blue-600 hover:bg-blue-50 font-medium">
-                  View All →
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button variant="ghost" size="sm" className="text-blue-600 hover:bg-blue-50 font-medium">
+                    View All →
+                  </Button>
+                  <Button variant="outline" size="sm" className="font-medium" asChild>
+                    <a href="/profile/student/minh-anh">Xem trang công khai</a>
+                  </Button>
+                </div>
               </div>
               
               <div className="space-y-4 mb-6">
@@ -381,11 +433,11 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* Enhanced Friends */}
+          {/* Bạn bè & Hội nhóm của tôi */}
           <Card className="lg:col-span-1 shadow-lg border-0">
             <CardContent className="p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                👥 Bạn Bè
+                👥 Bạn bè & Hội nhóm của tôi
               </h3>
               
               <div className="space-y-4">
@@ -434,9 +486,14 @@ export default function Dashboard() {
                     </div>
                   </div>
                 </div>
-                <Button size="sm" className="w-full bg-green-600 hover:bg-green-700">
-                  🚀 Tham gia học nhóm
-                </Button>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button size="sm" className="bg-green-600 hover:bg-green-700">
+                    🚀 Tham gia học nhóm
+                  </Button>
+                  <Button size="sm" variant="outline">
+                    ➕ Tạo nhóm mới
+                  </Button>
+                </div>
               </div>
 
               <div className="mt-6">

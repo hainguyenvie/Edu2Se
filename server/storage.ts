@@ -412,6 +412,28 @@ export class MemStorage implements IStorage {
       this.tutors.set(id, { ...tutor, id, createdAt: new Date() });
     });
 
+    // Add a demo tutor with a stable ID so you can open it directly
+    const demoTutorId = "380e334d-4366-4033-aa82-0344f55a30e4";
+    this.tutors.set(demoTutorId, {
+      id: demoTutorId,
+      name: "MINH TIẾN",
+      subjects: ["Toán", "Lý"],
+      grades: ["Lớp 10", "Lớp 11", "Lớp 12"],
+      education: "Đại học Bách Khoa Hà Nội",
+      experience: "5 năm kinh nghiệm",
+      pricePerHour: 150000,
+      rating: "4.9",
+      reviewCount: 150,
+      status: "online",
+      isVerified: true,
+      isTopRated: true,
+      badges: ["ONLINE", "TOP"],
+      profileImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop",
+      timeSlots: ["evening"],
+      description: "Gia sư Toán - Lý với 5+ năm kinh nghiệm. Chuyên luyện thi Đại học, phương pháp dễ hiểu, tận tâm.",
+      createdAt: new Date(),
+    });
+
     // Initialize videos
     const videosData: InsertVideo[] = [
       { tutorId: Array.from(this.tutors.keys())[0], subject: "Toán", title: "Giải phương trình bậc 2", duration: "5:00", thumbnailColor: "hsl(207, 90%, 54%)" },
