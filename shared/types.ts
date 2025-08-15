@@ -1,5 +1,26 @@
 import { z } from "zod";
 
+// Search filters type
+export type SearchFilters = {
+  subject?: string;
+  courseType?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  timeSlots?: string[];
+  keywords?: string;
+};
+
+// Virtual classroom types
+export type ChatMessage = {
+  id: string;
+  sender: string;
+  message: string;
+  timestamp: string;
+};
+
+export type VirtualClassroomTool = "pointer" | "pen" | "highlighter" | "eraser" | "text" | "shape";
+export type VirtualClassroomTab = "mathematics" | "documents" | "whiteboard";
+
 // Type definitions for the application
 export type User = {
   id: string;
@@ -160,4 +181,71 @@ export type MeetingSettings = {
   cameraEnabled: boolean;
   micEnabled: boolean;
   speakerEnabled: boolean;
+};
+
+// Curriculum Management Types
+export type Curriculum = {
+  id: string;
+  tutorId: string;
+  subjectName: string;
+  grade: string;
+  title: string;
+  description?: string | null;
+  topics: CurriculumTopicData[];
+  difficulty: "beginner" | "intermediate" | "advanced";
+  estimatedHours?: number | null;
+  price?: number | null;
+  isActive?: boolean | null;
+  createdAt: Date | null;
+  updatedAt?: Date | null;
+};
+
+export type CurriculumTopic = {
+  id: string;
+  curriculumId: string;
+  title: string;
+  description?: string | null;
+  order: number;
+  estimatedMinutes?: number | null;
+  objectives: string[];
+  resources?: any | null;
+  isCompleted?: boolean | null;
+  createdAt: Date | null;
+};
+
+export type CurriculumTopicData = {
+  title: string;
+  description?: string;
+  order: number;
+  estimatedMinutes?: number;
+  objectives?: string[];
+  resources?: {
+    videos?: string[];
+    documents?: string[];
+    exercises?: string[];
+  };
+};
+
+export type InsertCurriculum = {
+  tutorId: string;
+  subjectName: string;
+  grade: string;
+  title: string;
+  description?: string | null;
+  topics: CurriculumTopicData[];
+  difficulty?: "beginner" | "intermediate" | "advanced";
+  estimatedHours?: number | null;
+  price?: number | null;
+  isActive?: boolean | null;
+};
+
+export type InsertCurriculumTopic = {
+  curriculumId: string;
+  title: string;
+  description?: string | null;
+  order: number;
+  estimatedMinutes?: number | null;
+  objectives?: string[];
+  resources?: any | null;
+  isCompleted?: boolean | null;
 };

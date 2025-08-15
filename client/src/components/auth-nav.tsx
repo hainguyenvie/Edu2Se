@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/auth-context";
-import { LogIn, UserPlus, LogOut, User, GraduationCap } from "lucide-react";
+import { LogIn, UserPlus, LogOut, User, GraduationCap, FileText } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -98,6 +98,12 @@ export function AuthNav() {
               </DropdownMenuItem>
             </Link>
           )}
+          <Link href="/my-biography">
+            <DropdownMenuItem>
+              <FileText className="mr-2 h-4 w-4" />
+              <span>My Biography</span>
+            </DropdownMenuItem>
+          </Link>
           {user?.role === 'student' && (
             <Link href="/profile/student/minh-anh">
               <DropdownMenuItem>

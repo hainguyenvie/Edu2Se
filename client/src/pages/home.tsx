@@ -8,6 +8,8 @@ import TutorDetailSidebar from "@/components/tutor-detail-sidebar";
 import MessagesPopup from "@/components/messages-popup";
 import CommunityFeatures from "@/components/community-features";
 import AutoRotatingBanner from "@/components/auto-rotating-banner";
+import QuickRequestFAB from "@/components/quick-request-fab";
+import QuickRequestsFeed from "@/components/quick-requests-feed";
 import { useQuery } from "@tanstack/react-query";
 import { type Tutor, type SearchFilters as SearchFiltersType } from "@shared/schema";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -103,6 +105,11 @@ export default function Home() {
 
           {/* Video Carousel */}
           <VideoCarousel />
+
+          {/* Quick Requests Section */}
+          <div className="p-4 bg-gray-50">
+            <QuickRequestsFeed limit={4} showHeader={true} />
+          </div>
 
           {/* Tutors Section */}
           <div className="p-4">
@@ -208,6 +215,9 @@ export default function Home() {
         onClose={closeMessages}
         selectedTutorName={selectedTutorForChat || undefined}
       />
+
+      {/* Quick Request FAB */}
+      <QuickRequestFAB />
     </div>
   );
 }

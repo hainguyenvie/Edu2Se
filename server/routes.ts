@@ -161,6 +161,123 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Curriculum Management Routes
+  
+  // Get all curriculums for a tutor
+  app.get("/api/tutors/:tutorId/curriculums", async (req, res) => {
+    try {
+      const curriculums = await storage.getCurriculums(req.params.tutorId);
+      res.json(curriculums);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Get specific curriculum
+  app.get("/api/curriculums/:id", async (req, res) => {
+    try {
+      const curriculum = await storage.getCurriculum(req.params.id);
+      if (!curriculum) {
+        return res.status(404).json({ message: "Curriculum not found" });
+      }
+      res.json(curriculum);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Create new curriculum
+  app.post("/api/curriculums", async (req, res) => {
+    try {
+      const curriculumData = req.body;
+      const curriculum = await storage.createCurriculum(curriculumData);
+      res.status(201).json(curriculum);
+    } catch (error) {
+      console.error('Create curriculum error:', error);
+      res.status(500).json({ message: "Failed to create curriculum" });
+    }
+  });
+
+  // Update curriculum
+  app.put("/api/curriculums/:id", async (req, res) => {
+    try {
+      const curriculumData = req.body;
+      const curriculum = await storage.updateCurriculum(req.params.id, curriculumData);
+      if (!curriculum) {
+        return res.status(404).json({ message: "Curriculum not found" });
+      }
+      res.json(curriculum);
+    } catch (error) {
+      console.error('Update curriculum error:', error);
+      res.status(500).json({ message: "Failed to update curriculum" });
+    }
+  });
+
+  // Delete curriculum
+  app.delete("/api/curriculums/:id", async (req, res) => {
+    try {
+      const success = await storage.deleteCurriculum(req.params.id);
+      if (!success) {
+        return res.status(404).json({ message: "Curriculum not found" });
+      }
+      res.json({ message: "Curriculum deleted successfully" });
+    } catch (error) {
+      console.error('Delete curriculum error:', error);
+      res.status(500).json({ message: "Failed to delete curriculum" });
+    }
+  });
+
+  // Get curriculum topics
+  app.get("/api/curriculums/:curriculumId/topics", async (req, res) => {
+    try {
+      const topics = await storage.getCurriculumTopics(req.params.curriculumId);
+      res.json(topics);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Create curriculum topic
+  app.post("/api/curriculums/:curriculumId/topics", async (req, res) => {
+    try {
+      const topicData = { ...req.body, curriculumId: req.params.curriculumId };
+      const topic = await storage.createCurriculumTopic(topicData);
+      res.status(201).json(topic);
+    } catch (error) {
+      console.error('Create topic error:', error);
+      res.status(500).json({ message: "Failed to create topic" });
+    }
+  });
+
+  // Update curriculum topic
+  app.put("/api/topics/:id", async (req, res) => {
+    try {
+      const topicData = req.body;
+      const topic = await storage.updateCurriculumTopic(req.params.id, topicData);
+      if (!topic) {
+        return res.status(404).json({ message: "Topic not found" });
+      }
+      res.json(topic);
+    } catch (error) {
+      console.error('Update topic error:', error);
+      res.status(500).json({ message: "Failed to update topic" });
+    }
+  });
+
+  // Delete curriculum topic
+  app.delete("/api/topics/:id", async (req, res) => {
+    try {
+      const success = await storage.deleteCurriculumTopic(req.params.id);
+      if (!success) {
+        return res.status(404).json({ message: "Topic not found" });
+      }
+      res.json({ message: "Topic deleted successfully" });
+    } catch (error) {
+      console.error('Delete topic error:', error);
+      res.status(500).json({ message: "Failed to delete topic" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

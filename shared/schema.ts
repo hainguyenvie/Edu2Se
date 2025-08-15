@@ -69,6 +69,35 @@ export const subjects = pgTable("subjects", {
   isActive: boolean("is_active").default(true),
 });
 
+export const curriculums = pgTable("curriculums", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  tutorId: varchar("tutor_id").notNull().references(() => tutors.id, { onDelete: "cascade" }),
+  subjectName: text("subject_name").notNull(),
+  grade: text("grade").notNull(),
+  title: text("title").notNull(),
+  description: text("description"),
+  topics: jsonb("topics").notNull(),
+  difficulty: text("difficulty").notNull().default("beginner"), // beginner, intermediate, advanced
+  estimatedHours: integer("estimated_hours").default(0),
+  price: integer("price"),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const curriculumTopics = pgTable("curriculum_topics", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  curriculumId: varchar("curriculum_id").notNull().references(() => curriculums.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  description: text("description"),
+  order: integer("order").notNull(),
+  estimatedMinutes: integer("estimated_minutes").default(60),
+  objectives: text("objectives").array().default([]),
+  resources: jsonb("resources"),
+  isCompleted: boolean("is_completed").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
@@ -90,6 +119,17 @@ export const insertSubjectSchema = createInsertSchema(subjects).omit({
   id: true,
 });
 
+export const insertCurriculumSchema = createInsertSchema(curriculums).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertCurriculumTopicSchema = createInsertSchema(curriculumTopics).omit({
+  id: true,
+  createdAt: true,
+});
+
 export const searchFiltersSchema = z.object({
   subject: z.string().optional(),
   courseType: z.string().optional(),
@@ -109,3 +149,7 @@ export type InsertVideo = z.infer<typeof insertVideoSchema>;
 export type Video = typeof videos.$inferSelect;
 export type InsertSubject = z.infer<typeof insertSubjectSchema>;
 export type Subject = typeof subjects.$inferSelect;
+export type InsertCurriculum = z.infer<typeof insertCurriculumSchema>;
+export type Curriculum = typeof curriculums.$inferSelect;
+export type InsertCurriculumTopic = z.infer<typeof insertCurriculumTopicSchema>;
+export type CurriculumTopic = typeof curriculumTopics.$inferSelect;

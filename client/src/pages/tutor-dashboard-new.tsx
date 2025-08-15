@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import ScheduleSetupModal from "@/components/schedule-setup-modal";
 import StatisticsModal from "@/components/statistics-modal";
 import WithdrawModal from "@/components/withdraw-modal";
+import CurriculumManager from "@/components/curriculum-manager";
 import { useAuth } from "@/contexts/auth-context";
 import { Link } from "wouter";
 import {
@@ -485,6 +486,25 @@ export default function TutorDashboard() {
                     </div>
                   ))}
                 </div>
+              </CardContent>
+            </Card>
+
+            {/* Curriculum Management */}
+            <Card className="shadow-lg border-0">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <BookOpen className="w-5 h-5 mr-2" />
+                  Quản lý Chương trình học
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CurriculumManager 
+                  tutorId={user?.id || "1"} 
+                  onCurriculumUpdate={() => {
+                    // Handle curriculum updates
+                    console.log("Curriculum updated");
+                  }}
+                />
               </CardContent>
             </Card>
           </div>

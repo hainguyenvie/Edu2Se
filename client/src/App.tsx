@@ -24,6 +24,7 @@ import LoginPage from "@/pages/login";
 import RegisterPage from "@/pages/register";
 import NotFound from "@/pages/not-found";
 import SettingsPage from "@/pages/settings";
+import MyBiographyPage from "@/pages/my-biography";
 
 function Router() {
   return (
@@ -52,6 +53,7 @@ function Router() {
       <Route path="/qa-forum" component={QAForum} />
       <Route path="/create-study-room" component={CreateStudyRoom} />
       <Route path="/quick-requests" component={QuickRequests} />
+      <Route path="/my-biography" component={MyBiographyPage} />
       <Route path="/settings" component={SettingsPage} />
       <Route component={NotFound} />
     </Switch>
