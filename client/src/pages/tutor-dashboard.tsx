@@ -32,6 +32,67 @@ export default function TutorDashboard() {
   const [isStatisticsOpen, setIsStatisticsOpen] = useState(false);
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
 
+  // Check if user is a tutor
+  const isTutor = user?.role === 'tutor';
+
+  // If not a tutor, show the registration prompt
+  if (!isTutor) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        
+        <main className="container mx-auto px-4 pt-24 pb-10 max-w-4xl">
+          <div className="text-center py-16">
+            <div className="max-w-md mx-auto">
+              <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                <Users className="w-12 h-12 text-white" />
+              </div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-4">
+                Bạn chưa phải là gia sư
+              </h1>
+              <p className="text-gray-600 mb-8">
+                Để truy cập trang quản lý gia sư, bạn cần đăng ký trở thành gia sư trước.
+                Hãy đăng ký ngay để bắt đầu hành trình giảng dạy của bạn!
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div className="p-4 bg-blue-50 rounded-lg">
+                  <DollarSign className="w-8 h-8 mx-auto mb-2 text-blue-600" />
+                  <h3 className="font-semibold text-sm mb-1">Thu nhập linh hoạt</h3>
+                  <p className="text-xs text-gray-600">Tự quyết định giá và lịch dạy</p>
+                </div>
+                <div className="p-4 bg-green-50 rounded-lg">
+                  <Users className="w-8 h-8 mx-auto mb-2 text-green-600" />
+                  <h3 className="font-semibold text-sm mb-1">Kết nối học sinh</h3>
+                  <p className="text-xs text-gray-600">Tìm kiếm học sinh phù hợp</p>
+                </div>
+                <div className="p-4 bg-purple-50 rounded-lg">
+                  <Trophy className="w-8 h-8 mx-auto mb-2 text-purple-600" />
+                  <h3 className="font-semibold text-sm mb-1">Phát triển kỹ năng</h3>
+                  <p className="text-xs text-gray-600">Nâng cao năng lực giảng dạy</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <a href="/my-biography">
+                  <Button className="w-full bg-green-600 hover:bg-green-700">
+                    <Users className="w-4 h-4 mr-2" />
+                    Đăng ký làm gia sư ngay
+                  </Button>
+                </a>
+                <a href="/my-biography">
+                  <Button variant="outline" className="w-full">
+                    ← Quay lại My Bio
+                  </Button>
+                </a>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   // Mock data for tutor view
   const stats = [
     { label: "Học viên hoạt động", value: 18, icon: Users, color: "text-blue-600" },
@@ -340,5 +401,3 @@ function StatTile({ title, value }: { title: string; value: string }) {
     </div>
   );
 }
-
-

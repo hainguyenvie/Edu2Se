@@ -9,6 +9,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (token: string, userData: Omit<User, 'password'>) => void;
   logout: () => void;
+  updateUserRole?: (role: 'student' | 'tutor') => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -77,12 +78,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
     logoutMutation.mutate();
   };
 
+  const updateUserRole = (role: 'student' | 'tutor') => {
+    if (user) {
+      const updatedUser = { ...user, role };
+      setUser(updatedUser);
+      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+    }
+  };
+
   const value: AuthContextType = {
     user,
     isLoading: !isInitialized || isLoading,
     isAuthenticated: !!user,
     login,
     logout,
+    updateUserRole,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

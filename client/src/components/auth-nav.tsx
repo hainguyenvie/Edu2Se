@@ -77,57 +77,22 @@ export function AuthNav() {
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <Link href="/dashboard">
-            <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" />
-              <span>Bảng điều khiển</span>
-            </DropdownMenuItem>
-          </Link>
-          {user?.role === 'tutor' ? (
-            <Link href="/my-profile">
-              <DropdownMenuItem>
-                <User className="mr-2 h-4 w-4" />
-                <span>Cổng gia sư</span>
-              </DropdownMenuItem>
-            </Link>
-          ) : (
-            <Link href="/my-profile">
-              <DropdownMenuItem>
-                <User className="mr-2 h-4 w-4" />
-                <span>Hồ sơ của tôi</span>
-              </DropdownMenuItem>
-            </Link>
-          )}
           <Link href="/my-biography">
             <DropdownMenuItem>
               <FileText className="mr-2 h-4 w-4" />
-              <span>My Biography</span>
+              <span>My Bio</span>
             </DropdownMenuItem>
           </Link>
-          {user?.role === 'student' && (
-            <Link href="/profile/student/minh-anh">
-              <DropdownMenuItem>
-                <User className="mr-2 h-4 w-4" />
-                <span>Trang công khai (Học sinh)</span>
-              </DropdownMenuItem>
-            </Link>
-          )}
-          {user?.role === 'student' && (
-            <DropdownMenuItem onClick={() => setIsTutorRegistrationOpen(true)}>
-              <GraduationCap className="mr-2 h-4 w-4" />
-              <span>Đăng ký làm gia sư</span>
-            </DropdownMenuItem>
-          )}
-          <Link href="/settings">
+          <Link href="/my-profile">
             <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" />
-              <span>Cài đặt</span>
+              <GraduationCap className="mr-2 h-4 w-4" />
+              <span>{user?.role === 'tutor' ? 'Trang Gia Sư' : 'Trở thành Gia Sư'}</span>
             </DropdownMenuItem>
           </Link>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={logout}>
             <LogOut className="mr-2 h-4 w-4" />
-            <span>Đăng xuất</span>
+            <span>Logout</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
