@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Header from "@/components/header";
-import EnhancedSidebar from "@/components/enhanced-sidebar";
+import CompactSearchSidebar from "@/components/compact-search-sidebar";
 import VideoCarousel from "@/components/video-carousel";
 
 import TutorCard from "@/components/tutor-card";
@@ -8,7 +8,6 @@ import TutorDetailSidebar from "@/components/tutor-detail-sidebar";
 import MessagesPopup from "@/components/messages-popup";
 import CommunityFeatures from "@/components/community-features";
 import AutoRotatingBanner from "@/components/auto-rotating-banner";
-import QuickRequestFAB from "@/components/quick-request-fab";
 import QuickRequestsFeed from "@/components/quick-requests-feed";
 import { useQuery } from "@tanstack/react-query";
 import { type Tutor, type SearchFilters as SearchFiltersType } from "@shared/schema";
@@ -17,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export default function Home() {
-  const [sidebarOpen, setSidebarOpen] = useState(true); // Start with sidebar open on desktop
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [filters, setFilters] = useState<SearchFiltersType>({});
   const [selectedTutor, setSelectedTutor] = useState<Tutor | null>(null);
   const [tutorDetailOpen, setTutorDetailOpen] = useState(false);
@@ -71,18 +70,13 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden">
-      <Header 
-        onToggleSidebar={toggleSidebar}
-        onSubjectSelect={(subject) => setFilters(prev => ({ ...prev, subject }))}
-      />
+      <Header onToggleSidebar={toggleSidebar} />
       
       <div className="pt-16 relative overflow-x-hidden">
-        <EnhancedSidebar 
+        <CompactSearchSidebar 
           isOpen={sidebarOpen} 
-          onClose={closeSidebar} 
-          onToggle={toggleSidebar}
-          onSubjectSelect={(subject) => setFilters(prev => ({ ...prev, subject }))}
-          onFiltersChange={handleFilterChange}
+          onClose={closeSidebar}
+          onSearch={handleFilterChange}
         />
         
         {/* Mobile overlay */}
@@ -93,13 +87,14 @@ export default function Home() {
           />
         )}
 
-        {/* Main content - responsive layout */}
+        {/* Main content - with sidebar space */}
         <main className={cn(
           "transition-all duration-300 min-h-screen overflow-x-hidden",
           sidebarOpen 
-            ? "lg:ml-96 lg:max-w-[calc(100vw-24rem)]" 
+            ? "lg:ml-80 lg:max-w-[calc(100vw-20rem)]" 
             : "lg:ml-0 max-w-full"
         )}>
+
           {/* Auto-Rotating Promotional Banner */}
           <AutoRotatingBanner />
 
@@ -216,8 +211,7 @@ export default function Home() {
         selectedTutorName={selectedTutorForChat || undefined}
       />
 
-      {/* Quick Request FAB */}
-      <QuickRequestFAB />
+
     </div>
   );
 }

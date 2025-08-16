@@ -37,7 +37,6 @@ export default function QuickRequestFAB() {
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [requestType, setRequestType] = useState<RequestType>(null);
-  const [showFABOptions, setShowFABOptions] = useState(false);
   const [formData, setFormData] = useState<QuickRequest>({
     type: null,
     subject: "",
@@ -91,7 +90,6 @@ export default function QuickRequestFAB() {
     setRequestType(type);
     setFormData(prev => ({ ...prev, type }));
     setIsOpen(true);
-    setShowFABOptions(false);
   };
 
   const handleTimeSlotToggle = (slot: string) => {
@@ -141,57 +139,21 @@ export default function QuickRequestFAB() {
   const handleClose = () => {
     setIsOpen(false);
     setRequestType(null);
-    setShowFABOptions(false);
   };
 
   return (
     <>
       {/* Floating Action Button */}
       <div className="fixed bottom-6 right-6 z-50">
-        {/* FAB Options */}
-        {showFABOptions && (
-          <div className="absolute bottom-16 right-0 space-y-3 mb-4">
-            {/* Need Tutor Option */}
-            <div className="flex items-center justify-end">
-              <div className="bg-black/80 text-white px-3 py-1 rounded-lg text-sm mr-3 whitespace-nowrap">
-                Tôi cần tìm gia sư
-              </div>
-              <Button
-                size="lg"
-                className="h-12 w-12 rounded-full bg-blue-600 hover:bg-blue-700 shadow-lg"
-                onClick={() => handleOpenRequest("need-tutor")}
-              >
-                <GraduationCap className="h-6 w-6" />
-              </Button>
-            </div>
 
-            {/* Need Student Option */}
-            <div className="flex items-center justify-end">
-              <div className="bg-black/80 text-white px-3 py-1 rounded-lg text-sm mr-3 whitespace-nowrap">
-                Tôi muốn dạy học
-              </div>
-              <Button
-                size="lg"
-                className="h-12 w-12 rounded-full bg-orange-600 hover:bg-orange-700 shadow-lg"
-                onClick={() => handleOpenRequest("need-student")}
-              >
-                <Users className="h-6 w-6" />
-              </Button>
-            </div>
-          </div>
-        )}
 
-        {/* Main FAB */}
+        {/* Main FAB - Now just for finding tutors */}
         <Button
           size="lg"
-          className={`h-14 w-14 rounded-full shadow-lg transition-transform ${
-            showFABOptions 
-              ? "bg-red-600 hover:bg-red-700 rotate-45" 
-              : "bg-gradient-to-r from-blue-600 to-orange-600 hover:from-blue-700 hover:to-orange-700"
-          }`}
-          onClick={() => setShowFABOptions(!showFABOptions)}
+          className="h-14 w-14 rounded-full shadow-lg bg-blue-600 hover:bg-blue-700 transition-all"
+          onClick={() => handleOpenRequest("need-tutor")}
         >
-          <Plus className="h-7 w-7" />
+          <GraduationCap className="h-7 w-7" />
         </Button>
       </div>
 
